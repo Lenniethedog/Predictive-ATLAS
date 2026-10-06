@@ -668,7 +668,7 @@ function s6(S) {
 
 // ================================================================ 7. the river line
 function s7(S) {
-  const view = new MapView(geoMercator().scale(2700).translate([W / 2, H / 2]), { res: "50m", bbox: [[20, 42], [42, 54]] });
+  const view = new MapView(geoMercator().scale(2700).translate([W / 2, H / 2]), { res: "50m", bbox: [[4, 36], [60, 60]] });
   view.setCam(K.camFor(view, [31.6, 48.4], 0.66, 960, 345));
   const ua = view.union(UA);
   const occ = view.pathOf(poly(OCCUPIED));
@@ -945,6 +945,15 @@ function s10(S) {
   const tFlip = S.at(8);
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
+    // the split ledger is on screen from the first word: two empty books, one country
+    const sk = prog(t, 0.2, 0.8) * (1 - prog(t, tWest, 0.4));
+    if (sk > 0) {
+      D.panel(ctx, 140, 150, 800, 540, { alpha: sk, title: "Western state · reconstruction", titleColor: PALE_AMBER, fill: rgba(C.bg2, 0.5) });
+      D.panel(ctx, 980, 150, 800, 540, { alpha: sk, title: "Eastern zone · fiscal clearing", titleColor: "#f0a0a6", color: rgba(C.darkred, 0.6), fill: rgba(C.bg2, 0.5) });
+      D.stroke(ctx, [[960, 170], [960, 670]], { color: C.ice, width: 2, dash: [8, 8], alpha: sk * 0.6 });
+      D.text(ctx, "ONE MAP ON PAPER", 960, 730, { kind: "mono", size: 14, tracking: 3, align: "center", color: C.mid, alpha: sk });
+      D.text(ctx, "TWO PATRONS IN PRACTICE", 960, 756, { kind: "mono", size: 14, tracking: 3, align: "center", color: C.ice, alpha: sk * prog(t, 1.5, 0.8) });
+    }
     const flip = prog(t, tFlip, 1.2, ease.inOut);
     const sx = Math.abs(Math.cos(flip * Math.PI));
     const back = flip > 0.5;
@@ -1166,5 +1175,6 @@ export default {
   title: "The Tragedy of Buffer States",
   subtitle: "The final partition of Ukraine",
   short: "The Tragedy of Buffer States",
+  titles: ["The width", "Capabilities, not intentions", "How the buffer thinned", "The neutral blueprint", "The indivisible object", "The contact-line freeze", "The river line", "The capital", "The repeated game", "The split ledger", "Weapons are facts", "Stable under anarchy"],
   scenes: [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12],
 };

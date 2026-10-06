@@ -1,7 +1,8 @@
 // Reusable visual objects built on the primitives.
 import { geoInterpolate } from "d3-geo";
 import { C, W, H, clamp, ease, lerp, prog, rgba, rng, smooth } from "./core.mjs";
-import { node, roundRect, text, label, measure, stroke } from "./draw.mjs";
+import { node, roundRect, text, label, measure, stroke, decode } from "./draw.mjs";
+import * as SFX from "./sfx-rec.mjs";
 
 // Keyframed value: keys = [[t, v], ...]; eased between keys.
 export function track(t, keys, fn = ease.inOut) {
@@ -199,6 +200,7 @@ export function book(ctx, x, y, w, o = {}) {
 export function boxNode(ctx, x, y, w, h, title, o = {}) {
   const { color = C.mid, alpha = 1, fill = 0.08, glow = 0, sub, lw = 1.5, titleSize = 18, subColor = C.dim, dim = 0 } = o;
   if (alpha <= 0) return;
+  SFX.appear("blip", title, alpha, { x });
   ctx.save();
   ctx.globalAlpha *= alpha * (1 - dim * 0.65);
   roundRect(ctx, x - w / 2, y - h / 2, w, h, 6);
@@ -292,6 +294,7 @@ export function heat(ctx, pts, o = {}) {
 export function chip(ctx, str, x, y, o = {}) {
   const { color = C.amber, alpha = 1, size = 15, align = "left", fill = 0.12, kind = "mono" } = o;
   if (alpha <= 0) return 0;
+  SFX.appear("blip", str, alpha, { x });
   const w = measure(ctx, str, { kind, size, tracking: 1.5, caps: true }) + 24;
   const bx = align === "center" ? x - w / 2 : align === "right" ? x - w : x;
   ctx.save();
@@ -305,7 +308,7 @@ export function chip(ctx, str, x, y, o = {}) {
   ctx.lineWidth = 1.2;
   ctx.stroke();
   ctx.restore();
-  text(ctx, str, bx + 12, y + 1, { kind, size, tracking: 1.5, caps: true, color, alpha });
+  text(ctx, decode(String(str).toUpperCase(), alpha), bx + 12, y + 1, { kind, size, tracking: 1.5, caps: true, color, alpha });
   return w;
 }
 

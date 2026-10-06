@@ -296,7 +296,7 @@ function s2(S) {
 // ================================================================ 3. the cap on the strongest block
 function s3(S) {
   const blocks = [["GERMANY", 1.0], ["ITALY", 0.42], ["FRANCE", 0.38], ["SPAIN", 0.22], ["POLAND", 0.17], ["NETHERLANDS", 0.15]];
-  const tRank = S.at(1);
+  const tRank = 0.4;
   const tInset = S.at(1, 0.55);
   const tFree = S.at(3);
   const tCap = S.at(4);
@@ -554,7 +554,7 @@ function s6(S) {
       [700, "Term 2 · export revenue", tT2],
       [1280, "Term 3 · insurance value", tT3],
     ];
-    cols.forEach(([x, title, t0]) => D.panel(ctx, x, 240, 520, 380, { alpha: prog(t, t0, 0.6), title, fill: rgba("#0b0e13", 0.92) }));
+    cols.forEach(([x, title, t0], i) => D.panel(ctx, x, 240, 520, 380, { alpha: prog(t, Math.min(t0, 0.4 + i * 0.3), 0.6), title, fill: rgba("#0b0e13", 0.92) }));
     // term 1
     const a1 = prog(t, tT1 + 0.4, 0.6);
     [["GERMANY", 0.9, GER], ["CHINA", 0.55, C.crimson], ["UNITED STATES", 0.35, C.cyan]].forEach(([n, v, col], i) => {
@@ -627,7 +627,7 @@ function s7(S) {
     D.bg(ctx, { gridAlpha: 0.2 });
     // secondary-sanctions draft, narrowed by a German pen
     const da = prog(t, tSanc, 0.6);
-    D.panel(ctx, 120, 160, 480, 420, { alpha: da, fill: rgba("#10161e", 0.97), title: "Secondary sanctions · draft" });
+    D.panel(ctx, 120, 160, 480, 420, { alpha: Math.max(da, prog(t, 0.3, 0.6)), fill: rgba("#10161e", 0.97), title: "Secondary sanctions · draft" });
     const lines = ["MILITARY END-USE ITEMS", "DUAL-USE COMPONENTS", "ORDINARY INDUSTRIAL SALES", "MACHINE TOOLS · GENERAL", "VEHICLE EXPORTS", "CHEMICAL INPUTS"];
     lines.forEach((l, i) => {
       const y = 230 + i * 52;
@@ -643,13 +643,13 @@ function s7(S) {
     D.label(ctx, "NARROWED", 360, 560, { color: GER, alpha: prog(t, tSanc + 5, 0.5), size: 12, align: "center" });
     // write-off postponed
     const wa = prog(t, tWrite, 0.6);
-    D.panel(ctx, 660, 160, 480, 420, { alpha: wa, fill: rgba("#10161e", 0.97), title: "Chemical capacity · write-off" });
+    D.panel(ctx, 660, 160, 480, 420, { alpha: Math.max(wa, prog(t, 0.6, 0.6)), fill: rgba("#10161e", 0.97), title: "Chemical capacity · write-off" });
     for (let i = 0; i < 6; i++) D.stroke(ctx, [[690, 240 + i * 46], [690 + (i % 3 === 2 ? 240 : 380), 240 + i * 46]], { color: C.border, width: 3, alpha: wa });
     D.stamp(ctx, "POSTPONED", 900, 420, t, tWrite + 1.5, { color: C.amber, size: 34, angle: -0.08 });
     K.chip(ctx, "WHICH MOLECULE COULD RETURN QUIETLY?", 900, 540, { color: C.mid, align: "center", alpha: prog(t, tWrite + 3, 0.5), size: 12 });
     // finance ministry chart
     const fa = prog(t, tFin, 0.6);
-    D.panel(ctx, 1200, 160, 600, 420, { alpha: fa, title: "Finance ministry", fill: rgba("#0b0e13", 0.94) });
+    D.panel(ctx, 1200, 160, 600, 420, { alpha: Math.max(fa, prog(t, 0.9, 0.6)), title: "Finance ministry", fill: rgba("#0b0e13", 0.94) });
     const fp = prog(t, tFin + 0.5, 4);
     const gx = 1240;
     const gy = 230;
@@ -766,7 +766,7 @@ function s8(S) {
     const p = prog(t, tPV + 0.3, 3);
     D.series(ctx, gx, gy, gw, gh, prot, { color: C.cyan, width: 3, p, alpha: pa, glow: 6 });
     D.series(ctx, gx, gy, gw, gh, lost, { color: GER, width: 3, p, alpha: pa, glow: 6 });
-    D.label(ctx, "PV · LOST CHEMICAL, GLASS, METAL, MACHINE-TOOL CAPACITY", gx + 10, gy + gh - 20, { color: GER, alpha: pa, size: 11 });
+    D.label(ctx, "PV · LOST CHEMICAL, GLASS, METAL, MACHINE-TOOL CAPACITY", gx + 10, gy + gh + 26, { color: GER, alpha: pa, size: 11 });
     D.label(ctx, "PV · PROTECTION IN THE AMERICAN UMBRELLA", gx + 10, gy + gh - 0.55 * gh - 14, { color: C.cyan, alpha: pa, size: 11 });
     const xc = gx + 0.62 * gw;
     D.stroke(ctx, [[xc, 340], [xc, gy + gh]], { color: C.amber, width: 1.5, dash: [5, 5], alpha: prog(t, tPV + 3, 0.8) });
@@ -913,7 +913,7 @@ function s10(S) {
     const gy = 200;
     const gw = 1000;
     const gh = 420;
-    const ca = prog(t, tCurve - 0.6, 0.6);
+    const ca = prog(t, 0.4, 0.6);
     D.axes(ctx, gx, gy, gw, gh, { alpha: ca, ticks: 3 });
     D.label(ctx, "SUPPLY COST CURVE INTO CENTRAL EUROPE · ILLUSTRATIVE", gx, gy - 20, { color: C.mid, alpha: ca, size: 12 });
     D.label(ctx, "VOLUME →", gx + gw, gy + gh + 28, { color: C.dim, alpha: ca, size: 11, align: "right" });
@@ -981,7 +981,8 @@ function s11(S) {
     D.bg(ctx, { gridAlpha: 0.2 });
     // dual loss
     const la = prog(t, tLose, 0.6);
-    D.panel(ctx, 120, 160, 520, 380, { alpha: la, title: "Lose China + pay the energy premium", fill: rgba("#0b0e13", 0.92), color: C.crimson, titleColor: C.crimson });
+    D.text(ctx, "CHINA · THE EXPORT HINGE", 960, 380, { size: 26, weight: 600, tracking: 6, align: "center", alpha: fade(t, 0.5, 0.6, tMil - 1.6, 0.6) });
+    D.panel(ctx, 120, 160, 520, 380, { alpha: Math.max(la, prog(t, 0.3, 0.6)), title: "Lose China + pay the energy premium", fill: rgba("#0b0e13", 0.92), color: C.crimson, titleColor: C.crimson });
     for (const [x, lab, k] of [[260, "CHINESE MARKET", 0], [500, "U.S. ENERGY PREMIUM", 1]]) {
       const p = prog(t, tLose + 0.4 + k * 0.6, 1, ease.out);
       D.arrow(ctx, [[x, 250], [x, 250 + 180 * p]], { color: C.crimson, width: 10, head: 26, alpha: la });
@@ -990,7 +991,7 @@ function s11(S) {
     D.text(ctx, "LOSES TWICE", 380, 525, { size: 22, weight: 600, tracking: 6, align: "center", color: C.crimson, alpha: prog(t, tLose + 2, 0.5) });
     // keep China: a narrow disappointment
     const ka = prog(t, tKeep, 0.6);
-    D.panel(ctx, 1280, 160, 520, 380, { alpha: ka, title: "Keep the Chinese market", fill: rgba("#0b0e13", 0.92), color: GER, titleColor: GER });
+    D.panel(ctx, 1280, 160, 520, 380, { alpha: Math.max(ka, prog(t, 0.6, 0.6)), title: "Keep the Chinese market", fill: rgba("#0b0e13", 0.92), color: GER, titleColor: GER });
     D.text(ctx, "DISAPPOINT WASHINGTON", 1310, 300, { size: 24, weight: 600, tracking: 3, alpha: ka });
     D.text(ctx, "ON THE MARGIN OF TECHNOLOGY", 1310, 340, { kind: "mono", size: 13, color: C.mid, alpha: ka });
     D.text(ctx, "AND INVESTMENT CONTROLS", 1310, 362, { kind: "mono", size: 13, color: C.mid, alpha: ka });
@@ -1131,5 +1132,6 @@ export default {
   title: "The German Pivot",
   subtitle: "The day the eurozone chose industrial survival",
   short: "The German Pivot",
+  titles: ["Two prices", "The cheap molecule", "The cap", "Stabilizer, relabelled vice", "The dearer substitute", "Three terms", "Documents, not speeches", "The unannounced crossing", "The eurozone multiplier", "The molecule, without romance", "The export hinge", "A European coat"],
   scenes: [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12],
 };

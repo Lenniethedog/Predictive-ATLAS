@@ -389,7 +389,7 @@ function s5(S) {
     const x1 = 860;
     const top = 300;
     const unit = 46; // px per mb/d
-    const sa = prog(t, tSrc, 0.6);
+    const sa = Math.max(0.35 * prog(t, 0.6, 0.8), prog(t, tSrc, 0.6));
     ctx.save();
     ctx.globalAlpha = sa;
     ctx.fillStyle = C.ice;
@@ -404,7 +404,8 @@ function s5(S) {
     D.text(ctx, "6.0", x1 + 20, top - 20 + 3 * unit, { kind: "mono", size: 30, weight: 600, color: C.crimson, alpha: rp1 });
     D.text(ctx, "SOUTHERN STRAIT", x1 + 20, top - 20 + 3 * unit + 26, { kind: "mono", size: 12, color: C.crimson, alpha: rp1 });
     D.text(ctx, "5.0", x1 + 20, top + 60 + 8.5 * unit, { kind: "mono", size: 30, weight: 600, color: C.amber, alpha: rp2 });
-    D.text(ctx, "PACIFIC OR LAND · UNTOUCHED BY A MALACCA-ONLY STOP", x1 + 20, top + 60 + 8.5 * unit + 26, { kind: "mono", size: 12, color: C.amber, alpha: rp2 });
+    D.text(ctx, "PACIFIC OR LAND", x1 + 20, top + 60 + 8.5 * unit + 26, { kind: "mono", size: 12, color: C.amber, alpha: rp2 });
+    D.text(ctx, "UNTOUCHED BY A MALACCA-ONLY STOP", x1 + 20, top + 60 + 8.5 * unit + 48, { kind: "mono", size: 12, color: C.amber, alpha: rp2 * 0.8 });
     D.label(ctx, "THREE PIPES", (x0 + x1) / 2, top - 60, { align: "center", color: C.mid, alpha: prog(t, tSplit, 0.6), size: 13 });
     // stock dial
     const da = prog(t, tDial, 0.8);
@@ -789,8 +790,10 @@ function s10(S) {
       const b = clamp(m - 2);
       D.stroke(ctx, openB.map(([mm, v]) => [X(mm), Y(v)]), { color: C.amber, width: 3, glow: 10, to: b });
       D.stroke(ctx, closedB.map(([mm, v]) => [X(mm), Y(v)]), { color: C.crimson, width: 3, glow: 10, to: b * prog(t, tClosed, 0.5) });
-      D.label(ctx, "PACIFIC OPEN · INJURED, FUNCTIONING", X(3) + 14, Y(518) + 4, { color: C.amber, alpha: b, size: 12 });
-      D.label(ctx, "PACIFIC CLOSED · INDUSTRIAL CORE CONTRACTS", X(3) + 14, Y(330) - 14, { color: C.crimson, alpha: prog(t, tClosed + 1, 0.6), size: 12 });
+      D.label(ctx, "PACIFIC OPEN", X(3) + 14, Y(518) - 6, { color: C.amber, alpha: b, size: 12 });
+      D.label(ctx, "INJURED, FUNCTIONING", X(3) + 14, Y(518) + 14, { color: C.amber, alpha: b, size: 12 });
+      D.label(ctx, "PACIFIC CLOSED", X(3) + 14, Y(330) - 22, { color: C.crimson, alpha: prog(t, tClosed + 1, 0.6), size: 12 });
+      D.label(ctx, "INDUSTRIAL CORE CONTRACTS", X(3) + 14, Y(330) - 2, { color: C.crimson, alpha: prog(t, tClosed + 1, 0.6), size: 12 });
     }
     // event annotations
     const ev = [
@@ -801,11 +804,18 @@ function s10(S) {
       [1.65, "PIPELINES FORCED UP", tPipe, 2],
       [1.85, "SOUTH-COAST FACTORIES IDLE", tFac, 3],
     ];
+    // stock value along the base path at month mm (for leader lines)
+    const stockAt = (mm) => {
+      for (let k = 1; k < base.length; k++) if (mm <= base[k][0]) return lerp(base[k - 1][1], base[k][1], (mm - base[k - 1][0]) / (base[k][0] - base[k - 1][0]));
+      return base[base.length - 1][1];
+    };
     ev.forEach(([mm, lab, t0, row]) => {
       const a = prog(t, t0, 0.5);
       const x = X(mm);
-      D.stroke(ctx, [[x, gy + gh - 4], [x, gy + 40 + row * 30]], { color: C.mid, width: 1, alpha: a * 0.5 });
-      D.label(ctx, lab, x + 6, gy + 40 + row * 30, { color: C.ice, alpha: a, size: 11 });
+      const ly = gy + 250 + row * 34;
+      D.stroke(ctx, [[x, Y(stockAt(mm)) + 8], [x, ly - 16]], { color: C.mid, width: 1, alpha: a * 0.6, dash: [2, 3] });
+      D.node(ctx, x, Y(stockAt(mm)), 3, C.ice, { alpha: a, glow: 6, ring: false, core: null });
+      D.label(ctx, lab, x - 4, ly, { color: C.ice, alpha: a, size: 11 });
     });
     // insurance spike sparkline
     const ia = prog(t, tIns, 0.6);
@@ -1002,6 +1012,12 @@ function s13(S) {
   };
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
+    const sk = prog(t, 0.3, 0.8) * (1 - prog(t, tL, 0.5));
+    if (sk > 0) {
+      D.panel(ctx, 90, 180, 820, 720, { alpha: sk, title: "Number one · a strait", fill: rgba("#0b0e13", 0.6) });
+      D.panel(ctx, 1010, 180, 820, 720, { alpha: sk, title: "Number two · a siege", fill: rgba("#0b0e13", 0.6) });
+      D.text(ctx, "TWO NUMBERS · TWO MAPS", 960, 560, { size: 30, weight: 600, tracking: 10, align: "center", alpha: sk });
+    }
     panel(ctx, L, 90, "Malacca-only closure", ["MONTHS", "STOCKS DRAW · HULLS DIVERT · PIPELINES ≈ 1.5 MB/D", "PACIFIC CRUDE STILL FLOWS"], prog(t, tL, 0.8), t, false);
     panel(ctx, R, 1010, "Southern + Pacific siege", ["REGIONAL WAR", "A SHARP INDUSTRIAL CONTRACTION", "NOT A STRAIT · A WAR"], prog(t, tR, 0.8), t, true);
     // Beijing's gambit
@@ -1023,5 +1039,6 @@ export default {
   title: "The Malacca Siege",
   subtitle: "The math behind China's chokepoint gambit",
   short: "The Malacca Siege",
+  titles: ["An import equation", "The funnel", "Valve hands", "The same ships", "The arithmetic", "The surviving five million", "Every southern gate", "Demand destruction", "Overland and Arctic", "One quarter forward", "The third month", "The second buyer", "Two numbers, two maps"],
   scenes: [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13],
 };

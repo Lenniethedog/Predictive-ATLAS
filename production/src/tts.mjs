@@ -135,6 +135,49 @@ function writeWav(file, buf, sr = SR) {
   fs.writeFileSync(file, Buffer.concat([h, data]));
 }
 
+// Small-room impulse response: a few early reflections and a short decaying tail.
+function writeRoomIR(file) {
+  const sr = 48000;
+  const len = Math.round(sr * 0.42);
+  const L = new Float32Array(len);
+  const R = new Float32Array(len);
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647) * 2 - 1;
+  for (const [ms, g] of [[7, 0.5], [11, 0.38], [17, 0.3], [23, 0.22], [31, 0.16]]) {
+    L[Math.round((ms * sr) / 1000)] += g;
+    R[Math.round(((ms + 1.3) * sr) / 1000)] += g * 0.9;
+  }
+  let lpL = 0;
+  let lpR = 0;
+  for (let i = Math.round(0.012 * sr); i < len; i++) {
+    const env = Math.exp(-i / (sr * 0.075));
+    lpL = lpL * 0.55 + rnd() * 0.45;
+    lpR = lpR * 0.55 + rnd() * 0.45;
+    L[i] += lpL * env * 0.35;
+    R[i] += lpR * env * 0.35;
+  }
+  const data = Buffer.alloc(len * 4);
+  for (let i = 0; i < len; i++) {
+    data.writeInt16LE(Math.round(Math.max(-1, Math.min(1, L[i])) * 32767), i * 4);
+    data.writeInt16LE(Math.round(Math.max(-1, Math.min(1, R[i])) * 32767), i * 4 + 2);
+  }
+  const h = Buffer.alloc(44);
+  h.write("RIFF", 0);
+  h.writeUInt32LE(36 + data.length, 4);
+  h.write("WAVE", 8);
+  h.write("fmt ", 12);
+  h.writeUInt32LE(16, 16);
+  h.writeUInt16LE(1, 20);
+  h.writeUInt16LE(2, 22);
+  h.writeUInt32LE(sr, 24);
+  h.writeUInt32LE(sr * 4, 28);
+  h.writeUInt16LE(4, 32);
+  h.writeUInt16LE(16, 34);
+  h.write("data", 36);
+  h.writeUInt32LE(data.length, 40);
+  fs.writeFileSync(file, Buffer.concat([h, data]));
+}
+
 function ffmpeg(args) {
   const r = spawnSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", ...args], { stdio: "inherit" });
   if (r.status !== 0) throw new Error(`ffmpeg failed: ${args.join(" ")}`);
@@ -176,6 +219,174 @@ async function synthSentence(text, voice, speed) {
   const a = await synthSentence(text.slice(0, at + 1), voice, speed);
   const b = await synthSentence(text.slice(at + 2), voice, speed);
   return concat([a, silence(TIMELINE.commaSplitPause), b]);
+}
+
+// ---------------------------------------------------------------- phrasing
+// Sentences are synthesized in small groups so Kokoro carries intonation across the
+// sentence break (one-sentence-at-a-time reads like a list). Short punch lines
+// ("It breaks.") are isolated and given a beat of air either side.
+const words = (s) => s.split(/\s+/).length;
+const isPunch = (s) => words(s) <= 5;
+
+async function buildChunks(sentences) {
+  const ph = await Promise.all(sentences.map((s) => toPhonemes(s)));
+  const chunks = [];
+  let cur = null;
+  sentences.forEach((s, i) => {
+    const last = cur && sentences[cur.idx[cur.idx.length - 1]];
+    const fits = cur && cur.len + ph[i].length + 1 <= 360 && cur.idx.length < 3;
+    if (!cur || !fits || isPunch(s) || isPunch(last) || last.endsWith(":")) {
+      cur = { idx: [], len: 0 };
+      chunks.push(cur);
+    }
+    cur.idx.push(i);
+    cur.len += ph[i].length + 1;
+  });
+  return chunks.map((c) => ({ idx: c.idx, ph: c.idx.map((i) => ph[i]) }));
+}
+
+// Find the k-1 sentence breaks inside a multi-sentence chunk from its silences.
+function alignChunk(buf, phs) {
+  const k = phs.length;
+  const dur = buf.length / SR;
+  if (k === 1) return [[0, dur]];
+  const hop = Math.round(SR * 0.01);
+  const rms = [];
+  for (let i = 0; i + hop <= buf.length; i += hop) {
+    let e = 0;
+    for (let j = i; j < i + hop; j++) e += buf[j] * buf[j];
+    rms.push(Math.sqrt(e / hop));
+  }
+  const peak = Math.max(...rms);
+  const thr = Math.max(0.004, peak * 0.035);
+  const runs = [];
+  let st = -1;
+  rms.forEach((v, i) => {
+    if (v < thr && st < 0) st = i;
+    if ((v >= thr || i === rms.length - 1) && st >= 0) {
+      if (i - st >= 9) runs.push({ a: st * 0.01, b: i * 0.01 });
+      st = -1;
+    }
+  });
+  const total = phs.reduce((a, p) => a + p.length, 0);
+  let acc = 0;
+  let prev = 0;
+  const cuts = [];
+  for (let j = 0; j < k - 1; j++) {
+    acc += phs[j].length;
+    const expect = (dur * acc) / total;
+    let best = null;
+    for (const r of runs) {
+      const c = (r.a + r.b) / 2;
+      if (r.a <= prev + 0.3) continue;
+      const score = (r.b - r.a) * 2.5 - Math.abs(c - expect);
+      if (Math.abs(c - expect) < Math.max(1.2, dur * 0.22) && (!best || score > best.score)) best = { ...r, score };
+    }
+    const cut = best ? [best.a + 0.03, best.b - 0.03] : [expect, expect];
+    cuts.push(cut);
+    prev = cut[1];
+  }
+  const spans = [];
+  let s0 = 0;
+  for (const [a, b] of cuts) {
+    spans.push([s0, a]);
+    s0 = b;
+  }
+  spans.push([s0, dur]);
+  alignChunk.stats.total += k - 1;
+  alignChunk.stats.fallback += cuts.filter(([a, b]) => a === b).length;
+  return spans;
+}
+alignChunk.stats = { total: 0, fallback: 0 };
+
+// Short, declarative lines are delivered more slowly, as a narrator would.
+function phraseSpeed(base, nWords) {
+  if (nWords <= 6) return +(base * 0.9).toFixed(3);
+  if (nWords <= 12) return +(base * 0.94).toFixed(3);
+  if (nWords <= 20) return +(base * 0.97).toFixed(3);
+  return base;
+}
+
+async function synthChunk(sentences, chunk, voice, baseSpeed) {
+  // a reader's tempo drifts a little phrase to phrase; ±1.5%, seeded by the text
+  const h = crypto.createHash("md5").update(chunk.idx.map((i) => sentences[i]).join(" ")).digest()[0] / 255;
+  const speed = +(phraseSpeed(baseSpeed, chunk.idx.reduce((a, i) => a + words(sentences[i]), 0)) * (1 + (h - 0.5) * 0.03)).toFixed(3);
+  if (chunk.idx.length === 1) {
+    const buf = await synthSentence(sentences[chunk.idx[0]], voice, speed);
+    return { buf, spans: [[0, buf.length / SR]] };
+  }
+  const buf = fadeEdges(await synthPhonemes(chunk.ph.join(" "), voice, speed));
+  return { buf, spans: alignChunk(buf, chunk.ph) };
+}
+
+// Pause between chunks: varied, never metronomic. Seeded so re-runs are identical.
+function pauseAfter(prevText, nextText, seed) {
+  const r = (Math.sin(seed * 12.9898) * 43758.5453) % 1;
+  const jitter = (Math.abs(r) - 0.5) * 0.12;
+  if (prevText.endsWith(":")) return 0.32 + jitter * 0.5;
+  if (isPunch(nextText)) return 0.72 + jitter;
+  if (isPunch(prevText)) return 0.6 + jitter;
+  if (words(prevText) > 28) return 0.52 + jitter;
+  return 0.44 + jitter;
+}
+
+// ---------------------------------------------------------------- breath + room tone
+// RBJ biquad, applied in place.
+function biquad(buf, type, f0, q) {
+  const w = (2 * Math.PI * f0) / SR;
+  const al = Math.sin(w) / (2 * q);
+  const cw = Math.cos(w);
+  let b0, b1, b2;
+  if (type === "band") [b0, b1, b2] = [al, 0, -al];
+  else [b0, b1, b2] = [(1 - cw) / 2, 1 - cw, (1 - cw) / 2];
+  const a0 = 1 + al;
+  const a1 = -2 * cw;
+  const a2 = 1 - al;
+  let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+  for (let i = 0; i < buf.length; i++) {
+    const x = buf[i];
+    const y = (b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2) / a0;
+    x2 = x1; x1 = x; y2 = y1; y1 = y;
+    buf[i] = y;
+  }
+  return buf;
+}
+
+// A soft mouth inhale: pink noise through two breathy formants, swelling then cut.
+function breath(dur, rms, seed) {
+  const n = Math.round(dur * SR);
+  let a = seed >>> 0;
+  const rnd = () => ((a = (a * 1664525 + 1013904223) >>> 0) / 4294967296) * 2 - 1;
+  let b0 = 0, b1 = 0, b2 = 0;
+  const pink = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const w = rnd();
+    b0 = 0.99765 * b0 + w * 0.099046;
+    b1 = 0.963 * b1 + w * 0.2965164;
+    b2 = 0.57 * b2 + w * 1.0526913;
+    pink[i] = b0 + b1 + b2 + w * 0.1848;
+  }
+  const f1 = biquad(pink.slice(), "band", 1250 + (seed % 7) * 40, 1.1);
+  const f2 = biquad(pink.slice(), "band", 2700 + (seed % 5) * 60, 1.8);
+  const out = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const u = i / n;
+    const env = u < 0.62 ? Math.pow(Math.sin((Math.PI / 2) * (u / 0.62)), 1.6) : Math.pow(Math.cos((Math.PI / 2) * ((u - 0.62) / 0.38)), 2);
+    out[i] = (f1[i] + 0.55 * f2[i]) * env * (1 + 0.12 * Math.sin((2 * Math.PI * 6.5 * i) / SR));
+  }
+  biquad(out, "low", 5200, 0.7);
+  let e = 0;
+  for (let i = 0; i < n; i++) e += out[i] * out[i];
+  const g = rms / Math.sqrt(e / n || 1e-12);
+  for (let i = 0; i < n; i++) out[i] *= g;
+  return out;
+}
+
+function rmsOf(bufs) {
+  let e = 0;
+  let k = 0;
+  for (const b of bufs) for (let i = 0; i < b.length; i++) if (Math.abs(b[i]) > 0.01) { e += b[i] * b[i]; k++; }
+  return Math.sqrt(e / (k || 1));
 }
 
 // ---------------------------------------------------------------- subtitles
@@ -220,8 +431,11 @@ function wrap2(text) {
 
 // ---------------------------------------------------------------- episode
 async function buildEpisode(n, voice, speed) {
+  alignChunk.stats = { total: 0, fallback: 0 };
   const paras = readParagraphs(n);
   const chunks = [silence(TIMELINE.titleCard)];
+  const voiced = [];
+  const breaths = []; // { at: speech onset (s), dur, rel: dB below speech RMS }
   let t = TIMELINE.titleCard;
   const timing = { episode: n, voice, speed, titleCard: TIMELINE.titleCard, paragraphs: [] };
   const t0 = Date.now();
@@ -229,37 +443,78 @@ async function buildEpisode(n, voice, speed) {
   for (let p = 0; p < paras.length; p++) {
     const sentences = splitSentences(paras[p]);
     const para = { index: p, start: t, sentences: [] };
-    for (let s = 0; s < sentences.length; s++) {
-      const buf = await synthSentence(sentences[s], voice, speed);
-      para.sentences.push({ text: sentences[s], start: t, end: t + buf.length / SR });
+    const groups = await buildChunks(sentences);
+    for (let g = 0; g < groups.length; g++) {
+      const { buf, spans } = await synthChunk(sentences, groups[g], voice, speed);
+      voiced.push(buf);
+      const nWords = groups[g].idx.reduce((a, i) => a + words(sentences[i]), 0);
+      const lastPause = g === 0 ? Infinity : pauseAfter(sentences[groups[g - 1].idx[groups[g - 1].idx.length - 1]], sentences[groups[g].idx[0]], n * 1000 + p * 50 + g - 1);
+      const coin = crypto.createHash("md5").update(`${n}|${p}|${g}`).digest()[1] / 255;
+      if (g === 0) breaths.push({ at: t, dur: 0.42 + coin * 0.12, rel: -28 });
+      else if (lastPause >= 0.58 && nWords >= 10 && coin < 0.55) breaths.push({ at: t, dur: 0.26 + coin * 0.08, rel: -32 });
+      groups[g].idx.forEach((si, j) => para.sentences.push({ text: sentences[si], start: t + spans[j][0], end: t + spans[j][1] }));
       chunks.push(buf);
       t += buf.length / SR;
-      if (s < sentences.length - 1) {
-        const pause = sentences[s].endsWith(":") ? TIMELINE.colonPause : TIMELINE.sentencePause;
+      if (g < groups.length - 1) {
+        const last = sentences[groups[g].idx[groups[g].idx.length - 1]];
+        const next = sentences[groups[g + 1].idx[0]];
+        const pause = pauseAfter(last, next, n * 1000 + p * 50 + g);
         chunks.push(silence(pause));
         t += pause;
       }
     }
     para.end = t;
     timing.paragraphs.push(para);
-    const gap = p < paras.length - 1 ? TIMELINE.paragraphGap : TIMELINE.tail;
+    // paragraph breath: a little longer after long paragraphs, never identical
+    const r = Math.abs((Math.sin((n * 100 + p) * 78.233) * 43758.5453) % 1);
+    const gap = p < paras.length - 1 ? TIMELINE.paragraphGap + (r - 0.5) * 0.4 + Math.min(0.3, (para.end - para.start) / 200) : TIMELINE.tail;
     chunks.push(silence(gap));
     t += gap;
     process.stdout.write(`  ep${n} ¶${p + 1}/${paras.length} ${para.end.toFixed(1)}s\n`);
   }
   timing.total = t;
 
-  const words = paras.join(" ").split(/\s+/).length;
+  const wordCount = paras.join(" ").split(/\s+/).length;
   const spoken = timing.paragraphs.reduce((a, p) => a + (p.end - p.start), 0);
-  timing.wpm = Math.round((words / spoken) * 60);
+  timing.wpm = Math.round((wordCount / spoken) * 60);
 
   for (const d of ["audio", "timing", "subtitles"]) fs.mkdirSync(path.join(OUT, d), { recursive: true });
   const raw = path.join(OUT, "audio", `episode-0${n}-raw.wav`);
   const wav = path.join(OUT, "audio", `episode-0${n}-narration.wav`);
   const mp3 = path.join(OUT, "audio", `episode-0${n}-narration.mp3`);
-  writeWav(raw, concat(chunks));
-  // Light voice chain: rumble cut, gentle de-ess-ish shelf, two-pass-free loudnorm to -16 LUFS.
-  ffmpeg(["-i", raw, "-af", "highpass=f=70,equalizer=f=6500:t=q:w=1.2:g=-2,loudnorm=I=-16:TP=-1.5:LRA=7", "-ar", "48000", "-ac", "1", wav]);
+  const all = concat(chunks);
+  // breaths end ~70 ms before the voice comes in, as a reader's would
+  const sRMS = rmsOf(voiced);
+  breaths.forEach((b, k) => {
+    const buf = breath(b.dur, sRMS * Math.pow(10, b.rel / 20), 1000 * n + k * 17 + 3);
+    const i0 = Math.max(0, Math.round((b.at - 0.07 - b.dur) * SR));
+    for (let i = 0; i < buf.length && i0 + i < all.length; i++) all[i0 + i] += buf[i];
+  });
+  // room tone: a faint, steady floor so pauses never drop to digital silence
+  {
+    let a = 77 + n;
+    const rnd = () => ((a = (a * 1664525 + 1013904223) >>> 0) / 4294967296) * 2 - 1;
+    let lp = 0;
+    const lvl = sRMS * Math.pow(10, -60 / 20);
+    for (let i = 0; i < all.length; i++) {
+      lp = lp * 0.96 + rnd() * 0.04;
+      all[i] += lp * lvl * 9;
+    }
+  }
+  timing.breaths = breaths.length;
+  writeWav(raw, all);
+  const ir = path.join(OUT, "audio", "room-ir.wav");
+  if (!fs.existsSync(ir)) writeRoomIR(ir);
+  // Voice chain: rumble cut, a touch of chest, softened sibilance, gentle compression,
+  // a small dry room (so silences sound like a booth, not a void), loudness to -16 LUFS.
+  const chain =
+    "[0:a]aresample=48000,highpass=f=65,bass=g=1.5:f=150:w=0.7," +
+    "equalizer=f=2800:t=q:w=1:g=0.8,equalizer=f=6800:t=q:w=1.2:g=-2.5," +
+    "acompressor=threshold=0.09:ratio=2.4:attack=12:release=220:makeup=1.6," +
+    "pan=stereo|c0=c0|c1=c0,asplit=2[dry][src];" +
+    "[src][1:a]afir=dry=10:wet=10[wet];" +
+    "[dry][wet]amix=inputs=2:weights=1 0.16:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=8[out]";
+  ffmpeg(["-i", raw, "-i", ir, "-filter_complex", chain, "-map", "[out]", "-ar", "48000", "-ac", "2", wav]);
   ffmpeg(["-i", wav, "-codec:a", "libmp3lame", "-b:a", "192k", mp3]);
   fs.rmSync(raw);
   fs.writeFileSync(path.join(OUT, "timing", `episode-0${n}.json`), JSON.stringify(timing, null, 2));
@@ -271,7 +526,8 @@ async function buildEpisode(n, voice, speed) {
   );
 
   console.log(
-    `ep${n}: ${(t / 60).toFixed(2)} min total, ${timing.wpm} wpm spoken, synth ${((Date.now() - t0) / 1000).toFixed(0)}s`,
+    `ep${n}: ${(t / 60).toFixed(2)} min total, ${timing.wpm} wpm spoken, synth ${((Date.now() - t0) / 1000).toFixed(0)}s, ` +
+      `breaks aligned ${alignChunk.stats.total - alignChunk.stats.fallback}/${alignChunk.stats.total}`,
   );
 }
 

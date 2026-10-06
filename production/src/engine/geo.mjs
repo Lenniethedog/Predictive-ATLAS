@@ -86,13 +86,19 @@ export class MapView {
       for (let i = 0; i <= 8; i++) for (const x of [x0, x1]) pts.push(projection([x, lerp(y0, y1, i / 8)]));
       const xs = pts.filter(Boolean).map((p) => p[0]);
       const ys = pts.filter(Boolean).map((p) => p[1]);
-      projection.clipExtent([[Math.min(...xs) - 40, Math.min(...ys) - 40], [Math.max(...xs) + 40, Math.max(...ys) + 40]]);
+      // generous margin so zoomed-out or panning cameras never reveal the clip edge
+      const mx = Math.max(500, (Math.max(...xs) - Math.min(...xs)) * 0.6);
+      const my = Math.max(400, (Math.max(...ys) - Math.min(...ys)) * 0.6);
+      projection.clipExtent([[Math.min(...xs) - mx, Math.min(...ys) - my], [Math.max(...xs) + mx, Math.max(...ys) + my]]);
     }
     const gp = geoPath(projection);
     const keep = (f) => {
       if (!bbox) return true;
       const [[a, b], [c, d]] = geoBounds(f);
-      const [[x0, y0], [x1, y1]] = bbox;
+      const [[bx0, by0], [bx1, by1]] = bbox;
+      const padX = (bx1 - bx0) * 0.6;
+      const padY = (by1 - by0) * 0.6;
+      const [[x0, y0], [x1, y1]] = [[bx0 - padX, Math.max(-90, by0 - padY)], [bx1 + padX, Math.min(90, by1 + padY)]];
       if (d < y0 || b > y1) return false;
       // antimeridian-crossing geometry spans [a, 180] and [-180, c]
       const spans = c < a ? [[a, 180], [-180, c]] : [[a, c]];

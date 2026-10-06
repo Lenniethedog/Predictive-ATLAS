@@ -295,9 +295,10 @@ function s4(S) {
       const a = prog(t, tStack + i * (S.e[1] - S.b[1]) * 0.25, 0.5);
       K.boxNode(ctx, 360, 260 + i * 100, 480, 76, n, { color: C.cyan, alpha: a, fill: 0.12, titleSize: 17 });
     });
-    D.label(ctx, "POLICY STACK", 120, 200, { color: C.cyan, alpha: prog(t, tStack, 0.5), size: 13, weight: 600 });
+    D.label(ctx, "POLICY STACK", 120, 200, { color: C.cyan, alpha: prog(t, 0.3, 0.5), size: 13, weight: 600 });
+    for (let i = 0; i < 3; i++) D.panel(ctx, 120, 222 + i * 100, 480, 76, { alpha: 0.35 * prog(t, 0.4 + i * 0.2, 0.5) * (1 - prog(t, tStack + i * (S.e[1] - S.b[1]) * 0.25, 0.5)), fill: null, color: C.cyanDeep });
     // ceiling over the Chinese technology trajectory
-    const ca = prog(t, tStack + 1, 0.6);
+    const ca = prog(t, 0.5, 0.6);
     const gx = 760;
     const gy = 200;
     const gw = 520;
@@ -308,7 +309,7 @@ function s4(S) {
       const u = i / 30;
       return [u, Math.min(0.62 + 0.01 * Math.sin(u * 30), 0.1 + 0.9 * u)];
     });
-    D.series(ctx, gx, gy, gw, gh, traj, { color: C.crimson, width: 3, p: prog(t, tStack + 1.2, 4), alpha: ca, glow: 8 });
+    D.series(ctx, gx, gy, gw, gh, traj, { color: C.crimson, width: 3, p: prog(t, 0.8, Math.max(4, tCeil - 0.5), ease.linear), alpha: ca, glow: 8 });
     const cl = prog(t, tCeil, 0.8);
     D.stroke(ctx, [[gx, gy + gh - 0.64 * gh], [gx + gw, gy + gh - 0.64 * gh]], { color: C.cyan, width: 4, to: cl, glow: 14 });
     D.label(ctx, "CEILING", gx + gw, gy + gh - 0.64 * gh - 12, { align: "right", color: C.cyan, alpha: cl, size: 12, weight: 600 });
@@ -358,8 +359,9 @@ function s5(S) {
     D.label(ctx, "JIANG · FOUR OUTCOMES · THE FORTRESS IS THE ORDERING AMONG THEM", 960, 140, { align: "center", color: C.green, alpha: prog(t, 0.3, 0.6), size: 13 });
     cells.forEach((c, i) => {
       const a = prog(t, c.t0, 0.6);
-      D.panel(ctx, c.x, c.y, 800, 380, { alpha: a, color: c.col, fill: rgba(c.col, i === 1 ? 0.1 : 0.05), lw: 1.6 });
-      D.text(ctx, c.n, c.x + 30, c.y + 80, { size: 64, weight: 300, color: c.col, alpha: a });
+      const fr = Math.max(a, 0.5 * prog(t, 0.4 + i * 0.25, 0.6));
+      D.panel(ctx, c.x, c.y, 800, 380, { alpha: fr, color: a > 0.5 ? c.col : C.border, fill: rgba(c.col, (i === 1 ? 0.1 : 0.05) * a), lw: 1.6 });
+      D.text(ctx, c.n, c.x + 30, c.y + 80, { size: 64, weight: 300, color: c.col, alpha: fr });
       D.text(ctx, c.title, c.x + 100, c.y + 66, { size: 26, weight: 600, tracking: 3, alpha: a, maxWidth: 660 });
       c.sub.forEach((l, k) => D.text(ctx, l, c.x + 100, c.y + 110 + k * 26, { kind: "mono", size: 13, color: C.mid, alpha: prog(t, c.t0 + 1 + k * 1.2, 0.5) }));
       const tagT = i === 0 ? S.at(3) : i === 1 ? S.at(6) : i === 2 ? S.at(10) : S.at(12);
@@ -402,7 +404,7 @@ function s6(S) {
     D.bg(ctx, { gridAlpha: 0.2 });
     // western substitutes vs the island
     const wa = prog(t, tWest - 0.5, 0.6);
-    D.panel(ctx, 120, 150, 820, 430, { alpha: wa, title: "Allied substitutes · fraction of future demand", fill: rgba("#0b0e13", 0.93) });
+    D.panel(ctx, 120, 150, 820, 430, { alpha: Math.max(wa, prog(t, 0.3, 0.6)), title: "Allied substitutes · fraction of future demand", fill: rgba("#0b0e13", 0.93) });
     let acc = 0;
     subs.forEach(([n, v], i) => {
       const a = prog(t, tWest + i * 1.6, 0.5);
@@ -419,7 +421,7 @@ function s6(S) {
     D.label(ctx, "SUM · STILL SHORT", 150, 520, { color: C.cyan, alpha: ia, size: 11 });
     // Chinese side: trailing nodes, expiring stockpile
     const ca = prog(t, tChina, 0.6);
-    D.panel(ctx, 980, 150, 820, 430, { alpha: ca, title: "Chinese substitutes", fill: rgba("#0b0e13", 0.93), color: C.crimson, titleColor: C.crimson });
+    D.panel(ctx, 980, 150, 820, 430, { alpha: Math.max(ca, prog(t, 0.6, 0.6)), title: "Chinese substitutes", fill: rgba("#0b0e13", 0.93), color: C.crimson, titleColor: C.crimson });
     const nodes = ["FRONTIER", "", "", "TRAILING"];
     D.label(ctx, "PROCESS GENERATION →", 1010, 230, { color: C.dim, alpha: ca, size: 11 });
     for (let k = 0; k < 6; k++) {
@@ -474,8 +476,10 @@ function s7(S) {
     const root = [260, 330];
     const up = [820, 210];
     const dn = [820, 450];
-    D.node(ctx, root[0], root[1], 16, C.ice, { alpha: ta, glow: 14 });
-    D.para(ctx, "VIOLENT CHANGE OF CONTROL", root[0] - 130, root[1] + 50, 260, { size: 17, weight: 600, tracking: 2, alpha: ta, lineHeight: 1.2 });
+    const ra = prog(t, 0.4, 0.6);
+    D.text(ctx, "THE CALCULATION", 120, 220, { kind: "mono", size: 14, tracking: 3, color: C.mid, alpha: ra });
+    D.node(ctx, root[0], root[1], 16, C.ice, { alpha: ra, glow: 14, pulseT: t < tTree ? t : undefined });
+    D.para(ctx, "VIOLENT CHANGE OF CONTROL", root[0] - 130, root[1] + 50, 260, { size: 17, weight: 600, tracking: 2, alpha: ra, lineHeight: 1.2 });
     D.stroke(ctx, D.arcPts(root, up, 0.1, 30), { color: C.mid, width: 1.5, alpha: ta, to: prog(t, tTree + 0.5, 1) });
     D.stroke(ctx, D.arcPts(root, dn, -0.1, 30), { color: C.crimson, width: 7, alpha: ta, to: prog(t, tTree + 0.5, 1), glow: 10 });
     D.text(ctx, "PLANT STILL OPERATES", up[0] + 30, up[1] + 6, { size: 18, weight: 600, tracking: 2, alpha: ta, color: C.mid });
@@ -649,9 +653,10 @@ function s10(S) {
     D.label(ctx, "THE STRATEGIC MENU · COARSER THAN AN ENGINEERING CHECKLIST", 120, 150, { color: C.mid, alpha: prog(t, 0.3, 0.6), size: 13 });
     opts.forEach(([n, title, sub, who, col, t0], i) => {
       const a = prog(t, t0, 0.6);
+      const fr = Math.max(a, 0.5 * prog(t, 0.4 + i * 0.3, 0.6));
       const x = 120 + i * 570;
-      D.panel(ctx, x, 190, 540, 380, { alpha: a, color: col, fill: rgba(col, 0.05) });
-      D.text(ctx, n, x + 30, 270, { size: 54, weight: 300, color: col, alpha: a });
+      D.panel(ctx, x, 190, 540, 380, { alpha: fr, color: a > 0.5 ? col : C.border, fill: rgba(col, 0.05 * a) });
+      D.text(ctx, n, x + 30, 270, { size: 54, weight: 300, color: col, alpha: fr });
       D.para(ctx, title, x + 30, 330, 480, { size: 26, weight: 600, tracking: 2, alpha: a, lineHeight: 1.2 });
       D.para(ctx, sub, x + 30, 430, 480, { kind: "mono", size: 13, color: C.mid, alpha: a, caps: true, lineHeight: 1.5 });
       K.chip(ctx, who, x + 30, 540, { color: col, alpha: a, size: 12 });
@@ -839,5 +844,6 @@ export default {
   title: "The Semiconductor Fortress",
   subtitle: "The realist calculus of a destroyed TSMC",
   short: "The Semiconductor Fortress",
+  titles: ["The fortress", "A global machine", "Three problems, one island", "A policy, not a law", "Four outcomes", "The substitutes decide", "Buying denial", "The prepared menu", "The dangerous middle", "Three options", "The narrowing window", "The fortress redrawn"],
   scenes: [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12],
 };

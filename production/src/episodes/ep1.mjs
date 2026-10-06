@@ -761,14 +761,14 @@ function s8(S) {
     }
     D.series(ctx, gx + 30, gy + 60, 600, 140, avg, { color: C.steel, width: 2, p: gp, dash: [6, 6], glow: 0, alpha: 0.7 * ga, dot: false });
     D.series(ctx, gx + 30, gy + 60, 600, 140, marg, { color: C.cyan, width: 3, p: gp, glow: 10, alpha: ga });
-    D.label(ctx, "AVERAGE BARREL", gx + 640, gy + 92, { align: "right", color: C.steel, size: 12, alpha: ga * prog(t, tGraph + 3, 0.6) });
+    D.label(ctx, "AVERAGE BARREL", gx + 640, gy + 74, { align: "right", color: C.steel, size: 12, alpha: ga * prog(t, tGraph + 3, 0.6) });
     D.label(ctx, "MARGINAL BARREL", gx + 640, gy + 182, { align: "right", color: C.cyan, size: 12, alpha: ga * prog(t, tGraph + 5, 0.6) });
     // pegs and the second option
     const pa = prog(t, tPeg, 0.6);
     D.panel(ctx, 110, 820, 560, 180, { alpha: pa, title: "Producer currency peg" });
     K.chip(ctx, "PEG: USD", 140, 900, { color: C.cyan, alpha: pa, size: 15 });
     const oa = prog(t, tOpt, 0.6);
-    ["CNY", "GOLD", "BASKET"].forEach((s, i) => K.chip(ctx, s, 300 + i * 112, 900, { color: C.amber, alpha: oa * prog(t, tOpt + i * 0.3, 0.4), size: 15 }));
+    ["CNY", "GOLD", "BASKET"].forEach((s, i) => K.chip(ctx, s, 290 + i * 118, 900, { color: C.amber, alpha: oa * prog(t, tOpt + i * 0.3, 0.4), size: 15 }));
     D.label(ctx, "SECOND OPTION ACQUIRED", 140, 970, { color: C.amber, alpha: oa, size: 13 });
     const pol = prog(t, tPol, 0.6);
     ["SECURITY PATRONS", "ARMS SUPPLIERS", "LONG-TERM BUYERS"].forEach((s, i) => D.label(ctx, s, 700, 840 + i * 30, { color: C.mid, size: 13, alpha: pol * prog(t, tPol + i * 0.4, 0.4) }));
@@ -1108,5 +1108,6 @@ export default {
   title: "The Hegemon's Mirror",
   subtitle: "How the petrodollar trapped China—and how it breaks",
   short: "The Hegemon's Mirror",
+  titles: ["The hegemon's mirror", "1971–1975 · the invoice", "The hub circuit", "China enters the loop", "Reserve and hostage", "The freeze", "Pipes around New York", "The grip", "The marginal barrel", "Flow · stock · settlement", "One object", "The crack, and only the crack", "The refusal at the margin"],
   scenes: [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13],
 };

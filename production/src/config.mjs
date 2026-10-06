@@ -15,7 +15,7 @@ export const TIMELINE = {
   sentencePause: 0.42,
   colonPause: 0.3,
   commaSplitPause: 0.2,
-  paragraphGap: 1.6, // breath between paragraphs, where scenes hand off
+  paragraphGap: 1.5, // base breath between paragraphs (varied per paragraph), where scenes hand off
   tail: 5.0, // hold after the last line, then cut to black
 };
 

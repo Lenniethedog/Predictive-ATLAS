@@ -22,23 +22,56 @@ const GRAIN = [];
   }
 }
 
+// Vignette built per pixel with ±1.5 levels of baked noise: smooth radial falloffs in
+// dark 8-bit video otherwise show up as concentric bands.
 const VIGNETTE = (() => {
   const c = canvas(W, H);
   const x = c.getContext("2d");
-  const g = x.createRadialGradient(W / 2, H / 2, H * 0.32, W / 2, H / 2, H * 1.02);
-  g.addColorStop(0, "rgba(0,0,0,0)");
-  g.addColorStop(1, "rgba(0,0,0,0.72)");
-  x.fillStyle = g;
-  x.fillRect(0, 0, W, H);
+  const img = x.createImageData(W, H);
+  const r = rng(7);
+  const r0 = H * 0.32;
+  const r1 = H * 1.02;
+  for (let py = 0; py < H; py++) {
+    for (let px = 0; px < W; px++) {
+      const d = Math.hypot(px - W / 2, py - H / 2);
+      const u = Math.min(1, Math.max(0, (d - r0) / (r1 - r0)));
+      const a = 0.72 * u * u * (3 - 2 * u) * 255 + (r() - 0.5) * 3;
+      const k = (py * W + px) * 4;
+      img.data[k + 3] = Math.max(0, Math.min(255, Math.round(a)));
+    }
+  }
+  x.putImageData(img, 0, 0);
   return c;
+})();
+
+// Full-resolution dither (~±1 level) applied last, so dark gradients don't band.
+const DITHER = (() => {
+  const r = rng(31337);
+  return [0, 1, 2].map(() => {
+    const c = canvas(W, H);
+    const x = c.getContext("2d");
+    const img = x.createImageData(W, H);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = Math.floor(r() * 256);
+      img.data[i] = v;
+      img.data[i + 1] = v;
+      img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+    x.putImageData(img, 0, 0);
+    return c;
+  });
 })();
 
 export function finish(ctx, frame) {
   ctx.drawImage(VIGNETTE, 0, 0);
   ctx.save();
-  ctx.globalAlpha = 0.045;
+  ctx.globalAlpha = 0.055;
   ctx.globalCompositeOperation = "overlay";
   ctx.drawImage(GRAIN[frame % GRAIN.length], 0, 0, W, H);
+  ctx.globalCompositeOperation = "source-over";
+  ctx.globalAlpha = 0.009;
+  ctx.drawImage(DITHER[frame % DITHER.length], 0, 0);
   ctx.restore();
 }
 
@@ -64,13 +97,57 @@ export function glyph(ctx, x, y, r, color = C.cyan, alpha = 1) {
 }
 
 // ---------------------------------------------------------------- title card
+// Faint wireframe globe turning behind the wordmark.
+function wireGlobe(ctx, cx, cy, r, rot, alpha) {
+  if (alpha <= 0) return;
+  ctx.save();
+  ctx.globalAlpha *= alpha;
+  ctx.strokeStyle = rgba(C.cyan, 0.5);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.strokeStyle = rgba(C.cyan, 0.22);
+  for (let k = 0; k < 12; k++) {
+    const a = rot + (k * Math.PI) / 12;
+    const w = Math.abs(Math.cos(a)) * r;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, Math.max(0.5, w), r, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  for (let k = -4; k <= 4; k++) {
+    const yy = (k / 5) * r;
+    const ww = Math.sqrt(Math.max(0, r * r - yy * yy));
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + yy, ww, ww * 0.06, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 export function titleCard(ctx, t, ep) {
   ctx.fillStyle = C.bg;
   ctx.fillRect(0, 0, W, H);
+  const g = ctx.createRadialGradient(W / 2, 470, 40, W / 2, 470, 900);
+  g.addColorStop(0, "rgba(25,211,255,0.06)");
+  g.addColorStop(1, "rgba(25,211,255,0)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+  wireGlobe(ctx, W / 2, 470, 330, t * 0.35, 0.22 * prog(t, 0, 1.2, ease.out));
+
   const a1 = prog(t, 0.05, 0.7, ease.out);
-  const track = lerp(18, 24, prog(t, 0, 3, ease.out));
+  const track = lerp(16, 24, prog(t, 0, 3, ease.out));
   glyph(ctx, W / 2, 360, 22, C.cyan, a1);
   text(ctx, "PREDICTIVE ATLAS", W / 2, 470, { size: 72, weight: 600, tracking: track, align: "center", alpha: a1 });
+  // light sweep across the wordmark
+  const sw = lerp(-500, W + 500, prog(t, 0.35, 1.6, ease.inOut));
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(sw - 120, 380, 240, 120);
+  ctx.clip();
+  text(ctx, "PREDICTIVE ATLAS", W / 2, 470, { size: 72, weight: 600, tracking: track, align: "center", alpha: a1 * 0.9, color: "#ffffff", glow: 24 });
+  ctx.restore();
+
   const rw = 520 * prog(t, 0.5, 0.8, ease.out);
   ctx.fillStyle = rgba(C.cyan, 0.8);
   ctx.fillRect(W / 2 - rw / 2, 512, rw, 2);
@@ -78,15 +155,22 @@ export function titleCard(ctx, t, ep) {
   text(ctx, `EPISODE ${ep.n} OF 5`, W / 2, 566, { kind: "mono", size: 18, tracking: 6, align: "center", color: C.dim, alpha: a2 });
   text(ctx, ep.title, W / 2, 640, { size: 46, weight: 600, tracking: 7, align: "center", alpha: a2, caps: true });
   text(ctx, ep.subtitle, W / 2, 690, { size: 24, weight: 500, tracking: 5, align: "center", color: C.mid, alpha: prog(t, 1.4, 0.7, ease.out), caps: true });
+  text(ctx, "STRUCTURAL REALISM · FINANCIAL GAME THEORY · FORECASTING", W / 2, 960, { kind: "mono", size: 13, tracking: 4, align: "center", color: C.dim, alpha: prog(t, 1.8, 0.8, ease.out) });
   brackets(ctx, 56, 56, W - 112, H - 112, { color: C.faint, len: 26, alpha: a1 });
 }
 
 // ---------------------------------------------------------------- frame overlay
-export function overlay(ctx, { ep, sceneIndex, sceneCount, T, total }) {
+export function overlay(ctx, { ep, sceneIndex, sceneCount, T, total, title, since = 99 }) {
   brackets(ctx, 40, 40, W - 80, H - 80, { color: rgba(C.mid, 0.35), len: 22, lw: 1.2 });
   glyph(ctx, 82, 78, 10, C.cyan, 0.85);
   text(ctx, "PREDICTIVE ATLAS", 104, 85, { size: 18, weight: 600, tracking: 5, alpha: 0.82 });
-  text(ctx, `EP ${String(ep.n).padStart(2, "0")} · ${ep.short}`, 104, 108, { kind: "mono", size: 12, tracking: 2.5, color: C.dim, alpha: 0.9, caps: true });
+  // second line: episode + scene slug; the slug types in at the head of each scene
+  const head = `EP ${String(ep.n).padStart(2, "0")} · ${String(sceneIndex + 1).padStart(2, "0")} · `;
+  const slug = title ?? ep.short;
+  const typed = slug.slice(0, Math.floor(slug.length * clamp((since - 0.2) / 0.9)));
+  const fresh = 1 - clamp((since - 5) / 1.5);
+  const hw = text(ctx, head, 104, 108, { kind: "mono", size: 12, tracking: 2.5, color: C.dim, alpha: 0.9, caps: true });
+  text(ctx, typed, 104 + hw + 2.5, 108, { kind: "mono", size: 12, tracking: 2.5, color: fresh > 0.5 ? C.ice : C.dim, alpha: 0.9, caps: true });
   const s = `${String(sceneIndex + 1).padStart(2, "0")} / ${String(sceneCount).padStart(2, "0")}`;
   text(ctx, s, W - 70, 85, { kind: "mono", size: 14, tracking: 2, color: C.mid, align: "right", alpha: 0.8 });
   const pw = 150;

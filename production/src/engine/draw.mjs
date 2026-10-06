@@ -1,6 +1,37 @@
 // Drawing primitives shared by every scene.
 import { Path2D } from "@napi-rs/canvas";
 import { C, FAMILY, W, H, clamp, lerp, ease, prog, rgba, rng } from "./core.mjs";
+import * as SFX from "./sfx-rec.mjs";
+
+// ---------------------------------------------------------------- frame clock + decode
+// Labels and tags "decode" as they fade in: unresolved characters flicker through
+// random glyphs and lock left to right. Needs consecutive frames, so it only runs in
+// video renders (sheets and stills show the plain text).
+let FRAME = -10;
+const seenThisFrame = new Map();
+const lastAlpha = new Map();
+export function setFrame(f) {
+  FRAME = f;
+  seenThisFrame.clear();
+}
+const GLYPHS = "ABCDEFGHJKLMNPRSTUVWXYZ0123456789#%/<>+=";
+function decode(str, alpha) {
+  const k = seenThisFrame.get(str) ?? 0;
+  seenThisFrame.set(str, k + 1);
+  const key = `${str}#${k}`;
+  const prev = lastAlpha.get(key);
+  lastAlpha.set(key, { a: alpha, f: FRAME });
+  if (!prev || prev.f !== FRAME - 1 || !(alpha > prev.a + 1e-4) || alpha >= 0.999) return str;
+  const locked = Math.floor(str.length * clamp((alpha - 0.08) / 0.85));
+  let out = "";
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    if (i < locked || !/[A-Z0-9]/i.test(ch)) out += ch;
+    else out += GLYPHS[((Math.imul((FRAME >> 1) + 7, 2654435761) ^ Math.imul(i + 3, 40503)) >>> 0) % GLYPHS.length];
+  }
+  return out;
+}
+export { decode };
 
 // ---------------------------------------------------------------- background
 export function bg(ctx, { grid = true, step = 60, color = C.bg, gridAlpha = 1 } = {}) {
@@ -30,10 +61,15 @@ export function font(kind = "cond", size = 24, weight = 500) {
   return `${weight} ${size}px '${FAMILY[kind] ?? kind}'`;
 }
 
+// Small type is lifted toward 16 px so labels survive phone screens and compression.
+export function legible(size) {
+  return size >= 17 ? size : Math.round((size + (17 - size) * 0.45) * 10) / 10;
+}
+
 export function text(ctx, str, x, y, o = {}) {
+  let { size = 24 } = o;
   const {
     kind = "cond",
-    size = 24,
     weight = 500,
     color = C.ice,
     align = "left",
@@ -46,6 +82,7 @@ export function text(ctx, str, x, y, o = {}) {
   } = o;
   if (alpha <= 0 || !str) return 0;
   const s = caps ? str.toUpperCase() : str;
+  size = legible(size);
   ctx.save();
   ctx.globalAlpha *= alpha;
   ctx.font = font(kind, size, weight);
@@ -74,7 +111,7 @@ export function text(ctx, str, x, y, o = {}) {
 export function measure(ctx, str, o = {}) {
   const { kind = "cond", size = 24, weight = 500, tracking = 0, caps = false } = o;
   ctx.save();
-  ctx.font = font(kind, size, weight);
+  ctx.font = font(kind, legible(size), weight);
   ctx.letterSpacing = `${tracking}px`;
   const w = ctx.measureText(caps ? str.toUpperCase() : str).width - tracking;
   ctx.restore();
@@ -125,9 +162,11 @@ export function caption(ctx, str, t, t0, o = {}) {
     tracking = 5,
     sub,
   } = o;
+  SFX.at("type", t0, str, { dur: typeDur, x });
   const a = prog(t, t0, 0.5, ease.out) * (1 - prog(t, t0 + hold, 0.6));
   if (a <= 0) return;
-  const s = typed(str, prog(t, t0, typeDur, ease.linear));
+  const tp = prog(t, t0, typeDur, ease.linear);
+  const s = typed(str, tp);
   const full = measure(ctx, str, { size, weight: 600, tracking, caps: true });
   const left = align === "center" ? x - full / 2 : align === "right" ? x - full : x;
   ctx.save();
@@ -142,7 +181,14 @@ export function caption(ctx, str, t, t0, o = {}) {
   const rw = 56 * prog(t, t0, 0.5, ease.out);
   ctx.fillStyle = accent;
   ctx.fillRect(left, y - size - 18, rw, 3);
-  text(ctx, s, left, y, { size, weight: 600, tracking, caps: true, color });
+  const tw = text(ctx, s, left, y, { size, weight: 600, tracking, caps: true, color });
+  // block cursor while typing, blinking out shortly after
+  const since = t - t0 - typeDur;
+  if (tp < 1 || since < 1.2) {
+    const blink = tp < 1 ? 1 : Math.floor(since * 2.4) % 2 === 0 ? 1 : 0;
+    ctx.fillStyle = rgba(accent, 0.85 * blink);
+    ctx.fillRect(left + (s.length ? tw + tracking + 4 : 0), y - size * 0.78, size * 0.42, size * 0.86);
+  }
   if (sub) text(ctx, sub, left, y + size * 0.95, { kind: "mono", size: size * 0.5, color: C.dim, tracking: 2, caps: true });
   ctx.restore();
 }
@@ -151,6 +197,7 @@ export function caption(ctx, str, t, t0, o = {}) {
 export function label(ctx, str, x, y, o = {}) {
   const { color = C.mid, size = 15, align = "left", alpha = 1, box = false, kind = "mono", weight = 500, tracking = 1.5, caps = true, leader, bgColor = C.bg } = o;
   if (alpha <= 0) return;
+  str = caps && kind === "mono" ? decode(String(str).toUpperCase(), alpha) : str;
   ctx.save();
   ctx.globalAlpha *= alpha;
   if (leader) {
@@ -190,6 +237,7 @@ export function roundRect(ctx, x, y, w, h, r = 6) {
 export function panel(ctx, x, y, w, h, o = {}) {
   const { color = C.border, fill = rgba(C.bg2, 0.82), alpha = 1, title, titleColor = C.mid, r = 6, lw = 1.2, glow = 0 } = o;
   if (alpha <= 0) return;
+  SFX.appear("panel", title || `${Math.round(x)}|${Math.round(y)}|${Math.round(w)}`, alpha, { x: x + w / 2 });
   ctx.save();
   ctx.globalAlpha *= alpha;
   roundRect(ctx, x, y, w, h, r);
@@ -435,6 +483,7 @@ export function smoothPts(pts, per = 10) {
 // Animated thread: draws on over [t0, t0+d], then carries moving particles.
 export function thread(ctx, pts, t, t0, d, o = {}) {
   const { color = C.ice, width = 2, alpha = 1, glow = 10, particles = 6, speed = 0.18, psize = 2.6, base = 0.55, head = true, fadeOut = Infinity } = o;
+  SFX.at("draw", t0, "thread", { dur: d, x: pts[0]?.[0] ?? W / 2 });
   const p = prog(t, t0, d, ease.inOut);
   const a = alpha * (1 - prog(t, fadeOut, 0.6));
   if (p <= 0 || a <= 0) return;
@@ -719,6 +768,7 @@ export function slider(ctx, x, y, w, v, o = {}) {
 // ---------------------------------------------------------------- stamps, cracks, misc
 export function stamp(ctx, str, x, y, t, t0, o = {}) {
   const { color = C.crimson, size = 40, angle = -0.08, alpha = 1, tracking = 6 } = o;
+  SFX.at("impact", t0, str, { x });
   const p = prog(t, t0, 0.35, ease.out);
   if (p <= 0 || alpha <= 0) return;
   const s = lerp(1.6, 1, p);
