@@ -237,7 +237,8 @@ export function roundRect(ctx, x, y, w, h, r = 6) {
 export function panel(ctx, x, y, w, h, o = {}) {
   const { color = C.border, fill = rgba(C.bg2, 0.82), alpha = 1, title, titleColor = C.mid, r = 6, lw = 1.2, glow = 0 } = o;
   if (alpha <= 0) return;
-  SFX.appear("panel", title || `${Math.round(x)}|${Math.round(y)}|${Math.round(w)}`, alpha, { x: x + w / 2 });
+  // only titled panels have a stable identity across frames (untitled ones may move or grow)
+  if (title) SFX.appear("panel", title, alpha, { x: x + w / 2 });
   ctx.save();
   ctx.globalAlpha *= alpha;
   roundRect(ctx, x, y, w, h, r);
