@@ -6,7 +6,7 @@ export const SCRIPTS = path.resolve(ROOT, "../scripts");
 export const OUT = path.join(ROOT, "out");
 
 // Narration voice. Swap with --voice on the CLI; samples via `node src/tts.mjs --samples`.
-export const VOICE = "am_michael";
+export const VOICE = "bm_george";
 export const SPEED = 0.96;
 
 // Episode timeline, in seconds.

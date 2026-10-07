@@ -397,6 +397,7 @@ export const RIVERS = {
 };
 
 // Approximate line of contact in Ukraine (north to south, then down the Dnieper to the sea).
+// Dated in src/figures.mjs (contactLine). Change the trace and the as-of date together.
 export const CONTACT_LINE = [
   [37.7, 50.35], [37.62, 49.9], [37.95, 49.45], [38.15, 49.05], [38.0, 48.6], [37.75, 48.3], [37.25, 48.2], [37.1, 47.95],
   [36.85, 47.8], [36.3, 47.62], [35.84, 47.45], [35.3, 47.44], [34.75, 47.48], [34.2, 47.42], [33.37, 46.75], [32.62, 46.62], [31.95, 46.52],

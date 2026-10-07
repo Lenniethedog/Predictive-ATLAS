@@ -1,4 +1,4 @@
-// EPISODE 1 — THE HEGEMON'S MIRROR
+// EPISODE 1 — THE DOLLAR TRAP
 import { geoMercator, geoNaturalEarth1 } from "d3-geo";
 import { C, W, H, clamp, lerp, ease, prog, fade, pulse, rgba, mix, rng } from "../engine/core.mjs";
 import * as D from "../engine/draw.mjs";
@@ -73,12 +73,12 @@ function s1(S) {
   const globe = new Globe({ res: "110m", scale: 400 });
   const buoys = [P.rasTanura, P.juaymah, P.kharg, P.fujairah];
   const ports = [P.shanghai, P.ningbo, P.qingdao, P.guangzhou];
-  const tBack = S.at(2, 0.05);
-  const tGlobe = S.at(2, 0.4);
-  const tThreads = S.at(2, 0.45);
-  const tRebound = S.at(2, 0.8);
-  const tMirror = S.at(3);
-  const tBar = S.at(4);
+  const tBack = S.at("China finances", 0.02);
+  const tGlobe = S.at("China finances", 0.22);
+  const tThreads = S.at("China finances", 0.32);
+  const tRebound = S.at("China finances", 0.55);
+  const tMirror = S.at("This is");
+  const tBar = S.at("Beijing's industrial");
   const crack = D.crackPts([1010, 300], [990, 520], 11, 0.08, 10);
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.5 });
@@ -96,14 +96,14 @@ function s1(S) {
     const bx = lerp(960, g[0], ease.inOut(pull));
     const by = lerp(560, g[1], ease.inOut(pull));
     barrelMacro(ctx, bx, by, bs, 1 - prog(t, tGlobe + 0.4, 0.8), t);
-    K.chip(ctx, "INVOICED IN USD", 960 + 250, 380, { color: C.cyan, alpha: fade(t, S.at(1), 0.5, tBack + 0.6, 0.5), size: 22 });
+    K.chip(ctx, "INVOICED IN USD", 960 + 250, 380, { color: C.cyan, alpha: fade(t, S.at("It is"), 0.5, tBack + 0.6, 0.5), size: 22 });
 
     // invoice threads Gulf -> China
     for (let i = 0; i < buoys.length; i++) {
       const a = globe.xy(buoys[i]);
       D.node(ctx, a[0], a[1], 4, C.ice, { alpha: prog(t, tGlobe, 0.6), glow: 14, ring: false });
       const pts = K.globeArc(globe, buoys[i], ports[i], 0.12);
-      D.thread(ctx, pts, t, tThreads + i * 0.25, 1.6, { color: C.ice, width: 1.8, particles: 4, speed: 0.22 });
+      D.thread(ctx, pts, t, tThreads + i * 0.16, 1.6, { color: C.ice, width: 1.8, particles: 4, speed: 0.22 });
     }
     for (const p of ports) {
       const q = globe.xy(p);
@@ -136,14 +136,14 @@ function s1(S) {
       K.mirrorPane(ctx, mx - 6, 170, 12, 760, { alpha: mw, sheen: prog(t, tMirror, 3) });
       D.stroke(ctx, [[mx, 170], [mx, 170 + 760 * mw]], { color: C.ice, width: 2, glow: 20, alpha: 0.85 });
       // fiscal capacity bar
-      const bp = prog(t, tBar, Math.max(2, S.at(5) - tBar), ease.inOut);
+      const bp = prog(t, tBar, Math.max(2, S.at("The mirror") - tBar), ease.inOut);
       D.bar(ctx, 1640, 780, 90, 420, C.cyan, { p: bp, alpha: mw, outline: true, glow: 20 });
-      D.label(ctx, "U.S. FISCAL CAPACITY", 1685, 822, { align: "center", alpha: mw, color: C.cyan, size: 15 });
-      D.label(ctx, "BEIJING · INDUSTRIAL SURPLUS", 520, 1000, { align: "center", alpha: mw, color: C.crimson, size: 16 });
-      D.label(ctx, "WASHINGTON · FISCAL CAPACITY", 1460, 1000, { align: "center", alpha: mw, color: C.cyan, size: 16 });
+      D.label(ctx, "WHAT WASHINGTON CAN BORROW", 1685, 822, { align: "center", alpha: mw, color: C.cyan, size: 15 });
+      D.label(ctx, "CHINA'S FACTORY SURPLUS", 520, 1000, { align: "center", alpha: mw, color: C.crimson, size: 16 });
+      D.label(ctx, "WASHINGTON'S BORROWING POWER", 1460, 1000, { align: "center", alpha: mw, color: C.cyan, size: 16 });
     }
-    K.chip(ctx, "CONDITION: THE NEXT BARREL MUST BE BOUGHT IN DOLLARS", 1000, 150, { align: "center", color: C.ice, alpha: fade(t, S.at(5), 0.6), size: 16 });
-    mirrorCrack(ctx, crack, prog(t, S.at(7), 0.25, ease.out), { alpha: 0.55, width: 1.5 });
+    K.chip(ctx, "THE TRAP HOLDS WHILE THE NEXT BARREL IS BILLED IN DOLLARS", 1000, 150, { align: "center", color: C.ice, alpha: fade(t, S.at("The mirror"), 0.6), size: 16 });
+    mirrorCrack(ctx, crack, prog(t, S.at("It breaks."), 0.25, ease.out), { alpha: 0.55, width: 1.5 });
   };
 }
 
@@ -161,16 +161,16 @@ function s2(S) {
   const tx1 = 1700;
   const ty = 218;
   const yx = (y) => lerp(tx0, tx1, (y - 1971) / 4);
-  const tSnap = S.at(0, 0.6);
-  const tFall = S.at(1);
-  const tSaudi = S.at(3);
-  const tImp0 = S.at(4);
-  const tImp1 = S.at(6, 1);
+  const tSnap = S.at("In nineteen", 0.6);
+  const tFall = S.at("The dollar");
+  const tSaudi = S.at("The deal");
+  const tImp0 = S.at("Oil would");
+  const tImp1 = S.at("Every importer,", 1);
   const events = [
     [1971, "GOLD WINDOW CLOSED", 0],
-    [1973, "OIL SHOCK", S.at(2)],
-    [1974, "U.S.–SAUDI ARRANGEMENTS", S.at(3)],
-    [1975, "OPEC PRICES IN DOLLARS", S.at(4)],
+    [1973, "OIL SHOCK", S.at("It promised")],
+    [1974, "U.S.–SAUDI OIL DEAL", S.at("The deal")],
+    [1975, "OPEC PRICES IN DOLLARS", S.at("Oil would")],
   ];
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.4 });
@@ -183,7 +183,7 @@ function s2(S) {
     view.base(ctx, { colors, alpha: prog(t, 0, 1) });
 
     // timeline
-    const cur = K.track(t, [[0, 1971], [S.at(1), 1971.4], [S.at(3), 1974], [S.at(5), 1975]]);
+    const cur = K.track(t, [[0, 1971], [S.at("The dollar"), 1971.4], [S.at("The deal"), 1974], [S.at("Surpluses would"), 1975]]);
     D.stroke(ctx, [[tx0, ty], [tx1, ty]], { color: C.dim, width: 1.5 });
     for (const y of years) {
       const x = yx(y);
@@ -251,7 +251,7 @@ function s2(S) {
     const settled = importers.filter((_, i) => t > lerp(tImp0, tImp1, i / importers.length) + 0.6).length;
     D.label(ctx, `IMPORTER CONTRACTS SETTLED IN USD  ${String(settled).padStart(2, "0")} / ${importers.length}`, 1780, 330, { align: "right", color: C.cyan, alpha: prog(t, tImp0, 0.6), size: 14 });
 
-    D.caption(ctx, "Relative power compounds through the invoice", t, S.at(8), { y: 1000 });
+    D.caption(ctx, "The oil bill keeps the dollar on top", t, S.at("The leading"), { y: 1000 });
   };
 }
 
@@ -271,15 +271,15 @@ function s3(S) {
     loop.push([cx + Math.cos(a) * R, cy + Math.sin(a) * R]);
   }
   const edge = [
-    [230, 290, "SDR BASKET"],
-    [1690, 290, "BANCOR PROPOSAL · 1944"],
-    [230, 800, "SUBSTITUTION ACCOUNT"],
-    [1690, 800, "REGIONAL SWAP POOLS"],
+    [230, 290, "A SHARED WORLD MONEY"],
+    [1690, 290, "A 1944 ALTERNATIVE"],
+    [230, 800, "A PLAN TO SWAP OUT DOLLARS"],
+    [1690, 800, "REGIONAL MONEY POOLS"],
   ];
-  const tLoop = S.at(1);
-  const tDef = S.at(2);
-  const tGray = S.at(3, 0.15);
-  const tWeapon = S.at(3, 0.7);
+  const tLoop = S.at("The financial");
+  const tDef = S.at("Deficits could");
+  const tGray = S.at("The hub's", 0.15);
+  const tWeapon = S.at("The hub's", 0.7);
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.35 });
     // edge institutions desaturate to gray
@@ -343,11 +343,11 @@ function s4(S) {
   const yangtze = [120.6, 31.35];
   const pearl = [113.6, 22.85];
   const tZoom = 0.2;
-  const tWTO = S.at(1);
-  const tOut = S.at(2);
-  const tCrude = S.at(3);
-  const tBars = S.at(5);
-  const tDom = S.at(6);
+  const tWTO = S.at("Joining the");
+  const tOut = S.at("The surplus arrived");
+  const tCrude = S.at("A rising");
+  const tBars = S.at("At each");
+  const tDom = S.at("Recycling was");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.35 });
     view.setCam(MapView.mixCam(camA, camB, prog(t, tZoom, Math.max(3, tWTO + 1.5 - tZoom))));
@@ -393,30 +393,30 @@ function s4(S) {
     const pw = 560;
     const ph = 440;
     D.panel(ctx, px, py, pw, ph, { alpha: pa, title: "China · official U.S. Treasury holdings", titleColor: C.mid });
-    D.label(ctx, "$BN · APPROX. (TIC)", px + 18, py + 52, { alpha: pa, color: C.dim, size: 12 });
+    D.label(ctx, "$BN · ROUGH FIGURE", px + 18, py + 52, { alpha: pa, color: C.dim, size: 12 });
     const bw = (pw - 60) / holdings.length;
-    const grow = prog(t, tBars, Math.max(3, S.at(7) - tBars), ease.linear);
+    const grow = prog(t, tBars, Math.max(3, S.at("The Treasury") - tBars), ease.linear);
     holdings.forEach(([yr, v], i) => {
       const local = clamp(grow * holdings.length - i);
       const hgt = (v / 1300) * (ph - 130);
       D.bar(ctx, px + 30 + i * bw + 3, py + ph - 40, bw - 8, hgt, C.cyan, { p: ease.out(local), alpha: pa, glow: 6 });
       if (i % 3 === 0) D.text(ctx, String(yr), px + 30 + i * bw + bw / 2, py + ph - 16, { kind: "mono", size: 12, color: C.dim, align: "center", alpha: pa });
     });
-    K.chip(ctx, "DOMINANT STRATEGY: RECYCLE", px, py - 30, { color: C.ice, alpha: fade(t, tDom, 0.6), size: 15 });
+    K.chip(ctx, "BEST MOVE: BUY U.S. DEBT", px, py - 30, { color: C.ice, alpha: fade(t, tDom, 0.6), size: 15 });
   };
 }
 
 // ================================================================ 5. reserve and hostage
 function s5(S) {
   const tStack = 0.2;
-  const tHead = S.at(1, 0.25);
-  const tHost = S.at(1, 0.6);
-  const tCust = S.at(2);
-  const tEnv = S.at(3);
-  const tSlider = S.at(5);
-  const tSmall = S.at(6);
-  const tHouse = S.at(7);
-  const tMutual = S.at(8);
+  const tHead = S.at("They are", 0.25);
+  const tHost = S.at("They are", 0.6);
+  const tCust = S.at("A hostage is");
+  const tEnv = S.at("Mearsheimer assumes");
+  const tSlider = S.at("A careful");
+  const tSmall = S.at("For years");
+  const tHouse = S.at("China's Treasuries");
+  const tMutual = S.at("Each side needed");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.35 });
     const L = 250;
@@ -424,7 +424,7 @@ function s5(S) {
     const top = 210;
     const bot = 820;
     const mid = (L + R) / 2;
-    D.panel(ctx, L, top, R - L, bot - top, { alpha: prog(t, 0, 0.8), title: "PBOC balance sheet · foreign reserves" });
+    D.panel(ctx, L, top, R - L, bot - top, { alpha: prog(t, 0, 0.8), title: "China's reserve pile" });
     D.stroke(ctx, [[mid, top + 60], [mid, bot - 20]], { color: C.border, width: 1.5, alpha: prog(t, 0.3, 0.8) });
     D.text(ctx, "RESERVE", (L + mid) / 2, top + 110, { size: 38, weight: 600, tracking: 10, align: "center", alpha: prog(t, tHead, 0.6) });
     D.text(ctx, "HOSTAGE", (mid + R) / 2, top + 110, { size: 38, weight: 600, tracking: 10, align: "center", color: C.crimson, alpha: prog(t, tHost, 0.6) });
@@ -437,15 +437,15 @@ function s5(S) {
       D.brackets(ctx, (mid + R) / 2 - 165, bot - 40 - 13 * 27 - 20, 330, 13 * 27 + 30, { color: C.crimson, len: 26, lw: 2.5, alpha: ha * 0.8 });
       D.icon.lock(ctx, (mid + R) / 2 + 190, bot - 230, 34, C.crimson, ha * 0.6);
     }
-    K.chip(ctx, "VALUE = f(CUSTODIAN RESTRAINT)", mid, bot + 52, { color: C.ice, align: "center", alpha: fade(t, tCust, 0.6), size: 15 });
+    K.chip(ctx, "WORTH DEPENDS ON WASHINGTON HOLDING BACK", mid, bot + 52, { color: C.ice, align: "center", alpha: fade(t, tCust, 0.6), size: 15 });
     // intentions are private
     K.envelope(ctx, 1520, 690, 130, { alpha: fade(t, tEnv, 0.6, tHouse, 0.8), color: C.mid });
-    D.label(ctx, "CUSTODIAN INTENTIONS · PRIVATE INFORMATION", 1520, 790, { align: "center", alpha: fade(t, tEnv + 0.3, 0.6, tHouse, 0.8), size: 13 });
+    D.label(ctx, "WASHINGTON'S PLANS STAY HIDDEN", 1520, 790, { align: "center", alpha: fade(t, tEnv + 0.3, 0.6, tHouse, 0.8), size: 13 });
     // freeze risk slider
     const sa = prog(t, tSlider, 0.6);
     const v = 0.035 + 0.006 * Math.sin(t * 1.3);
     D.slider(ctx, L + 40, 935, R - L - 80, v, { alpha: sa, color: C.crimson, label: "FREEZE RISK" });
-    D.text(ctx, "p ≈ 0.03", R - 40, 905, { kind: "mono", size: 18, color: C.crimson, align: "right", alpha: prog(t, tSmall, 0.6) });
+    D.text(ctx, "LOOKS UNLIKELY", R - 40, 905, { kind: "mono", size: 16, color: C.crimson, align: "right", alpha: prog(t, tSmall, 0.6) });
     // household consumption
     const hx = 1560;
     const hy = 400;
@@ -454,7 +454,7 @@ function s5(S) {
     D.label(ctx, "U.S. HOUSEHOLD CONSUMPTION", hx, hy + 100, { align: "center", color: C.cyan, alpha: hA, size: 14 });
     const line = [[R - 20, 560], [1380, 500], [hx - 70, hy + 20]];
     D.stroke(ctx, D.smoothPts(line), { color: C.ice, width: 1.5, to: prog(t, tHouse + 0.3, 1.2), alpha: 0.9, glow: 6 });
-    D.label(ctx, "MUTUAL VULNERABILITY", 1250, 610, { color: C.ice, alpha: prog(t, tMutual, 0.8), size: 15, weight: 600 });
+    D.label(ctx, "EACH SIDE NEEDS THE OTHER", 1250, 610, { color: C.ice, alpha: prog(t, tMutual, 0.8), size: 15, weight: 600 });
   };
 }
 
@@ -472,10 +472,10 @@ function s6(S) {
     ["ZA", [24, -29], 40, 24],
   ];
   const brics = [[[-47.9, -15.8], "BR"], [P.moscow, "RU"], [[77.2, 28.6], "IN"], [P.beijing, "CN"], [[28.2, -25.7], "ZA"], [[51.4, 35.7], "IR"], [[31.2, 30.0], "EG"], [[38.7, 9.0], "ET"], [[54.4, 24.5], "AE"]];
-  const tLock = S.at(0, 0.55);
-  const tFlick = S.at(1);
-  const tCred = S.at(2);
-  const tBrics = S.at(3);
+  const tLock = S.at("The chance", 0.55);
+  const tFlick = S.at("What mattered");
+  const tCred = S.at("If government");
+  const tBrics = S.at("Sachs places");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.3 });
     view.base(ctx, { graticule: true });
@@ -536,10 +536,10 @@ function s6(S) {
         data.push([u, 0.43 + 0.012 * Math.sin(u * 27)]);
       }
     }
-    const dp = prog(t, tCred + 0.4, Math.max(3, S.at(5) - tCred), ease.linear);
+    const dp = prog(t, tCred + 0.4, Math.max(3, S.at("The cost") - tCred), ease.linear);
     D.series(ctx, gx + 24, gy + 56, 470, 130, data, { color: C.ice, width: 2.5, p: dp, glow: 8 });
     if (dp > 0.6) D.label(ctx, "STEP DOWN · NO RECOVERY", gx + 330, gy + 110, { color: C.mid, size: 12, alpha: prog(t, tCred + 2.6, 0.6) });
-    D.label(ctx, "BRICS NODES +1 STOP", 1780, 990, { align: "right", color: C.amber, alpha: up, size: 14 });
+    D.label(ctx, "OTHER EXPORTERS TAKE NOTICE", 1780, 990, { align: "right", color: C.amber, alpha: up, size: 14 });
   };
 }
 
@@ -553,11 +553,11 @@ function s7(S) {
     [1660, 750, "COMMODITY EXPORTERS"],
   ];
   const goldV = [260, 330];
-  const tFlat = S.at(5);
-  const tGold = S.at(6);
-  const tOil = S.at(7);
-  const tSwap = S.at(8);
-  const tRail = S.at(9);
+  const tFlat = S.at("Fewer fresh");
+  const tGold = S.at("More gold.");
+  const tOil = S.at("More state-to-state");
+  const tSwap = S.at("More swap");
+  const tRail = S.at("More attempts");
   const swapNodes = (() => {
     const r = rng(17);
     const out = [];
@@ -646,7 +646,7 @@ function s7(S) {
     ctx.restore();
     // new UST purchases flatten (screen-fixed inset, top right)
     const ia = prog(t, 0.4, 0.8);
-    D.panel(ctx, 1410, 130, 400, 160, { alpha: ia, title: "New UST purchases · China" });
+    D.panel(ctx, 1410, 130, 400, 160, { alpha: ia, title: "New U.S. debt China buys" });
     const fl = prog(t, tFlat, 2.5);
     const data = [[0, 0.1], [0.2, 0.35], [0.4, 0.62], [0.55, 0.78], [0.7, lerp(0.86, 0.8, fl)], [0.85, lerp(0.93, 0.8, fl)], [1, lerp(1, 0.8, fl)]];
     D.series(ctx, 1434, 180, 350, 90, data, { color: C.cyan, width: 2.5, p: prog(t, 0.6, 2.5, ease.out), glow: 8 });
@@ -656,14 +656,14 @@ function s7(S) {
 
 // ================================================================ 8. the grip
 function s8(S) {
-  const tPress = S.at(1);
-  const tStrike = S.at(1, 0.6);
-  const tMesh = S.at(2);
-  const tCut = S.at(3);
-  const tGraph = S.at(4);
-  const tPeg = S.at(5);
-  const tOpt = S.at(7);
-  const tPol = S.at(8);
+  const tPress = S.at("The grip is not");
+  const tStrike = S.at("The grip is not", 0.6);
+  const tMesh = S.at("The grip is the");
+  const tCut = S.at("An adversary");
+  const tGraph = S.at("Energy is");
+  const tPeg = S.at("Currency pegs");
+  const tOpt = S.at("A producer that");
+  const tPol = S.at("Security patrons,");
   const chain = [
     ["INVOICE", "OIL CARGO · USD", 250],
     ["CORRESPONDENT BANK", "NEW YORK MESH", 620],
@@ -715,12 +715,12 @@ function s8(S) {
     D.stroke(ctx, [[chain[0][2], 520], [chain[4][2], 520]], { color: C.cyan, width: 3, alpha: 0.5 * (1 - dimAll * 0.5), dash: [10, 8], dashOffset: -t * 30 });
     chain.forEach(([title, sub, x], i) => {
       const a = prog(t, 0.2 + i * 0.25, 0.6);
-      const lit = i >= 1 && i <= 3 ? prog(t, tMesh + (i - 1) * (S.e[2] - S.b[2]) * 0.3, 0.5) : 0;
+      const lit = i >= 1 && i <= 3 ? prog(t, tMesh + (i - 1) * (S.end("The grip is the") - S.start("The grip is the")) * 0.3, 0.5) : 0;
       const grip = i === 3;
       const col = i === 0 || i === 4 ? C.mid : mix(C.steel, C.cyan, Math.max(lit, grip ? 0.3 : 0));
       slab(ctx, x, 520, grip ? 250 : 240, 100, title, sub, col, a, grip ? 30 * lit + 8 : lit * 14, dimAll);
     });
-    const gripA = prog(t, tMesh + (S.e[2] - S.b[2]) * 0.75, 0.6);
+    const gripA = prog(t, tMesh + (S.end("The grip is the") - S.start("The grip is the")) * 0.75, 0.6);
     D.text(ctx, "THE GRIP", chain[3][2], 420, { size: 34, weight: 700, tracking: 8, align: "center", color: C.cyan, glow: 22, alpha: gripA * (1 - dimAll * 0.4) });
     if (!cut) {
       const cargoP = ((t * 0.08) % 1);
@@ -750,7 +750,7 @@ function s8(S) {
     const ga = prog(t, tGraph, 0.8);
     const gx = 1150;
     const gy = 780;
-    D.panel(ctx, gx, gy, 660, 220, { alpha: ga, title: "Dollar share of the marginal barrel" });
+    D.panel(ctx, gx, gy, 660, 220, { alpha: ga, title: "Dollars in China's next oil bill" });
     const gp = prog(t, tGraph + 0.5, Math.max(4, S.dur - tGraph - 3), ease.linear);
     const marg = [];
     const avg = [];
@@ -761,18 +761,18 @@ function s8(S) {
     }
     D.series(ctx, gx + 30, gy + 60, 600, 140, avg, { color: C.steel, width: 2, p: gp, dash: [6, 6], glow: 0, alpha: 0.7 * ga, dot: false });
     D.series(ctx, gx + 30, gy + 60, 600, 140, marg, { color: C.cyan, width: 3, p: gp, glow: 10, alpha: ga });
-    D.label(ctx, "AVERAGE BARREL", gx + 640, gy + 74, { align: "right", color: C.steel, size: 12, alpha: ga * prog(t, tGraph + 3, 0.6) });
-    D.label(ctx, "MARGINAL BARREL", gx + 640, gy + 182, { align: "right", color: C.cyan, size: 12, alpha: ga * prog(t, tGraph + 5, 0.6) });
+    D.label(ctx, "A TYPICAL BARREL", gx + 640, gy + 74, { align: "right", color: C.steel, size: 12, alpha: ga * prog(t, tGraph + 3, 0.6) });
+    D.label(ctx, "CHINA'S NEXT BARREL", gx + 640, gy + 182, { align: "right", color: C.cyan, size: 12, alpha: ga * prog(t, tGraph + 5, 0.6) });
     // pegs and the second option
     const pa = prog(t, tPeg, 0.6);
     D.panel(ctx, 110, 820, 560, 180, { alpha: pa, title: "Producer currency peg" });
     K.chip(ctx, "PEG: USD", 140, 900, { color: C.cyan, alpha: pa, size: 15 });
     const oa = prog(t, tOpt, 0.6);
     ["CNY", "GOLD", "BASKET"].forEach((s, i) => K.chip(ctx, s, 290 + i * 118, 900, { color: C.amber, alpha: oa * prog(t, tOpt + i * 0.3, 0.4), size: 15 }));
-    D.label(ctx, "SECOND OPTION ACQUIRED", 140, 970, { color: C.amber, alpha: oa, size: 13 });
+    D.label(ctx, "A SECOND WAY TO GET PAID", 140, 970, { color: C.amber, alpha: oa, size: 13 });
     const pol = prog(t, tPol, 0.6);
-    ["SECURITY PATRONS", "ARMS SUPPLIERS", "LONG-TERM BUYERS"].forEach((s, i) => D.label(ctx, s, 700, 840 + i * 30, { color: C.mid, size: 13, alpha: pol * prog(t, tPol + i * 0.4, 0.4) }));
-    D.label(ctx, "→ POLITICAL PRICE OF THE OPTION", 700, 960, { color: C.ice, size: 13, alpha: prog(t, tPol + 1.4, 0.5) });
+    ["SECURITY PARTNERS", "ARMS SUPPLIERS", "LONG-TERM BUYERS"].forEach((s, i) => D.label(ctx, s, 700, 840 + i * 30, { color: C.mid, size: 13, alpha: pol * prog(t, tPol + i * 0.25, 0.4) }));
+    D.label(ctx, "THE PRICE OF THAT CHOICE", 700, 960, { color: C.ice, size: 13, alpha: prog(t, tPol + 0.9, 0.5) });
   };
 }
 
@@ -782,11 +782,11 @@ function s9(S) {
   const wide = K.camFor(view, [86, 26], 0.88, 960, 470);
   const gulf = K.camFor(view, [51.2, 27.2], 4.0, 960, 430);
   const terms = [P.rasTanura, P.juaymah, P.kharg, P.mina, [53.06, 25.15], P.fujairah, [52.6, 27.5], P.basra];
-  const tIn = S.at(0, 0.2);
-  const tOut = S.at(6);
-  const tYuan = S.at(6, 0.2);
-  const tCap = S.at(7);
-  const tFlow = S.at(8);
+  const tIn = S.at("This is", 0.2);
+  const tOut = S.at("A Gulf");
+  const tYuan = S.at("A Gulf", 0.2);
+  const tCap = S.at("The volume");
+  const tFlow = S.at("It must");
   const dest = [P.ningbo, P.qingdao, P.dalian, P.zhanjiang];
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2, color: "#0a0d12" });
@@ -803,13 +803,13 @@ function s9(S) {
     K.place(ctx, view.xy(P.kharg), "KHARG", { alpha: zin * (1 - zout), color: C.ice, dot: 0 });
     K.place(ctx, view.xy(P.fujairah), "FUJAIRAH", { alpha: zin * (1 - zout), color: C.ice, dot: 0, dy: 24 });
     // dollar contracts detour via New York (off the top of frame)
-    const dA = prog(t, S.at(1), 1) * (1 - 0.6 * prog(t, tYuan, 1));
+    const dA = prog(t, S.at("The loop"), 1) * (1 - 0.6 * prog(t, tYuan, 1));
     dest.forEach((d, i) => {
       const a = view.xy(terms[i]);
       const b = view.xy(d);
       const peak = [lerp(a[0], b[0], 0.55), -260];
       const pts = D.smoothPts([a, [lerp(a[0], peak[0], 0.5), 120], peak, [lerp(peak[0], b[0], 0.6), 160], b], 10);
-      D.stroke(ctx, pts, { color: C.ice, width: 1.1, alpha: 0.45 * dA, to: prog(t, S.at(1) + i * 0.2, 1.5) });
+      D.stroke(ctx, pts, { color: C.ice, width: 1.1, alpha: 0.45 * dA, to: prog(t, S.at("The loop") + i * 0.2, 1.5) });
       K.flow(ctx, pts, t + i, { color: C.ice, n: 3, speed: 0.1, size: 2, alpha: dA * 0.8 });
     });
     D.label(ctx, "↑ VIA NEW YORK CLEARING", 1180, 80 + 70, { color: C.ice, alpha: dA * 0.8, size: 13 });
@@ -826,7 +826,7 @@ function s9(S) {
     D.thread(ctx, direct, t, tYuan, 2, { color: C.amber, width: 6, particles: 9, psize: 3.6, speed: 0.16, glow: 22 });
     const mid = D.pointAt(direct, 0.55);
     K.chip(ctx, "YUAN", mid.x, mid.y + 54, { color: C.amber, align: "center", alpha: prog(t, tYuan + 1.6, 0.5), size: 18 });
-    D.caption(ctx, "Marginal barrel, not the average barrel", t, tCap, { y: 820, size: 30, accent: C.amber });
+    D.caption(ctx, "China's next barrel, not every barrel", t, tCap, { y: 820, size: 30, accent: C.amber });
     // new purchases fall through replacement
     const fa = prog(t, tFlow, 0.8);
     const fx = 120;
@@ -837,15 +837,15 @@ function s9(S) {
     D.hbar(ctx, fx, fy, fw, 26, C.cyan, { p: v, alpha: fa });
     const rx = fx + fw * 0.5;
     D.stroke(ctx, [[rx, fy - 16], [rx, fy + 44]], { color: C.ice, width: 2, dash: [5, 4], alpha: fa });
-    D.label(ctx, "REPLACEMENT RATE", rx + 10, fy + 64, { color: C.ice, alpha: fa, size: 12 });
+    D.label(ctx, "NEEDED TO HOLD THE PILE STEADY", rx + 10, fy + 64, { color: C.ice, alpha: fa, size: 12 });
   };
 }
 
 // ================================================================ 10. flow, stock, settlement
 function s10(S) {
   const tPanels = 0.2;
-  const tShock = S.at(5, 0.4);
-  const keys = [[S.at(0), 0], [S.at(2, 1), 0.34], [S.at(4, 1), 0.55], [S.at(6, 1), 0.66], [S.at(9), 0.84], [S.dur - 1.5, 1]];
+  const tShock = S.at("Washington's sensible", 0.4);
+  const keys = [[S.at("Then the"), 0], [S.at("Dollars can", 1), 0.34], [S.at("What remains", 1), 0.55], [S.at("The reminder is", 1), 0.66], [S.at("Sachs would"), 0.84], [S.dur - 1.5, 1]];
   const uMark = 0.32;
   const uShock = 0.6;
   const flow = [];
@@ -861,9 +861,9 @@ function s10(S) {
     share.push([u, 0.08 + (u < uMark ? 0.02 * u : 0.02 * uMark + 0.82 * ease.inOut(clamp((u - uMark) / (1 - uMark))))]);
   }
   const panels = [
-    ["FLOW", flow, C.cyan],
-    ["STOCK", stock, C.cyan],
-    ["SETTLEMENT SHARE", share, C.amber],
+    ["NEW BUYING", flow, C.cyan],
+    ["THE PILE ALREADY HELD", stock, C.cyan],
+    ["PAID OUTSIDE DOLLARS", share, C.amber],
   ];
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.3 });
@@ -879,13 +879,13 @@ function s10(S) {
     });
     // event markers through all panels
     const mx = x0 + uMark * w;
-    const ma = prog(t, S.at(2, 0.5), 0.6);
+    const ma = prog(t, S.at("Dollars can", 0.5), 0.6);
     D.stroke(ctx, [[mx, 150], [mx, 170 + 2 * 270 + 210]], { color: C.amber, width: 1.5, dash: [6, 6], alpha: ma });
     K.chip(ctx, "YUAN OIL CONTRACT", mx, 140, { color: C.amber, align: "center", alpha: ma, size: 14 });
     const sx = x0 + uShock * w;
     const sa = prog(t, tShock, 0.4, ease.out);
     D.stroke(ctx, [[sx, 150], [sx, 170 + 2 * 270 + 210]], { color: C.cyan, width: 4, alpha: sa, glow: 24 });
-    K.chip(ctx, "CUSTODY THREAT", sx, 140, { color: C.cyan, align: "center", alpha: sa, size: 14 });
+    K.chip(ctx, "THREAT TO FREEZE THE PILE", sx, 140, { color: C.cyan, align: "center", alpha: sa, size: 14 });
     // cursor
     const cx = x0 + u * w;
     D.stroke(ctx, [[cx, 160], [cx, 170 + 2 * 270 + 200]], { color: C.ice, width: 1, alpha: 0.18 });
@@ -894,10 +894,10 @@ function s10(S) {
 
 // ================================================================ 11. one object
 function s11(S) {
-  const tLines = S.at(2);
-  const tOne = S.at(6);
-  const tSplit = S.at(7);
-  const tFast = S.at(9);
+  const tLines = S.at("If official");
+  const tOne = S.at("The weapon and");
+  const tSplit = S.at("Use of");
+  const tFast = S.at("It speeds");
   const obj = (ctx, x, y, s, half, a, spin) => {
     if (a <= 0) return;
     ctx.save();
@@ -952,7 +952,7 @@ function s11(S) {
   return (ctx, t) => {
     D.bg(ctx, { grid: false, color: "#07090c" });
     const spin = t * 0.55;
-    const objA = prog(t, 0.2, 1) * (1 - prog(t, S.at(8), 1.5));
+    const objA = prog(t, 0.2, 1) * (1 - prog(t, S.at("Depreciation stays"), 1.5));
     const lift = prog(t, tLines, 2);
     const oy = lerp(520, 330, lift);
     const sp = prog(t, tSplit, 1.6, ease.inOut);
@@ -984,8 +984,8 @@ function s11(S) {
     D.series(ctx, gx, gy, gw, gh, dem, { color: C.cyan, width: 3, p: lp, glow: 10, alpha: la });
     const ce = D.pointAt(cost.map(([u, v]) => [gx + u * gw, gy + gh - v * gh]), lp);
     const de = D.pointAt(dem.map(([u, v]) => [gx + u * gw, gy + gh - v * gh]), lp);
-    D.label(ctx, "COST OF FUNDING", ce.x + 16, ce.y + 5, { color: C.ice, alpha: la, size: 14 });
-    D.label(ctx, "FOREIGN OFFICIAL DEMAND", de.x + 16, de.y + 5, { color: C.cyan, alpha: la, size: 14 });
+    D.label(ctx, "COST OF BORROWING", ce.x + 16, ce.y + 5, { color: C.ice, alpha: la, size: 14 });
+    D.label(ctx, "FOREIGN GOVERNMENTS BUYING", de.x + 16, de.y + 5, { color: C.cyan, alpha: la, size: 14 });
     D.stroke(ctx, [[gx + kink * gw, gy + 20], [gx + kink * gw, gy + gh]], { color: C.amber, width: 1, dash: [4, 6], alpha: kp * 0.7 });
     D.label(ctx, "BARREL MOVES", gx + kink * gw + 10, gy + 36, { color: C.amber, size: 12, alpha: kp });
   };
@@ -1000,9 +1000,9 @@ function s12(S) {
   const factory = P.shanghai;
   const barrel = P.rasTanura;
   const bond = P.newYork;
-  const tAmber = S.at(1);
-  const tAllied = S.at(3);
-  const tCrack = S.at(6);
+  const tAmber = S.at("A spare");
+  const tAllied = S.at("The United");
+  const tCrack = S.at("The break is the");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.25 });
     const dx = K.track(t, [[0, 20], [S.dur, -30]], ease.linear);
@@ -1025,7 +1025,7 @@ function s12(S) {
     const sh = view.xy(P.shanghai);
     producers.forEach((ll, i) => {
       const pts = D.arcPts(sh, view.xy(ll), 0.18, 40, -1);
-      D.thread(ctx, pts, t, tAmber + i * 0.3, 1.6, { color: C.amber, width: 2.4, particles: 4, speed: 0.15, glow: 14 });
+      D.thread(ctx, pts, t, tAmber + i * 0.18, 1.6, { color: C.amber, width: 2.4, particles: 4, speed: 0.15, glow: 14 });
     });
     D.node(ctx, sh[0], sh[1], 7, C.crimson, { glow: 18 });
     // glass overlay
@@ -1046,10 +1046,10 @@ function s12(S) {
 
 // ================================================================ 13. the refusal at the margin
 function s13(S) {
-  const tWalls = S.at(2);
-  const tThick = S.at(4);
-  const tEnd = S.at(7);
-  const tPath = S.at(9);
+  const tWalls = S.at("Tariffs, technology");
+  const tThick = S.at("They tell");
+  const tEnd = S.at("It is not");
+  const tPath = S.at("The mirror");
   const crack = D.crackPts([960, 220], [960, 840], 41, 0.05, 26);
   const walls = [
     ["TARIFF WALLS", 300],
@@ -1065,7 +1065,7 @@ function s13(S) {
     ctx.translate(-960, -540);
     // barriers
     walls.forEach(([name, y], i) => {
-      const a = prog(t, tWalls + i * 0.8, 1);
+      const a = prog(t, tWalls + i * 0.45, 1);
       D.stroke(ctx, [[180, y], [700, y]], { color: C.cyan, width: 2, alpha: a * 0.8, glow: 10 });
       for (let x = 190; x < 700; x += 26) D.stroke(ctx, [[x, y - 10], [x, y + 10]], { color: C.cyan, width: 1, alpha: a * 0.4 });
       D.label(ctx, name, 180, y - 18, { color: C.cyan, alpha: a, size: 14 });
@@ -1082,7 +1082,7 @@ function s13(S) {
     D.stroke(ctx, [fct, brl, bnd], { color: C.ice, width: 1, dash: [4, 6], alpha: 0.4 });
     mirrorCrack(ctx, crack, 0.55 + 0.45 * prog(t, tPath, 3), { width: 2, alpha: 0.85, seed: 12 });
     const crackPath = [...D.crackPts(fct, brl, 51, 0.06, 12), ...D.crackPts(brl, bnd, 52, 0.06, 12).slice(1)];
-    mirrorCrack(ctx, crackPath, prog(t, tPath, Math.max(2, S.e[S.n - 1] - tPath), ease.inOut), { width: 2.6, seed: 9 });
+    mirrorCrack(ctx, crackPath, prog(t, tPath, Math.max(2, S.end(-1) - tPath), ease.inOut), { width: 2.6, seed: 9 });
     // amber energy corridor thickens, only on the energy path
     const th = prog(t, tThick, 3);
     const corr = D.smoothPts([[1160, 530], [1330, 470], [1500, 500], [1640, 560]], 10);
@@ -1092,7 +1092,7 @@ function s13(S) {
     // the marginal barrel, settled outside
     const ba = prog(t, tEnd, 1);
     D.icon.barrel(ctx, 1700, 560, 74, C.amber, ba);
-    D.label(ctx, "MARGINAL BARREL", 1700, 640, { align: "center", color: C.amber, size: 14, alpha: ba });
+    D.label(ctx, "CHINA'S NEXT BARREL", 1700, 640, { align: "center", color: C.amber, size: 14, alpha: ba });
     D.label(ctx, "SETTLED OUTSIDE THE MIRROR", 1700, 664, { align: "center", color: C.dim, size: 12, alpha: ba });
     ctx.restore();
     // Treasury stock declining beneath
@@ -1104,10 +1104,96 @@ function s13(S) {
   };
 }
 
+// Spoken line, visual direction, and score mood. scripts/episode-01-*.txt are generated from this.
+const STORY = [
+  {
+    "title": "The mirror",
+    "mood": "establish",
+    "narration": "The trap is not a debt. It is a simple price rule. China finances the American government because the oil that feeds Chinese factories is billed in dollars, and the only safe pile large enough to store those dollars is United States Treasury debt. This is the whole picture. Beijing's industrial surplus shows up, on the far side of the glass, as Washington's room to borrow and spend. The mirror holds only while the next barrel must be bought in dollars. When that rule fails, the loop does not bend. It breaks.",
+    "cue": "[VISUAL: MACRO on a single crude barrel. PULL BACK to a black globe. Ice-white invoice threads run from Gulf loading buoys to crimson Chinese ports, then rebound as a thicker thread into a blue vault stenciled U.S. TREASURIES. A mirror wipe shows the same flow as a rising bar of what Washington can borrow. Hold on the mirror.]"
+  },
+  {
+    "title": "1971 to 1975",
+    "mood": "history",
+    "narration": "In nineteen seventy-one the United States stopped promising gold for dollars. The dollar no longer promised metal. It promised that the world would keep needing it, and that need had to be built. The deal with Saudi Arabia supplied it. Oil would be priced in dollars. Surpluses would be parked in dollar assets. Every importer, whatever its flag, would need dollars to buy energy. John Mearsheimer reads this as a great power locking in its lead. The leading state does not trust promises. It ties each partner's survival to its currency, so the lead grows. A rival currency that can buy oil claims the same oil. One side's safety is the other side's risk.",
+    "cue": "[VISUAL: TIMELINE, 1971 to 1975, left to right. The gold peg snaps and falls off the bottom of frame. Saudi loading terminals lock to a blue dollar glyph. Importer capitals across Europe and Asia recolor as their oil contracts flip to dollar settlement. Lower-third caption: THE OIL BILL KEEPS THE DOLLAR ON TOP.]"
+  },
+  {
+    "title": "One circuit",
+    "mood": "system",
+    "narration": "Jeffrey Sachs reads the same setup as a privilege the system later mistook for a law of nature. The financial center and the arms industry became one circuit. Deficits could run for years because foreigners had to hold the paper. The hub's mistake was to treat a lucky break in history as a permanent right, and then to turn the pipes that made the break possible into a weapon.",
+    "cue": "[VISUAL: CIRCUIT DIAGRAM on black. Three blue nodes pulse as one loop: Pentagon buying, Treasury borrowing, Gulf oil money coming back. Older ideas for a shared world money sit at the frame edge and fade to gray. Label the center HUB. No faces. No flags except as small node markers.]"
+  },
+  {
+    "title": "China enters",
+    "mood": "motion",
+    "narration": "China entered the loop through trade, not through an alliance. Joining the World Trade Organization opened demand in rich countries to Chinese goods. The surplus arrived in dollars. A rising share of the fuel that kept the factories running came by sea, from producers who billed in dollars. Professor Jiang treats the move as forced. At each round, Beijing could park dollars in Treasuries, or try to swap them and find the next oil cargo still for sale only in dollars. Recycling was the best move on the board. The Treasury market was deep enough to take the surplus without pushing the price against the seller. The arrangement held because China, alone, could not change what the world paid for energy.",
+    "cue": "[VISUAL: ZOOM IN to the Yangtze and Pearl River deltas. Factory clusters burn white. Container arcs leave for North America and Europe. A return arc of dollar balances splits: one branch buys Gulf crude, the other settles into a bar chart of official Treasury holdings that climbs through the early 2010s and then bends down. China in crimson. Treasury bars in blue.]"
+  },
+  {
+    "title": "Savings, and a hostage",
+    "mood": "pressure",
+    "narration": "Call the Treasury pile what it really is. They are savings, and they are a hostage. A hostage is savings that keep their worth only if the keeper shows restraint. Mearsheimer assumes that restraint cannot be known ahead of time. Intentions stay hidden. A careful state therefore puts a chance on a freeze, a seizure, or a political condition, even when Washington's public language is mild. For years that chance looked small. China's Treasuries helped pay for the American household that bought Chinese goods. Each side needed the other, and that need passed for trust.",
+    "cue": "[VISUAL: SPLIT LEDGER. The same stack of Treasuries sits under two headings, RESERVE and HOSTAGE. A slider labeled FREEZE RISK rests near zero, marked LOOKS UNLIKELY. A thin white line connects the stack to American household buying, labeled EACH SIDE NEEDS THE OTHER. The slider does not move yet.]"
+  },
+  {
+    "title": "The freeze",
+    "mood": "shock",
+    "narration": "The chance moved when the dollar system froze the savings of a nuclear-armed oil seller. What mattered was the lesson other countries drew. If government bonds held in American banks could be switched off over a weekend, then Treasuries had looked safer than they were for any country that might face Washington. Sachs places that choice in a habit of punishment from the top. Sanctions had replaced a negotiated deal. The cost was delayed. It was paid in trust. Surplus countries had treated dollar savings as normal savings, and then changed their minds. The change does not reverse when a spokesman calls the case unique. What people believe about the keeper is updated by deeds.",
+    "cue": "[VISUAL: A central-bank reserve block over Russia desaturates and locks with a hard blue bracket. Identical pale blocks over other surplus countries flicker in sequence. A trust line on a graph steps down once and does not recover. Amber nodes for other big exporters brighten. No explosion, no courtroom.]"
+  },
+  {
+    "title": "Around New York",
+    "mood": "motion",
+    "narration": "Mearsheimer draws a plain conclusion, with no sermon attached. China cannot stay the workshop of a system whose banker can switch off China's savings. Staying free to act means holding less national wealth in a form a rival can cancel. Real power slips if a country must ask permission to use its own savings. The answer is a small change at the edge, not a grand speech. Fewer fresh purchases of Treasuries. More gold. More state-to-state oil contracts. More swap lines between central banks. More attempts to settle trade on rails that do not end in New York.",
+    "cue": "[VISUAL: China's blue Treasury bar flattens. Parallel pipes draw themselves in amber: a yuan payment rail, a gold allocation, a web of central-bank swap lines. New York's bank node stays blue and bright. The new pipes route around it and never touch it. Camera drifts along the amber pipes.]"
+  },
+  {
+    "title": "The grip",
+    "mood": "pressure",
+    "narration": "Jiang names what holds. The grip is not the printing press. The grip is the web of partner banks, the message system that carries payment orders, and the law that can tell those banks to stop. An adversary breaks that grip where a real good changes hands. Energy is the right place, because energy is the biggest bill that keeps coming due. Currency pegs are the support underneath. A producer tied to the dollar prefers to be paid in dollars. A producer that can be paid in money it spends on Chinese machines, or in gold, or in a mixed basket, has a second way to get paid. Security patrons, arms suppliers, and long-term buyers change the political price of using that second way.",
+    "cue": "[VISUAL: PAYMENT DIAGRAM. Invoice, partner bank, message rail, legal gate. The gate is labeled THE GRIP and glows blue. CUT TO the same oil cargo moving on an amber rail that skips the gate. A small line graph tracks dollars in China's next oil bill, with a flatter ghost line for a typical barrel.]"
+  },
+  {
+    "title": "The next barrel",
+    "mood": "fracture",
+    "narration": "This is why the break is narrower than a collapse of the dollar. The loop that traps China does not need every barrel on earth priced in dollars. It needs China's next barrel priced in dollars. The pressure applies only to the next purchase, not to the oil already bought. The pile of Treasuries already owned can sit quietly for a full decade. New buying stops when export earnings no longer have to be turned into the currency of the next cargo. A Gulf producer, with enough output to cover the growth in China's imports by sea, bills a standing volume of its crude in yuan and clears that payment on a rail that never enters American hands. The volume need not be most of that producer's sales to the world. It must be most of the extra barrels China would otherwise have bought with new dollars.",
+    "cue": "[VISUAL: ZOOM IN on Persian Gulf loading terminals at night. One contract thread, thicker than the others, leaves a single buoy and lands on the Chinese coast in amber, tagged YUAN, with a gap where a New York detour would have been. Caption, held: CHINA'S NEXT BARREL, NOT EVERY BARREL. Beneath, new Treasury purchases fall below the line needed to hold the pile steady.]"
+  },
+  {
+    "title": "Buying, the pile, the payment",
+    "mood": "system",
+    "narration": "Then the math changes direction. China's goods surplus can continue. Dollars can still arrive from buyers in the United States and in allied markets. The forced bid for Treasuries, the bid that existed only because the oil seller would take nothing else, is gone. What remains is a choice about where to keep the money, and that choice feels the hostage problem. Washington's sensible reply to a yuan oil contract is a reminder that the pile already held can still be frozen. The reminder is meant to scare others away from leaving. If plans stay hidden, the reminder points the wrong way. It raises the guessed chance of confiscation, and so it raises the gain from cutting the pile before a crisis rather than during one. Sachs would call this the center writing its own exit. Each show of force teaches surplus countries that a second way to pay is not a taste. It is insurance against seizure.",
+    "cue": "[VISUAL: THREE-PANEL GRAPH, moving with the narration. Top, NEW BUYING: fresh official Treasury buying drops after the yuan contract. Middle, THE PILE ALREADY HELD: it starts a controlled decline. A blue line labeled THREAT TO FREEZE THE PILE makes that decline steeper. Bottom: the share paid outside dollars rises.]"
+  },
+  {
+    "title": "One machine",
+    "mood": "shock",
+    "narration": "The arms industry arrives as another claim on the same loop. A dollar that foreign central banks must buy is a dollar that helps fund the security services of the leading state. If official foreign demand thins out, the interest needed to sell new Treasury debt has to come from home savers and allied private money. That shift is a fact about power. Higher borrowing costs tax the country that uses financial sanctions as a tool. Jiang closes on one plain point. The weapon and the funding base are one object. Use of the weapon wears down the funding base. Depreciation stays slow while China's next barrel forces the recycling. It speeds up after the barrel moves, because that barrel was the requirement.",
+    "cue": "[VISUAL: A single object, half munition and half Treasury bond, rotates and splits along a seam. Left piece stays blue. Right piece fades. A cost-of-borrowing line trends up as a foreign-government-buying line trends down. Only the two lines on a black field.]"
+  },
+  {
+    "title": "One crack",
+    "mood": "fracture",
+    "narration": "Nothing here requires Beijing to win a popularity contest for its currency. A spare way to pay can be messy, expensive, and still enough. Local money, gold as a neutral bridge, and a basket instead of the dollar are enough if they cover energy and some machinery. The United States remains the deepest market for savings. Allies remain inside the blue system because their protection is written there, and because depending on it limits what they can plan. The break is not the whole world walking out. The break is the exit of the one surplus economy whose oil bill made the mirror necessary.",
+    "cue": "[VISUAL: WORLD MAP, borders quiet. Allied money centers stay blue and steady. China's energy routes with a handful of producers glow amber. A glass mirror cracks only along the path factory, barrel, bond. Every other dollar path on the map stays intact. Slow drift, no shake.]"
+  },
+  {
+    "title": "The refusal",
+    "mood": "close",
+    "narration": "Mearsheimer adds the last limit. The leading state will not accept a gentle loss of its money weapon if it can make leaving expensive. Tariffs, technology denial, and the threat of being cut off from finance are attempts to restore the old payoffs. They are also new information. They tell the country that the leading state's intentions are hostile enough to justify speed. The two sides can therefore jump from a slow shift to a fast shift without either side wanting a crisis. That is how the trap ends. It is not a crash of the dollar against every good. It is a refusal, at the edge, to park China's surplus in claims on the American state. The mirror does not shatter everywhere. It shatters along the single path that ran from the factory, to the barrel, to the bond.",
+    "cue": "[VISUAL: SLOW ZOOM OUT. The cracked mirror holds center frame. Tariff walls, export-control gates, and sanction lists fade in as thin blue barriers. Amber corridors thicken in response, not everywhere, only on the energy path. End on China's next barrel, settled outside the mirror, with the Treasury pile quietly declining on a graph beneath. Hold four seconds. Cut to black.]"
+  }
+];
+
+const DRAWS = [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13];
+if (DRAWS.length !== STORY.length) throw new Error(`episode 1 draws ${DRAWS.length} vs story ${STORY.length}`);
+
 export default {
-  title: "The Hegemon's Mirror",
-  subtitle: "How the petrodollar trapped China—and how it breaks",
-  short: "The Hegemon's Mirror",
-  titles: ["The hegemon's mirror", "1971–1975 · the invoice", "The hub circuit", "China enters the loop", "Reserve and hostage", "The freeze", "Pipes around New York", "The grip", "The marginal barrel", "Flow · stock · settlement", "One object", "The crack, and only the crack", "The refusal at the margin"],
-  scenes: [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13],
+  title: "The Dollar Trap",
+  subtitle: "How an oil bill in dollars trapped China",
+  short: "The Dollar Trap",
+  // Pull mid-sentence pictures forward a little, so the frame changes before the line finishes.
+  pace: 0.9,
+  scenes: STORY.map((scene, i) => ({ ...scene, draw: DRAWS[i] })),
 };

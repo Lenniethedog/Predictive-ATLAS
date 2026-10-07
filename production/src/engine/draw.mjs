@@ -235,10 +235,13 @@ export function roundRect(ctx, x, y, w, h, r = 6) {
 }
 
 export function panel(ctx, x, y, w, h, o = {}) {
-  const { color = C.border, fill = rgba(C.bg2, 0.82), alpha = 1, title, titleColor = C.mid, r = 6, lw = 1.2, glow = 0 } = o;
+  const { color = C.border, fill = rgba(C.bg2, 0.82), alpha = 1, title, titleColor = C.mid, r = 6, lw = 1.2, glow = 0, sfx, at: atTime } = o;
+  // `sfx` is a stable name for a panel that has no title. Untitled panels stay silent
+  // unless they pass one, because a moving rectangle has no identity of its own.
+  const key = sfx ?? title;
+  if (key && atTime !== undefined) SFX.at("panel", atTime, key, { x: x + w / 2 });
   if (alpha <= 0) return;
-  // only titled panels have a stable identity across frames (untitled ones may move or grow)
-  if (title) SFX.appear("panel", title, alpha, { x: x + w / 2 });
+  if (key && atTime === undefined) SFX.appear("panel", key, alpha, { x: x + w / 2 });
   ctx.save();
   ctx.globalAlpha *= alpha;
   roundRect(ctx, x, y, w, h, r);
@@ -596,8 +599,9 @@ export function axes(ctx, x, y, w, h, o = {}) {
 
 // Series of [0..1, 0..1] points mapped into a rect; drawn on to fraction p.
 export function series(ctx, x, y, w, h, data, o = {}) {
-  const { color = C.cyan, width = 3, p = 1, glow = 10, fillAlpha = 0, dash, alpha = 1, dot = true } = o;
+  const { color = C.cyan, width = 3, p = 1, glow = 10, fillAlpha = 0, dash, alpha = 1, dot = true, sfx } = o;
   const pts = data.map(([u, v]) => [x + u * w, y + h - v * h]);
+  if (SFX.rec.on && p > 0.05) SFX.appear("draw", sfx || SFX.siteKey("series"), Math.min(1, p), { x, dur: 1.2 });
   if (p <= 0) return pts;
   if (fillAlpha > 0) {
     const sub = slice(pts, 0, p);

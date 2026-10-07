@@ -1,7 +1,7 @@
 // Ambient score: generated locally (no samples, no licensing), one chord per scene.
 //
-// A low tonic drone holds underneath; detuned, slowly filtered pad chords move at each
-// scene boundary through a minor progression that ends unresolved (sus2, no "lift");
+// A low tonic drone holds underneath; detuned, slowly filtered pad chords follow each
+// scene's mood (and stay unresolved on a closing scene);
 // a soft bell marks each scene change; a sparse plucked motif drifts over the top;
 // a low heartbeat pulse sits under the tensest scenes; faint air; all in a Freeverb.
 // The score holds through the final hold and stops on the cut to black.
@@ -14,12 +14,24 @@ import fs from "node:fs";
 import path from "node:path";
 import { OUT } from "./config.mjs";
 import { SR, TAU, midiHz, rng, smoothstep, blep, svf, freeverb, writeStereo, sceneClock } from "./engine/audio.mjs";
-
-// Scenes (0-based) that carry a low heartbeat pulse under the pads.
-const TENSION = { 1: [5, 9, 12], 2: [0, 6, 8], 3: [2, 9, 10], 4: [1, 7], 5: [0, 6, 11] };
+import { HEARTBEAT, MOOD_CHORD, scenesOf } from "./story.mjs";
 
 // Tonic (MIDI) per episode — each episode gets its own key colour.
 const TONIC = { 1: 38, 2: 36, 3: 40, 4: 41, 5: 39 }; // D, C, E, F, Eb (2nd octave)
+
+// How each scene mood sits in the mix. The chord comes from MOOD_CHORD.
+const PAD = { establish: 1, history: 0.95, system: 1, pressure: 0.88, shock: 0.72, motion: 1.05, cold: 0.58, fracture: 0.82, close: 0.66 };
+const PLUCK = { establish: 0.72, history: 0.7, system: 0.68, pressure: 0.48, shock: 0.3, motion: 0.9, cold: 0.34, fracture: 0.42, close: 0.24 };
+const GAP = { establish: 1, history: 1, system: 0.95, pressure: 1.2, shock: 1.45, motion: 0.62, cold: 1.55, fracture: 1.25, close: 1.7 };
+const DARK = { establish: 0, history: -30, system: 40, pressure: -90, shock: -200, motion: 90, cold: -150, fracture: -110, close: -170 };
+const BPM = { pressure: 52, shock: 66, fracture: 46 };
+
+function voicing(mood) {
+  const notes = CH[MOOD_CHORD[mood] ?? "i"];
+  if (mood === "cold" || mood === "shock") return notes.slice(0, 2);
+  if (mood === "close") return notes.slice(0, 3);
+  return notes;
+}
 
 // Chord voicings, semitones from the tonic (pad register adds an octave).
 const CH = {
@@ -31,13 +43,17 @@ const CH = {
   v: [7, 14, 19, 22],
   sus: [0, 7, 14, 19],
 };
-const PROGRESSION = ["i", "VI", "III", "VII", "i", "iv", "VI", "v", "i", "VI", "iv", "VII"];
-
-function generate(n) {
+function generate(n, moods) {
   const timing = JSON.parse(fs.readFileSync(path.join(OUT, "timing", `episode-0${n}.json`), "utf8"));
   const total = timing.total;
   const len = Math.ceil(total * SR);
   const { starts, end } = sceneClock(timing);
+  if (moods.length !== starts.length) throw new Error(`ep${n}: ${moods.length} moods vs ${starts.length} scenes`);
+  const moodAt = (t) => {
+    let s = 0;
+    for (let i = 0; i < starts.length; i++) if (t >= starts[i]) s = i;
+    return moods[s] ?? "establish";
+  };
   const tonic = TONIC[n] ?? 38;
   const L = new Float32Array(len);
   const R = new Float32Array(len);
@@ -73,8 +89,8 @@ function generate(n) {
     const xf = 3.5;
     const sceneCount = starts.length;
     for (let s = 0; s < sceneCount; s++) {
-      const name = s === sceneCount - 1 ? "sus" : PROGRESSION[s % PROGRESSION.length];
-      const notes = CH[name].map((o) => tonic + 12 + o);
+      const mood = moods[s] ?? "establish";
+      const notes = voicing(mood).map((o) => tonic + 12 + o);
       const t0 = s === 0 ? 0 : starts[s] - xf / 2;
       const t1 = s === sceneCount - 1 ? total : starts[s + 1] + xf / 2;
       const i0 = Math.max(0, Math.floor(t0 * SR));
@@ -83,7 +99,7 @@ function generate(n) {
         const f = midiHz(m);
         const det = [Math.pow(2, -6 / 1200), Math.pow(2, 7 / 1200)];
         const ph = [r(), r()];
-        const amp = k === 0 ? 0.32 : 0.24;
+        const amp = (k === 0 ? 0.32 : 0.24) * (PAD[mood] ?? 1);
         for (let i = i0; i < i1; i++) {
           const t = i / SR;
           const env = s === 0 ? smoothstep((t1 - t) / xf) : smoothstep((t - t0) / xf) * (s === sceneCount - 1 ? 1 : smoothstep((t1 - t) / xf));
@@ -103,7 +119,7 @@ function generate(n) {
     const cutoff = (t) => {
       let swell = 0;
       for (const st of starts) if (t >= st && t < st + 8) swell = Math.max(swell, Math.exp(-(t - st) / 2.5));
-      return 620 + 420 * (0.5 + 0.5 * Math.sin((TAU * t) / 29)) + 450 * swell;
+      return 620 + 420 * (0.5 + 0.5 * Math.sin((TAU * t) / 29)) + 450 * swell + (DARK[moodAt(t)] ?? 0);
     };
     svf(padL, cutoff, 0.8);
     svf(padR, (t) => cutoff(t) * 1.04, 0.8);
@@ -144,8 +160,7 @@ function generate(n) {
       events.push({ t, s: starts.filter((s0) => s0 <= t).length - 1, a: 0.035 });
     }
     for (const ev of events) {
-      const name = ev.s === starts.length - 1 ? "sus" : PROGRESSION[ev.s % PROGRESSION.length];
-      const tones = CH[name];
+      const tones = voicing(moods[Math.min(ev.s, moods.length - 1)] ?? "establish");
       const m = tonic + 24 + tones[Math.floor(r() * tones.length)];
       const f = midiHz(m);
       const pan = 0.25 + r() * 0.5;
@@ -165,11 +180,7 @@ function generate(n) {
 
   // ---- 5. plucked motif: sparse chord tones high up, a two-note figure now and then
   {
-    const notesAt = (t) => {
-      const sIdx = Math.max(0, starts.filter((s0) => s0 <= t).length - 1);
-      const name = sIdx === starts.length - 1 ? "sus" : PROGRESSION[sIdx % PROGRESSION.length];
-      return CH[name];
-    };
+    const notesAt = (t) => voicing(moodAt(t));
     const pluck = (t, m, a, pan) => {
       const f = midiHz(m);
       const i0 = Math.floor(t * SR);
@@ -186,23 +197,28 @@ function generate(n) {
         sendR[i0 + j] += v * gr * 1.6;
       }
     };
-    for (let t = 5 + r() * 3; t < end - 5; t += 2.6 + r() * 3.4) {
-      if (starts.some((s0) => Math.abs(s0 - t) < 2.2)) continue;
-      if (r() < 0.25) continue; // leave some gaps
+    for (let t = 5 + r() * 3; t < end - 5; ) {
+      const mood = moodAt(t);
+      const step = (2.6 + r() * 3.4) * (GAP[mood] ?? 1);
+      if (starts.some((s0) => Math.abs(s0 - t) < 2.2) || r() > (PLUCK[mood] ?? 0.75)) {
+        t += step;
+        continue;
+      }
       const tones = notesAt(t);
       const k = Math.floor(r() * tones.length);
       const m = tonic + 24 + tones[k];
       const pan = (r() - 0.5) * 0.8;
       pluck(t, m, 0.05, pan);
       if (r() < 0.35) pluck(t + 0.32 + r() * 0.12, tonic + 24 + tones[(k + 1) % tones.length], 0.035, -pan * 0.6);
+      t += step;
     }
   }
 
   // ---- 6. heartbeat pulse under the tensest scenes (lub-dub at ~52 bpm)
   {
-    const tense = TENSION[n] ?? [];
-    const beat = 60 / 52;
+    const tense = moods.map((m, i) => (HEARTBEAT.has(m) ? i : -1)).filter((i) => i >= 0);
     for (const sIdx of tense) {
+      const beat = 60 / (BPM[moods[sIdx]] ?? 52);
       const s0 = starts[sIdx];
       const s1 = sIdx + 1 < starts.length ? starts[sIdx + 1] : end;
       for (let t = s0 + 1.5; t < s1 - 1; t += beat) {
@@ -243,7 +259,9 @@ function generate(n) {
 const eps = process.argv.slice(2).filter((a) => /^[1-5]$/.test(a)).map(Number);
 for (const n of eps.length ? eps : [1, 2, 3, 4, 5]) {
   const t0 = Date.now();
-  const { L, R } = generate(n);
+  const ep = (await import(`./episodes/ep${n}.mjs`)).default;
+  const moods = scenesOf(ep).map((s) => s.mood);
+  const { L, R } = generate(n, moods);
   writeStereo(path.join(OUT, "audio", `episode-0${n}-music.wav`), L, R);
   console.log(`ep${n}: music ${(L.length / SR / 60).toFixed(2)} min, ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 }

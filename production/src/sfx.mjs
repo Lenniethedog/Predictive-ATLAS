@@ -15,9 +15,23 @@ import fs from "node:fs";
 import path from "node:path";
 import { OUT } from "./config.mjs";
 import { SR, TAU, midiHz, rng, svf, freeverb, writeStereo, place } from "./engine/audio.mjs";
+import { scenesOf } from "./story.mjs";
 
 const TONIC = { 1: 38, 2: 36, 3: 40, 4: 41, 5: 39 }; // matches the score's keys
 const db = (x) => Math.pow(10, x / 20);
+// Scale degrees and panel pitches, so a shock scene does not blip like an establishing one.
+const BLIP = {
+  establish: [0, 7, 12],
+  history: [3, 7, 10],
+  system: [3, 10, 14],
+  pressure: [0, 5, 10],
+  shock: [1, 6, 11],
+  motion: [0, 7, 14],
+  cold: [0, 7],
+  fracture: [0, 6, 10],
+  close: [0, 7, 19],
+};
+const PANEL_F = { establish: 210, history: 196, system: 220, pressure: 168, shock: 124, motion: 262, cold: 180, fracture: 146, close: 150 };
 
 // ---------------------------------------------------------------- voices
 function noise(n, r) {
@@ -80,7 +94,7 @@ function peakNorm(b, peak) {
 }
 
 // ---------------------------------------------------------------- episode
-function build(n) {
+function build(n, moods) {
   const cue = JSON.parse(fs.readFileSync(path.join(OUT, "sfx", `episode-0${n}.json`), "utf8"));
   const len = Math.ceil(cue.total * SR);
   const L = new Float32Array(len);
@@ -89,7 +103,7 @@ function build(n) {
   const sR = new Float32Array(len);
   const r = rng(5000 + n);
   const tonic = TONIC[n] ?? 38;
-  const blipNotes = [0, 3, 7, 10, 12, 15].map((o) => midiHz(tonic + 48 + o));
+  const moodOf = (e) => moods[e.scene] ?? "establish";
   const put = (buf, t, gain, pan = 0, send = 0.3) => {
     const i0 = Math.round(t * SR);
     place(L, R, buf, i0, gain, pan);
@@ -110,7 +124,10 @@ function build(n) {
     switch (e.kind) {
       case "whoosh": {
         // centred on the crossfade: builds into the cut, tails off after
-        const b = peakNorm(whoosh(1.5, 320, 1900, 650, r, 0.6), 1);
+        const mood = moodOf(e);
+        const dark = mood === "shock" || mood === "fracture" || mood === "close";
+        const bright = mood === "motion" || mood === "establish";
+        const b = peakNorm(whoosh(1.5, dark ? 180 : 320, bright ? 2400 : dark ? 900 : 1900, dark ? 420 : 650, r, 0.6), 1);
         const i0 = Math.round((e.t - 0.9) * SR);
         // sweep left -> right across the transition
         for (let j = 0; j < b.length; j++) {
@@ -129,13 +146,15 @@ function build(n) {
         break;
       }
       case "blip": {
-        const f = blipNotes[Math.floor(r() * blipNotes.length)];
+        const degrees = BLIP[moodOf(e)] ?? BLIP.establish;
+        const f = midiHz(tonic + 48 + degrees[Math.floor(r() * degrees.length)]);
         const b = peakNorm(tone(0.22, f, 0.06, [[1, 1], [2, 0.3, 0.025], [3.01, 0.08, 0.012]], 0.0015), 1);
         put(b, e.t, db(-33), pan, 0.5);
         break;
       }
       case "panel": {
-        const b = peakNorm(tone(0.25, 190 + r() * 30, 0.07, [[1, 1], [2.02, 0.25, 0.03]], 0.002), 1);
+        const f0 = PANEL_F[moodOf(e)] ?? 190;
+        const b = peakNorm(tone(0.25, f0 + r() * 16, 0.07, [[1, 1], [2.02, 0.25, 0.03]], 0.002), 1);
         const c = noise(Math.round(0.012 * SR), r);
         svf(c, () => 2600, 0.9, "band");
         for (let i = 0; i < c.length; i++) b[i] += c[i] * 0.5 * (1 - i / c.length);
@@ -211,6 +230,8 @@ function build(n) {
 const eps = process.argv.slice(2).filter((a) => /^[1-5]$/.test(a)).map(Number);
 for (const n of eps.length ? eps : [1, 2, 3, 4, 5]) {
   const t0 = Date.now();
-  const used = build(n);
+  const ep = (await import(`./episodes/ep${n}.mjs`)).default;
+  const moods = scenesOf(ep).map((s) => s.mood);
+  const used = build(n, moods);
   console.log(`ep${n}: sfx ${JSON.stringify(used)} ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 }

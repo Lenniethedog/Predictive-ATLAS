@@ -4,6 +4,7 @@ import { C, W, H, clamp, lerp, ease, prog, fade, pulse, rgba, mix, rng } from ".
 import * as D from "../engine/draw.mjs";
 import { MapView, P, ID, LANES, PIPES } from "../engine/geo.mjs";
 import * as K from "../engine/kit.mjs";
+import { inlandCrude, inlandMbd, inlandMtYear, malacca, orderOf } from "../figures.mjs";
 
 // Usable lane through the strait (water-routed for close zooms).
 const STRAIT = [[94.0, 6.4], [95.8, 6.1], [97.5, 5.6], [99.0, 4.6], [100.3, 3.3], [101.3, 2.5], [102.5, 1.75], [103.4, 1.2], [103.85, 1.13], [104.35, 1.25], [104.7, 1.6], [105.5, 2.6], [107.0, 4.6], [109.0, 8.0]];
@@ -110,8 +111,8 @@ function s1(S) {
   const view = seAsia(1500);
   const wide = K.camFor(view, [104, 6], 0.9, 960, 520);
   const close = K.camFor(view, [101.6, 2.9], 3.1, 960, 520);
-  const tEq = S.at(1);
-  const tBuy = S.at(2);
+  const tEq = S.at("China can");
+  const tBuy = S.at("Beijing has");
   const lanes = [
     [...WEST_IN, ...STRAIT, ...TO_CHINA],
     [...WEST_IN, ...STRAIT, ...TO_JAPAN],
@@ -142,7 +143,7 @@ function s1(S) {
     D.label(ctx, "SINGAPORE", sg[0] + 18, sg[1] + 30, { color: C.ice, alpha: la, size: 13 });
     D.label(ctx, "STRAIT OF MALACCA", ...view.xy([100.2, 3.9]), { color: C.ice, alpha: la, size: 13, align: "center" });
     // the equation
-    D.panel(ctx, 110, 870, 1050, 110, { alpha: prog(t, tEq, 0.6), fill: rgba("#0b0e13", 0.9) });
+    D.panel(ctx, 110, 870, 1050, 110, { alpha: prog(t, tEq, 0.6), fill: rgba("#0b0e13", 0.9), sfx: "Import equation" });
     equation(ctx, 140, 940, t, tEq + 0.2, { STOCKS: prog(t, tBuy, 0.8), PACIFIC: prog(t, tBuy + 0.4, 0.8), PIPELINES: prog(t, tBuy + 0.8, 0.8) });
     D.label(ctx, "TWO DECADES BUYING DOWN THE SHORTFALL →", 140, 900, { color: C.amber, alpha: prog(t, tBuy + 1, 0.6), size: 12 });
   };
@@ -156,10 +157,10 @@ function s2(S) {
   const lane = K.camFor(view, [103.85, 1.2], 26, 960, 520);
   const strait = K.camFor(view, [101.6, 2.9], 3.1, 960, 520);
   const tNarrow = 0.3;
-  const tFlows = S.at(1);
-  const tCard1 = S.at(2);
-  const tCard2 = S.at(3);
-  const tWide = S.at(5) - 1.2;
+  const tFlows = S.at("A large");
+  const tCard1 = S.at("The classic");
+  const tCard2 = S.at("Pipelines have");
+  const tWide = S.at("Middle Eastern") - 1.2;
   return (ctx, t) => {
     D.bg(ctx, { grid: false, color: "#090c10" });
     const wideA = prog(t, tWide, 1.4);
@@ -237,11 +238,11 @@ function s2(S) {
 
 // ================================================================ 3. valve hands
 function s3(S) {
-  const tGrip = S.at(2);
-  const tCap = S.at(3);
-  const tDep = S.at(4);
-  const tZero = S.at(5);
-  const tDecide = S.at(6);
+  const tGrip = S.at("It has");
+  const tCap = S.at("Under anarchy,");
+  const tDep = S.at("Energy dependence");
+  const tZero = S.at("Security is");
+  const tDecide = S.at("Relative power");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
     const cx = 960;
@@ -261,8 +262,8 @@ function s3(S) {
     ctx.restore();
     D.text(ctx, "OUTER SEA", 240, 230, { size: 30, weight: 600, tracking: 8, color: C.cyan, alpha: prog(t, 0.3, 0.6) });
     D.text(ctx, "INDIAN OCEAN SIDE · OFFSHORE HEGEMON", 240, 260, { kind: "mono", size: 13, color: C.mid, alpha: prog(t, 0.6, 0.6) });
-    D.text(ctx, "INDUSTRIAL DEMAND", 1680, 230, { size: 30, weight: 600, tracking: 8, color: C.crimson, align: "right", alpha: prog(t, S.at(1), 0.6) });
-    D.text(ctx, "PACIFIC SIDE · CHINESE INDUSTRY", 1680, 260, { kind: "mono", size: 13, color: C.mid, align: "right", alpha: prog(t, S.at(1) + 0.3, 0.6) });
+    D.text(ctx, "INDUSTRIAL DEMAND", 1680, 230, { size: 30, weight: 600, tracking: 8, color: C.crimson, align: "right", alpha: prog(t, S.at("The United"), 0.6) });
+    D.text(ctx, "PACIFIC SIDE · CHINESE INDUSTRY", 1680, 260, { kind: "mono", size: 13, color: C.mid, align: "right", alpha: prog(t, S.at("The United") + 0.3, 0.6) });
     // pipe
     const pipeY = cy;
     ctx.save();
@@ -306,7 +307,7 @@ function s3(S) {
     K.chip(ctx, "PLANS AGAINST: CAPABILITY", 240, 720, { color: C.ice, alpha: capA, size: 15 });
     K.chip(ctx, "NOT AGAINST: ASSURANCE", 240, 776, { color: C.mid, alpha: prog(t, tCap + 1, 0.6), size: 15 });
     K.chip(ctx, "ENERGY DEPENDENCE = ASSET OF THE OUTER-SEA SIDE", 1680, 720, { color: C.cyan, alpha: prog(t, tDep, 0.6), size: 15, align: "right" });
-    D.caption(ctx, "Security at a chokepoint is zero-sum", t, tZero + 0.4, { y: 960, x: 960, align: "center" });
+    D.caption(ctx, "One side's open lane is the other side's closed valve", t, tZero + 0.4, { y: 960, x: 960, align: "center" });
     K.chip(ctx, "RELATIVE POWER = DECIDING WHICH VALVE IS WHICH", 960, 870, { color: C.ice, align: "center", alpha: prog(t, tDecide, 0.6), size: 15 });
   };
 }
@@ -318,9 +319,9 @@ function s4(S) {
   const ships = [[93.5, 6.6], [95.5, 5.4], [92.0, 4.6], [97.5, 7.2], [90.5, 7.6], [94.8, 3.9]];
   const coalition = [[[62, 57], "RUSSIA"], [[51.4, 35.7], "IRAN"], [[51.2, 25.3], "QATAR"], [[54.4, 24.5], "UAE"], [P.beijing, "CHINA"]];
   const links = [[0, 4], [1, 4], [2, 4], [3, 4], [0, 1], [1, 2]];
-  const tOverlay = S.at(1);
-  const tMission = S.at(3);
-  const tCoal = S.at(4);
+  const tOverlay = S.at("A blockade");
+  const tMission = S.at("The Military-Industrial");
+  const tCoal = S.at("The act");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
     view.base(ctx, { colors: { [ID.china]: rgba(C.crimson, 0.2) }, borderAlpha: 0.5 });
@@ -371,15 +372,15 @@ function s4(S) {
 
 // ================================================================ 5. the arithmetic
 function s5(S) {
-  const tSrc = S.at(1);
-  const tSplit = S.at(2);
-  const tSouth = S.at(3);
-  const tPac = S.at(4);
-  const tDial = S.at(5);
-  const tAll = S.at(6);
-  const tSouthOnly = S.at(7);
-  const tRation = S.at(8);
-  const tLit = S.at(9);
+  const tSrc = S.at("Set Chinese");
+  const tSplit = S.at("Split the");
+  const tSouth = S.at("Six million barrels");
+  const tPac = S.at("The other");
+  const tDial = S.at("Put a");
+  const tAll = S.at("If every");
+  const tSouthOnly = S.at("If only");
+  const tRation = S.at("Rationing starts");
+  const tLit = S.at("The dilemma");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.25 });
     D.stamp(ctx, "SCENARIO", 1640, 190, t, 0.4, { color: C.amber, size: 30, angle: -0.06 });
@@ -389,40 +390,43 @@ function s5(S) {
     const x1 = 860;
     const top = 300;
     const unit = 46; // px per mb/d
+    const total = malacca.importsMbd;
+    const south = malacca.southernMbd;
+    const pacific = malacca.pacificOrLandMbd;
     const sa = Math.max(0.35 * prog(t, 0.6, 0.8), prog(t, tSrc, 0.6));
     ctx.save();
     ctx.globalAlpha = sa;
     ctx.fillStyle = C.ice;
-    ctx.fillRect(x0 - 26, top, 26, 11 * unit);
+    ctx.fillRect(x0 - 26, top, 26, total * unit);
     ctx.restore();
-    D.text(ctx, "11.0", x0 - 40, top + 5.5 * unit, { kind: "mono", size: 30, weight: 600, align: "right", alpha: sa });
-    D.text(ctx, "MB/D CRUDE IMPORTS", x0 - 40, top + 5.5 * unit + 26, { kind: "mono", size: 12, align: "right", color: C.mid, alpha: sa });
+    D.text(ctx, total.toFixed(1), x0 - 40, top + (total / 2) * unit, { kind: "mono", size: 30, weight: 600, align: "right", alpha: sa });
+    D.text(ctx, "MB/D CRUDE IMPORTS", x0 - 40, top + (total / 2) * unit + 26, { kind: "mono", size: 12, align: "right", color: C.mid, alpha: sa });
     const rp1 = prog(t, tSouth - 0.6, 1.6);
     const rp2 = prog(t, tPac - 0.6, 1.6);
-    D.ribbon(ctx, x0, top, top + 6 * unit, x1, top - 20, top - 20 + 6 * unit, C.crimson, { p: rp1, alpha: 0.6 });
-    D.ribbon(ctx, x0, top + 6 * unit, top + 11 * unit, x1, top + 6 * unit + 60, top + 11 * unit + 60, C.amber, { p: rp2, alpha: 0.55 });
-    D.text(ctx, "6.0", x1 + 20, top - 20 + 3 * unit, { kind: "mono", size: 30, weight: 600, color: C.crimson, alpha: rp1 });
-    D.text(ctx, "SOUTHERN STRAIT", x1 + 20, top - 20 + 3 * unit + 26, { kind: "mono", size: 12, color: C.crimson, alpha: rp1 });
-    D.text(ctx, "5.0", x1 + 20, top + 60 + 8.5 * unit, { kind: "mono", size: 30, weight: 600, color: C.amber, alpha: rp2 });
-    D.text(ctx, "PACIFIC OR LAND", x1 + 20, top + 60 + 8.5 * unit + 26, { kind: "mono", size: 12, color: C.amber, alpha: rp2 });
-    D.text(ctx, "UNTOUCHED BY A MALACCA-ONLY STOP", x1 + 20, top + 60 + 8.5 * unit + 48, { kind: "mono", size: 12, color: C.amber, alpha: rp2 * 0.8 });
+    D.ribbon(ctx, x0, top, top + south * unit, x1, top - 20, top - 20 + south * unit, C.crimson, { p: rp1, alpha: 0.6 });
+    D.ribbon(ctx, x0, top + south * unit, top + total * unit, x1, top + south * unit + 60, top + total * unit + 60, C.amber, { p: rp2, alpha: 0.55 });
+    D.text(ctx, south.toFixed(1), x1 + 20, top - 20 + (south / 2) * unit, { kind: "mono", size: 30, weight: 600, color: C.crimson, alpha: rp1 });
+    D.text(ctx, "SOUTHERN STRAIT", x1 + 20, top - 20 + (south / 2) * unit + 26, { kind: "mono", size: 12, color: C.crimson, alpha: rp1 });
+    D.text(ctx, pacific.toFixed(1), x1 + 20, top + 60 + (south + pacific / 2) * unit, { kind: "mono", size: 30, weight: 600, color: C.amber, alpha: rp2 });
+    D.text(ctx, "PACIFIC OR LAND", x1 + 20, top + 60 + (south + pacific / 2) * unit + 26, { kind: "mono", size: 12, color: C.amber, alpha: rp2 });
+    D.text(ctx, "UNTOUCHED BY A MALACCA-ONLY STOP", x1 + 20, top + 60 + (south + pacific / 2) * unit + 48, { kind: "mono", size: 12, color: C.amber, alpha: rp2 * 0.8 });
     D.label(ctx, "THREE PIPES", (x0 + x1) / 2, top - 60, { align: "center", color: C.mid, alpha: prog(t, tSplit, 0.6), size: 13 });
     // stock dial
     const da = prog(t, tDial, 0.8);
     const gx = 1460;
     const gy = 560;
     D.gauge(ctx, gx, gy, 150, 0.8 * prog(t, tDial + 0.3, 1.5, ease.out), { alpha: da, color: C.ice });
-    D.text(ctx, "800", gx, gy + 70, { kind: "mono", size: 48, weight: 600, align: "center", alpha: da });
+    D.text(ctx, String(malacca.stockMbbl), gx, gy + 70, { kind: "mono", size: 48, weight: 600, align: "center", alpha: da });
     D.text(ctx, "MN BBL · HYPOTHETICAL STOCK", gx, gy + 100, { kind: "mono", size: 13, align: "center", color: C.mid, alpha: da });
     // readouts
     const r1 = prog(t, tAll, 0.6);
     const r2 = prog(t, tSouthOnly, 0.6);
-    D.panel(ctx, 1240, 720, 440, 92, { alpha: r1, fill: rgba("#0b0e13", 0.9) });
-    D.text(ctx, "≈ 70 DAYS", 1264, 772, { size: 34, weight: 600, tracking: 3, alpha: r1 });
-    D.text(ctx, "IF EVERY IMPORT STOPS · 800 ÷ 11", 1264, 798, { kind: "mono", size: 12, color: C.mid, alpha: r1 });
-    D.panel(ctx, 1240, 830, 440, 92, { alpha: r2, fill: rgba("#0b0e13", 0.9), color: C.crimson });
-    D.text(ctx, "≈ 4 MONTHS", 1264, 882, { size: 34, weight: 600, tracking: 3, alpha: r2, color: C.crimson });
-    D.text(ctx, "IF ONLY THE SOUTHERN 6 STOP · 800 ÷ 6", 1264, 908, { kind: "mono", size: 12, color: C.mid, alpha: r2 });
+    D.panel(ctx, 1240, 720, 440, 92, { alpha: r1, fill: rgba("#0b0e13", 0.9), sfx: "Seventy days" });
+    D.text(ctx, orderOf(malacca.stockMbbl, malacca.importsMbd), 1264, 772, { size: 34, weight: 600, tracking: 3, alpha: r1 });
+    D.text(ctx, `IF EVERY IMPORT STOPS · ${malacca.stockMbbl} ÷ ${malacca.importsMbd}`, 1264, 798, { kind: "mono", size: 12, color: C.mid, alpha: r1 });
+    D.panel(ctx, 1240, 830, 440, 92, { alpha: r2, fill: rgba("#0b0e13", 0.9), color: C.crimson, sfx: "Four months" });
+    D.text(ctx, orderOf(malacca.stockMbbl, malacca.southernMbd), 1264, 882, { size: 34, weight: 600, tracking: 3, alpha: r2, color: C.crimson });
+    D.text(ctx, `IF ONLY THE SOUTHERN ${malacca.southernMbd} STOP · ${malacca.stockMbbl} ÷ ${malacca.southernMbd}`, 1264, 908, { kind: "mono", size: 12, color: C.mid, alpha: r2 });
     D.label(ctx, "RATIONING STARTS BEFORE EMPTY", 180, 980, { color: C.amber, alpha: prog(t, tRation, 0.6), size: 15, weight: 600 });
     K.chip(ctx, "DIVIDING BY TOTAL IMPORTS OVERSTATES THE SPEED OF A NARROW CLOSURE", 180, 930, { color: C.mid, alpha: prog(t, tLit, 0.6), size: 13 });
   };
@@ -432,14 +436,15 @@ function s5(S) {
 function s6(S) {
   const view = asiaWide(900, [[55, 0], [175, 64]]);
   view.setCam(K.camFor(view, [104, 37], 1, 900, 520));
-  const tMy = S.at(2);
-  const tKz = S.at(3);
-  const tRu = S.at(4);
-  const tSum = S.at(5);
-  const tGas = S.at(6);
-  const tPac = S.at(7);
-  const tWar = S.at(8);
-  const bars = [["MYANMAR", 22, tMy], ["KAZAKHSTAN", 20, tKz], ["RUSSIA → DAQING", 30, tRu]];
+  const tMy = S.at("The Myanmar");
+  const tKz = S.at("The Kazakhstan");
+  const tRu = S.at("The spur");
+  const tSum = S.at("Together that");
+  const tGas = S.at("The Power");
+  const tPac = S.at("Russian crude");
+  const tWar = S.at("Including the");
+  const barTimes = [tMy, tKz, tRu];
+  const bars = inlandCrude.lines.map((line, i) => [line.label, line.mtYear, barTimes[i]]);
   const americas = [[180, 30.5], [165, 31.5], [150, 32], [138, 31.2], [128, 31.0], P.shanghai];
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
@@ -459,7 +464,7 @@ function s6(S) {
     // gas: explicitly not plugged into the crude gap
     const gl = D.smoothPts(view.line(PIPES.powerOfSiberia), 6);
     D.stroke(ctx, gl, { color: C.violet, width: 3, dash: [8, 6], to: prog(t, tGas, 1.6), glow: 8 });
-    D.label(ctx, "POWER OF SIBERIA · GAS ≈ 38 BCM/Y · NOT CRUDE", ...view.xy([126.5, 62.0]), { color: C.violet, alpha: prog(t, tGas + 1, 0.5), size: 12 });
+    D.label(ctx, `POWER OF SIBERIA · GAS ≈ ${inlandCrude.powerOfSiberiaBcmYear} BCM/Y · NOT CRUDE`, ...view.xy([126.5, 62.0]), { color: C.violet, alpha: prog(t, tGas + 1, 0.5), size: 12 });
     // Pacific inflows bypass the Indian Ocean and stay lit
     const ko = D.smoothPts(view.line(PIPES.espoPacific), 6);
     D.stroke(ctx, ko, { color: C.amber, width: 2, alpha: 0.6 * prog(t, tPac, 1) });
@@ -478,20 +483,21 @@ function s6(S) {
       D.label(ctx, "INCLUDE THE PACIFIC → A LARGER WAR", a[0] + 10, b[1] + 30, { color: C.crimson, alpha: wa, size: 13 });
     }
     // design-capacity bars
-    const pa = prog(t, S.at(1), 0.6);
+    const pa = prog(t, S.at("Design capacity"), 0.6);
     const px = 110;
     const py = 640;
     D.panel(ctx, px, py, 600, 350, { alpha: pa, title: "Inland crude lines · design capacity", fill: rgba("#0b0e13", 0.92) });
+    const barScale = Math.max(...inlandCrude.lines.map((line) => line.mtYear)) + 2;
     bars.forEach(([n, v, t0], i) => {
       const y = py + 80 + i * 66;
       D.text(ctx, n, px + 24, y, { kind: "mono", size: 13, color: C.mid, alpha: pa });
-      D.hbar(ctx, px + 24, y + 10, 420, 20, C.amber, { p: (v / 32) * prog(t, t0, 1.2, ease.out), alpha: pa });
+      D.hbar(ctx, px + 24, y + 10, 420, 20, C.amber, { p: (v / barScale) * prog(t, t0, 1.2, ease.out), alpha: pa });
       D.text(ctx, `${v} MT/Y`, px + 560, y + 26, { kind: "mono", size: 16, weight: 600, align: "right", color: C.amber, alpha: prog(t, t0 + 0.8, 0.5) });
     });
     const sa = prog(t, tSum, 0.6);
     D.stroke(ctx, [[px + 24, py + 285], [px + 576, py + 285]], { color: C.border, width: 1, alpha: sa });
-    D.text(ctx, "≈ 1.45 MB/D", px + 24, py + 324, { kind: "mono", size: 28, weight: 600, color: C.ice, alpha: sa });
-    D.text(ctx, "72 MT/Y · JUST UNDER 1.5", px + 576, py + 324, { kind: "mono", size: 13, color: C.mid, align: "right", alpha: sa });
+    D.text(ctx, `≈ ${inlandMbd().toFixed(2)} MB/D`, px + 24, py + 324, { kind: "mono", size: 28, weight: 600, color: C.ice, alpha: sa });
+    D.text(ctx, `${inlandMtYear()} MT/Y · JUST UNDER 1.5`, px + 576, py + 324, { kind: "mono", size: 13, color: C.mid, align: "right", alpha: sa });
   };
 }
 
@@ -505,12 +511,12 @@ function s7(S) {
     ["LOMBOK", P.lombok, LANES.lombokRoute, ID.philippines],
     ["EASTERN EXITS", P.ombai, LANES.ombaiRoute, ID.timor],
   ];
-  const tGates = S.at(1);
-  const tCost = S.at(2);
-  const tDeep = S.at(4);
-  const tCap = S.at(5);
-  const tCoast = S.at(6);
-  const tValve = S.at(8);
+  const tGates = S.at("Cargoes that");
+  const tCost = S.at("The journey");
+  const tDeep = S.at("Some of");
+  const tCap = S.at("A closure");
+  const tCoast = S.at("Each added");
+  const tValve = S.at("The offshore");
   return (ctx, t) => {
     D.bg(ctx, { grid: false, color: "#090c10" });
     view.setCam(MapView.mixCam(camM, camA, prog(t, 0.5, Math.max(4, tGates + 4), ease.inOut)));
@@ -539,20 +545,20 @@ function s7(S) {
     const ia = prog(t, tCost - 1.5, 0.6);
     const tick = (label, x, base, t0) => {
       const v = base * (1 + 0.65 * prog(t, t0, 4, ease.out));
-      D.panel(ctx, x, 140, 250, 86, { alpha: ia, fill: rgba("#0b0e13", 0.92) });
+      D.panel(ctx, x, 140, 250, 86, { alpha: ia, fill: rgba("#0b0e13", 0.92), sfx: label });
       D.text(ctx, label, x + 16, 168, { kind: "mono", size: 11, color: C.mid, alpha: ia });
       D.text(ctx, v.toFixed(0), x + 16, 206, { kind: "mono", size: 28, weight: 600, color: C.amber, alpha: ia });
       tri(ctx, x + 214, 196, 9, C.amber, ia * prog(t, t0, 0.4));
     };
-    tick("FREIGHT INDEX", 1290, 100, S.at(2));
-    tick("WAR-RISK INSURANCE", 1560, 100, S.at(3));
-    D.label(ctx, "LONGER JOURNEY", 1290, 250, { color: C.mid, alpha: prog(t, S.at(2), 0.5), size: 12 });
+    tick("FREIGHT INDEX", 1290, 100, S.at("The journey"));
+    tick("WAR-RISK INSURANCE", 1560, 100, S.at("Freight and"));
+    D.label(ctx, "LONGER JOURNEY", 1290, 250, { color: C.mid, alpha: prog(t, S.at("The journey"), 0.5), size: 12 });
     // depth callout
     const dA = fade(t, tDeep, 0.6, tCap + 2, 0.6);
     const lb = view.xy(P.lombok);
     if (dA > 0) {
       D.stroke(ctx, [lb, [lb[0] + 120, lb[1] + 120]], { color: C.ice, width: 1.2, alpha: dA });
-      D.panel(ctx, lb[0] + 120, lb[1] + 100, 360, 84, { alpha: dA, fill: rgba("#0b0e13", 0.92) });
+      D.panel(ctx, lb[0] + 120, lb[1] + 100, 360, 84, { alpha: dA, fill: rgba("#0b0e13", 0.92), sfx: "Deep water" });
       D.text(ctx, "DEEP WATER", lb[0] + 140, lb[1] + 134, { size: 20, weight: 600, tracking: 3, alpha: dA });
       D.text(ctx, "THE LARGEST TANKERS ALREADY PREFER IT", lb[0] + 140, lb[1] + 160, { kind: "mono", size: 11, color: C.mid, alpha: dA });
     }
@@ -572,15 +578,15 @@ function s8(S) {
     ["EXPORT PETROCHEMICALS", 1.6, "cut2"],
     ["PRIVATE ROAD FUEL", 1.8, "cut1"],
   ];
-  const tProt = S.at(1);
-  const tRoad = S.at(2);
-  const tPetro = S.at(3);
-  const tRef = S.at(4);
-  const tGrid = S.at(5);
-  const tFx = S.at(6);
-  const tComp = S.at(7);
-  const tIns = S.at(8);
-  const tRetag = S.at(9);
+  const tProt = S.at("Diesel for");
+  const tRoad = S.at("Private road");
+  const tPetro = S.at("Export-oriented petrochemicals");
+  const tRef = S.at("Refineries are");
+  const tGrid = S.at("A modern");
+  const tFx = S.at("The industries");
+  const tComp = S.at("An energy");
+  const tIns = S.at("Tankers inside");
+  const tRetag = S.at("Cargoes that");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
     // stacked priority chart
@@ -661,10 +667,10 @@ function s9(S) {
   const proj = geoAzimuthalEquidistant().rotate([-100, -90]).scale(560).translate([W / 2, H / 2]);
   const view = new MapView(proj, { res: "50m" });
   view.setCam(K.camFor(view, [100, 90], 1, 900, 250));
-  const tPipes = S.at(1);
-  const tNsr = S.at(3);
-  const tVol = S.at(4);
-  const tGw = S.at(6);
+  const tPipes = S.at("Pipelines at");
+  const tNsr = S.at("The Northern");
+  const tVol = S.at("Its annual");
+  const tGw = S.at("Gwadar and");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.15 });
     view.base(ctx, { graticule: true, colors: { [ID.china]: rgba(C.crimson, 0.18), [ID.russia]: C.landHi }, borderAlpha: 0.5 });
@@ -712,16 +718,16 @@ function s9(S) {
     D.text(ctx, "NSR · ALL CARGO", 1384, 392, { kind: "mono", size: 12, color: C.mid, alpha: va });
     D.hbar(ctx, 1384, 402, 410, 18, C.ice, { p: 0.025 * prog(t, tVol + 0.5, 1), alpha: va });
     D.text(ctx, "ROUNDING ERROR", 1420, 418, { kind: "mono", size: 12, color: C.amber, alpha: prog(t, tVol + 1, 0.5) });
-    K.chip(ctx, "A RELIEF VALVE, NOT A REPLACEMENT ARTERY", 1360, 490, { color: C.ice, alpha: prog(t, S.at(5), 0.6), size: 13 });
+    K.chip(ctx, "A RELIEF VALVE, NOT A REPLACEMENT ARTERY", 1360, 490, { color: C.ice, alpha: prog(t, S.at("It is"), 0.6), size: 13 });
     // pipeline needles vs southern deficit
     const pa = prog(t, tPipes + 1, 0.6);
     D.panel(ctx, 1360, 560, 460, 170, { alpha: pa, title: "Pipelines vs southern deficit", fill: rgba("#0b0e13", 0.92) });
-    const fill = (1.45 / 6) * prog(t, tPipes + 1.5, 2.5, ease.out);
+    const fill = (inlandMbd() / malacca.southernMbd) * prog(t, tPipes + 1.5, 2.5, ease.out);
     D.hbar(ctx, 1384, 620, 410, 22, C.amber, { p: fill, alpha: pa });
     D.stroke(ctx, [[1384 + 410, 606], [1384 + 410, 656]], { color: C.crimson, width: 2, dash: [4, 4], alpha: pa });
-    D.text(ctx, "DEFICIT 6 MB/D", 1794, 680, { kind: "mono", size: 12, color: C.crimson, align: "right", alpha: pa });
-    D.text(ctx, "FULL DESIGN ≈ 1.45", 1384, 680, { kind: "mono", size: 12, color: C.amber, alpha: pa });
-    D.label(ctx, "RUSSIAN SURPLUS · KAZAKH POLITICS · BURMESE CORRIDOR", 1384, 712, { color: C.mid, alpha: prog(t, S.at(2), 0.6), size: 10 });
+    D.text(ctx, `DEFICIT ${malacca.southernMbd} MB/D`, 1794, 680, { kind: "mono", size: 12, color: C.crimson, align: "right", alpha: pa });
+    D.text(ctx, `FULL DESIGN ≈ ${inlandMbd().toFixed(2)}`, 1384, 680, { kind: "mono", size: 12, color: C.amber, alpha: pa });
+    D.label(ctx, "RUSSIAN SURPLUS · KAZAKH POLITICS · BURMESE CORRIDOR", 1384, 712, { color: C.mid, alpha: prog(t, S.at("Pushing them"), 0.6), size: 10 });
     // Gwadar: a thin political line with berth limits and a risk hatch
     const gw = D.smoothPts(view.line(PIPES.gwadarKashgar), 6);
     const ga = prog(t, tGw, 1.5);
@@ -758,16 +764,16 @@ function s10(S) {
   const base = [[0, 800], [0.5, 770], [1, 715], [1.5, 665], [2, 605]];
   const openB = [[2, 605], [2.5, 562], [3, 518]];
   const closedB = [[2, 605], [2.5, 470], [3, 330]];
-  const tM1 = S.at(1);
-  const tIns = S.at(2);
-  const tM2 = S.at(3);
-  const tPipe = S.at(4);
-  const tFac = S.at(5);
-  const tM3 = S.at(6);
-  const tClosed = S.at(7);
-  const tCalc = S.at(8);
-  const tForm = S.at(9);
-  const tPrice = S.at(10);
+  const tM1 = S.at("Month one:");
+  const tIns = S.at("The external");
+  const tM2 = S.at("Month two:");
+  const tPipe = S.at("Pipeline utilization");
+  const tFac = S.at("Export factories");
+  const tM3 = S.at("Month three:");
+  const tClosed = S.at("If the Pacific gate has");
+  const tCalc = S.at("This is");
+  const tForm = S.at("The option");
+  const tPrice = S.at("These routes");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
     D.axes(ctx, gx, gy, gw, gh, { ticks: 4 });
@@ -834,12 +840,12 @@ function s10(S) {
 
 // ================================================================ 11. the third month
 function s11(S) {
-  const tGauge = S.at(1);
-  const tRed = S.at(2);
-  const tResp = S.at(3);
-  const tPrem = S.at(4);
-  const tTaiwan = S.at(5);
-  const tEscape = S.at(6);
+  const tGauge = S.at("A continental");
+  const tRed = S.at("It experiences");
+  const tResp = S.at("The response");
+  const tPrem = S.at("Such moves");
+  const tTaiwan = S.at("Washington's planners");
+  const tEscape = S.at("The energy");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
     // survival gauge of the continental power
@@ -848,7 +854,7 @@ function s11(S) {
     D.gauge(ctx, 420, 470, 190, v, { alpha: ga, zones: [[0, 0.55, C.steel], [0.55, 0.8, C.amber], [0.8, 1, C.crimson]] });
     D.text(ctx, "SURVIVAL PRESSURE", 420, 540, { size: 22, weight: 600, tracking: 5, align: "center", alpha: ga });
     D.text(ctx, "CONTINENTAL POWER · MONTH 3 · PACIFIC CLOSED", 420, 568, { kind: "mono", size: 12, color: C.mid, align: "center", alpha: ga });
-    K.chip(ctx, "NOT A LIMITED NAVAL MEASURE", 420, 640, { color: C.mid, align: "center", alpha: fade(t, S.at(1, 0.5), 0.5, tRed, 0.5), size: 14 });
+    K.chip(ctx, "NOT A LIMITED NAVAL MEASURE", 420, 640, { color: C.mid, align: "center", alpha: fade(t, S.at("A continental", 0.5), 0.5, tRed, 0.5), size: 14 });
     K.chip(ctx, "AN ATTEMPT ON POLITICAL SURVIVAL", 420, 640, { color: C.crimson, align: "center", alpha: prog(t, tRed, 0.5), size: 14 });
     // response categories only
     const cats = [
@@ -858,9 +864,9 @@ function s11(S) {
     ];
     D.label(ctx, "RESPONSE SET · CATEGORIES ONLY", 900, 250, { color: C.mid, alpha: prog(t, tResp, 0.6), size: 12 });
     cats.forEach(([n, k], i) => {
-      const a = prog(t, tResp + i * (S.e[3] - S.b[3]) * 0.28, 0.5);
+      const a = prog(t, tResp + i * (S.end("The response") - S.start("The response")) * 0.28, 0.5);
       const y = 300 + i * 110;
-      D.panel(ctx, 900, y, 460, 84, { alpha: a, fill: rgba("#0b0e13", 0.9), color: C.crimson });
+      D.panel(ctx, 900, y, 460, 84, { alpha: a, fill: rgba("#0b0e13", 0.9), color: C.crimson, sfx: n });
       D.text(ctx, n, 990, y + 50, { size: 19, weight: 600, tracking: 2.5, alpha: a });
       if (k === "ECON") {
         D.text(ctx, "⇄", 945, y + 54, { size: 30, color: C.crimson, align: "center", alpha: a });
@@ -903,11 +909,11 @@ function s11(S) {
 function s12(S) {
   const view = asiaWide(820, [[25, -15], [150, 55]]);
   view.setCam(K.camFor(view, [92, 24], 1, 960, 560));
-  const tAllies = S.at(1);
-  const tFork = S.at(2);
-  const tHabit = S.at(3);
-  const tBuyer = S.at(4);
-  const tEp1 = S.at(5);
+  const tAllies = S.at("Allies who");
+  const tFork = S.at("Gulf producers");
+  const tHabit = S.at("The unipolar");
+  const tBuyer = S.at("A multipolar");
+  const tEp1 = S.at("Coercion at");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
     const al = prog(t, tAllies, 1);
@@ -920,7 +926,7 @@ function s12(S) {
       const p = view.xy(ll);
       const data = [];
       for (let i = 0; i <= 24; i++) data.push([i / 24, 0.15 + (i > 10 ? Math.pow((i - 10) / 14, 1.5) * 0.75 : 0) + 0.03 * Math.sin(i * 1.7)]);
-      D.panel(ctx, p[0] + 30, p[1] - 150 + off * 200, 220, 110, { alpha: al, fill: rgba("#0b0e13", 0.9), color: C.cyan });
+      D.panel(ctx, p[0] + 30, p[1] - 150 + off * 200, 220, 110, { alpha: al, fill: rgba("#0b0e13", 0.9), color: C.cyan, sfx: lab });
       D.text(ctx, `${lab} · OIL + SHIPPING RISK`, p[0] + 44, p[1] - 126 + off * 200, { kind: "mono", size: 10, color: C.cyan, alpha: al });
       D.series(ctx, p[0] + 44, p[1] - 116 + off * 200, 190, 66, data, { color: C.amber, width: 2, p: prog(t, tAllies + off, 3), alpha: al, glow: 6 });
     }
@@ -945,7 +951,7 @@ function s12(S) {
     if (ea > 0) {
       const ix = 1300;
       const iy = 620;
-      D.panel(ctx, ix, iy, 520, 330, { alpha: ea, title: "Replay · Episode 1 · the marginal barrel", fill: rgba("#0b0e13", 0.94), color: C.amber });
+      D.panel(ctx, ix, iy, 520, 330, { alpha: ea, title: "Replay · Episode 1 · China's next barrel", fill: rgba("#0b0e13", 0.94), color: C.amber });
       const a = [ix + 70, iy + 230];
       const b = [ix + 440, iy + 130];
       D.icon.barrel(ctx, a[0], a[1], 40, C.ice, ea);
@@ -971,10 +977,10 @@ function s13(S) {
   const R = mk();
   L.setCam(K.camFor(L, [113, 17], 0.55, 500, 455));
   R.setCam(K.camFor(R, [113, 17], 0.55, 1420, 455));
-  const tL = S.at(1);
-  const tR = S.at(2);
-  const tBeijing = S.at(3);
-  const tWash = S.at(4);
+  const tL = S.at("China can endure");
+  const tR = S.at("China cannot");
+  const tBeijing = S.at("Beijing's gambit");
+  const tWash = S.at("Washington's gambit");
   const panel = (ctx, view, x, title, sub, a, t, siege) => {
     D.panel(ctx, x, 180, 820, 720, { alpha: a, title, fill: rgba("#0b0e13", 0.9), color: siege ? C.crimson : C.border, titleColor: siege ? C.crimson : C.mid });
     ctx.save();
@@ -1018,7 +1024,7 @@ function s13(S) {
       D.panel(ctx, 1010, 180, 820, 720, { alpha: sk, title: "Number two · a siege", fill: rgba("#0b0e13", 0.6) });
       D.text(ctx, "TWO NUMBERS · TWO MAPS", 960, 560, { size: 30, weight: 600, tracking: 10, align: "center", alpha: sk });
     }
-    panel(ctx, L, 90, "Malacca-only closure", ["MONTHS", "STOCKS DRAW · HULLS DIVERT · PIPELINES ≈ 1.5 MB/D", "PACIFIC CRUDE STILL FLOWS"], prog(t, tL, 0.8), t, false);
+    panel(ctx, L, 90, "Malacca-only closure", ["MONTHS", `STOCKS DRAW · HULLS DIVERT · PIPELINES ≈ ${inlandMbd().toFixed(2)} MB/D`, "PACIFIC CRUDE STILL FLOWS"], prog(t, tL, 0.8), t, false);
     panel(ctx, R, 1010, "Southern + Pacific siege", ["REGIONAL WAR", "A SHARP INDUSTRIAL CONTRACTION", "NOT A STRAIT · A WAR"], prog(t, tR, 0.8), t, true);
     // Beijing's gambit
     D.stamp(ctx, "DISAPPOINTING", 500, 860, t, tBeijing, { color: C.steel, size: 28, angle: -0.05 });
@@ -1031,14 +1037,98 @@ function s13(S) {
       D.brackets(ctx, 70 - pad, 150 - pad, 1780 + pad * 2, 780 + pad * 2, { color: C.cyan, len: 46, lw: 4, alpha: wa });
       D.label(ctx, "WASHINGTON'S GAMBIT · THREATEN BOTH", 960, 960, { align: "center", color: C.cyan, alpha: wa, size: 14, weight: 600 });
     }
-    K.chip(ctx, "BOTH SIDES BUILD FOR THE TEST ANYWAY", 960, 1010, { color: C.ice, align: "center", alpha: prog(t, S.at(5), 0.6), size: 14 });
+    K.chip(ctx, "BOTH SIDES BUILD FOR THE TEST ANYWAY", 960, 1010, { color: C.ice, align: "center", alpha: prog(t, S.at("Under unknowable"), 0.6), size: 14 });
   };
 }
 
+// Spoken line, visual direction, and score mood. scripts/episode-03-*.txt are generated from this.
+const STORY = [
+  {
+    "title": "An import equation",
+    "mood": "establish",
+    "narration": "Closing the Strait of Malacca is a supply problem before it is a navy story. China can be cut off from the Gulf only as far as its oil still comes through a southern gate, and only while stocks, Pacific deliveries, and pipelines fail to fill the gap. Beijing has spent twenty quiet years and a great deal of money still trying to shrink that gap.",
+    "cue": "[VISUAL: SATELLITE VIEW, ZOOM IN to the Strait of Malacca between Sumatra and the Malay Peninsula. Shipping-density heatmap, white-hot in the usable lane near Singapore, cooling toward the approaches. An equation fades in at the lower left: DEFICIT = SOUTHERN FLOW − STOCKS − PACIFIC − PIPELINES. No fleet icons yet.]"
+  },
+  {
+    "title": "The funnel",
+    "mood": "pressure",
+    "narration": "The strait is a funnel between Sumatra and the Malay Peninsula, narrowing to a few kilometers of usable lane near Singapore. A large share of the oil and dry cargo moving between the Indian Ocean and the Pacific passes that funnel. The classic Chinese statement of the problem, the Malacca dilemma, treated roughly four-fifths of China's oil imports as hostages of this single passage. Pipelines have since lowered the fraction. They have not retired it. Middle Eastern and African crude still reaches Chinese terminals by riding the southern approaches.",
+    "cue": "[VISUAL: The funnel narrows to a few kilometers of lane. Historical flow ribbons: crude and dry cargo between the Indian Ocean and the Pacific. A 2000s planning card reads FOUR-FIFTHS OF OIL IMPORTS, then a second card shows the fraction lower but still dominant. Middle Eastern and African crude ribbons still enter from the west and exit toward crimson Chinese terminals.]"
+  },
+  {
+    "title": "Valve hands",
+    "mood": "shock",
+    "narration": "John Mearsheimer reads a blockade as the tool of a sea power. The United States does not have to occupy China's interior to hurt Chinese power. It has to threaten the ships that feed Chinese factories. Under anarchy, nobody is in charge, so intentions stay unknown, so Beijing plans for what America can do, not for a promise that it never will. Energy dependence is an advantage for whoever holds the outer sea. Security is one-sided at a narrow strait, because one navy's open lane is the other navy's closed valve. Relative power is getting to decide which of those it is.",
+    "cue": "[VISUAL: Two navies abstracted as valve hands, not as ship models in combat. Blue outer-sea control on the Indian Ocean side. Crimson industrial demand on the Pacific side. The chokepoint is a literal valve graphic. Open lane and closed valve are the same object, recolored. Caption: SECURITY AT A CHOKEPOINT IS ZERO-SUM.]"
+  },
+  {
+    "title": "The same ships",
+    "mood": "system",
+    "narration": "Jeffrey Sachs hears a different story in the same ships. A blockade of energy and food trade is what follows when one country runs out of rules and reaches for force. It confirms, inside the targeted country, that the American system is not a safe home. The Military-Industrial Complex can keep the posture going, because a crisis at a narrow strait is a fleet job with a budget line. The act meant to punish China is also the act that makes an energy partnership across Eurasia look like common sense.",
+    "cue": "[VISUAL: The ships remain. A second overlay, institutional, desaturates the fleet and highlights budget lines, allied price spikes, and Gulf producer choices. Amber lines begin to connect Russia, Iran, and selected Gulf nodes into a loose energy coalition. The blue fleet mission box stays funded. The coalition brightens as the mission box pulses.]"
+  },
+  {
+    "title": "The arithmetic",
+    "mood": "cold",
+    "narration": "Professor Jiang asks for the arithmetic before the coalition. Set Chinese crude imports at eleven million barrels a day. Split the flow into three pipes. Six million barrels a day still depend on a southern strait. The other five million arrive from the Pacific side or by land, and a Malacca-only stop does not touch them. Put a hypothetical stock of eight hundred million barrels behind the system, and call it a scenario dial rather than a published reserve. If every import stopped, the dial would read on the order of seventy days. If only the southern six million stopped, the deficit is six million a day and the same dial reads on the order of four months. Rationing starts before the tanks are empty. The dilemma literature divides stocks by total imports and therefore overstates the speed of a narrow closure.",
+    "cue": "[VISUAL: PLANNING CASE, clearly labeled SCENARIO, not a census. A Sankey diagram: eleven million barrels a day of crude imports split into six million southern-strait barrels and five million Pacific-or-land barrels. A dial marked HYPOTHETICAL STOCK, eight hundred million barrels. Two readouts: about seventy days if everything stops; about four months if only the southern six million stop. A footnote on the graph: RATIONING STARTS BEFORE EMPTY.]"
+  },
+  {
+    "title": "The surviving five million",
+    "mood": "motion",
+    "narration": "The composition of the surviving five million is the part of the map that matters. Design capacity on the three inland crude lines is public and limited. The Myanmar line from the Bay of Bengal toward Yunnan is about twenty-two million tons a year. The Kazakhstan line is about twenty million. The spur from Russia's eastern pipeline system into Daqing is about thirty million. Together that is a little under one and a half million barrels a day. The Power of Siberia line, at a design near thirty-eight billion cubic meters a year, displaces some seaborne liquefied gas and leaves the crude gap intact. Russian crude loaded on the Pacific, at Kozmino, never enters the Indian Ocean, and cargoes from the Americas can cross the Pacific directly. Including the Pacific turns the siege into a larger war.",
+    "cue": "[VISUAL: THREE PIPELINE BARS at design capacity. Myanmar, Bay of Bengal to Yunnan, twenty-two million tons a year. Kazakhstan, twenty million. The Russia-China spur into Daqing, thirty million. Sum labeled JUST UNDER 1.5 MILLION BARRELS A DAY. A separate gas bar for Power of Siberia, thirty-eight billion cubic meters, explicitly not plugged into the crude gap. Pacific loadings at Kozmino and trans-Pacific cargoes from the Americas bypass the Indian Ocean entirely and stay lit.]"
+  },
+  {
+    "title": "Every southern gate",
+    "mood": "pressure",
+    "narration": "Rerouting is the first counter. Cargoes that cannot use Malacca can try the Sunda Strait, the Lombok Strait, or the eastern Indonesian exits. The journey is longer. Freight and insurance rise. Some of this diversion is already normal, because the largest tankers prefer deeper water. A closure that is real in economic terms has to price every southern gate, not only the famous one. Each added gate adds coastline, adds a third country's territorial sea, and adds a chance that the blockade stops being a bilateral squeeze. Mearsheimer would count that chance as the mechanism by which chokepoint wars widen. The offshore power wants a valve. The geography offers an archipelago.",
+    "cue": "[VISUAL: ALTERNATE GATES draw on. Sunda, Lombok, and the eastern Indonesian exits take diverted ribbons. Freight and insurance indices tick up. A depth callout shows the largest tankers already preferring deeper water. The camera PULLS BACK from Malacca alone to the whole archipelago. Each added gate lights a third country's coastline. Caption: A REAL CLOSURE MUST PRICE EVERY SOUTHERN GATE.]"
+  },
+  {
+    "title": "Demand destruction",
+    "mood": "fracture",
+    "narration": "The second answer is to use less. Diesel for agriculture and for the armed forces is protected. Private road fuel is not. Export-oriented petrochemicals are cut before household heating. Refineries are told to favor the barrel used at home over the product sold abroad. A modern industrial country can take a partial loss of crude for a season if its grids still have coal, nuclear, hydro, and pipeline gas, and if managers will idle the least necessary factory. The industries that halt first are the ones whose exports earn the foreign money China uses to buy the next cargo. An energy squeeze and a dollar squeeze work together. Tankers inside the blue insurance system stop. Cargoes that still move are the ones paid in yuan, gold, or a two-country balance, under insurance written outside American law.",
+    "cue": "[VISUAL: DEMAND-DESTRUCTION SEQUENCE as a stacked priority chart. Diesel for agriculture and the armed forces stays green and protected. Private road fuel drops out. Export petrochemicals drop before household heating. A factory icon idles. Beside it, a currency loop: halted exports cut the foreign exchange used to buy the next cargo. Blue insurance nodes go dark. Remaining cargoes retag amber: yuan, gold, or a bilateral balance.]"
+  },
+  {
+    "title": "Overland and Arctic",
+    "mood": "cold",
+    "narration": "The third counter is the overland and Arctic option set. Pipelines at full design replace a slice of the southern deficit, not the deficit itself. Pushing them harder in a crisis depends on Russian surplus production, on Kazakh politics, and on the security of a Burmese corridor that has its own internal wars. The Northern Sea Route along the Russian Arctic is a summer and shoulder-season lane, shortened on the map between northern energy projects and Chinese ports, and constrained by ice class, icebreakers, insurance, and depth of traffic. Its annual volume is a rounding error beside the oil that normally rides Malacca. It is a relief valve, not a replacement artery. Gwadar and the Pakistani corridor are a political option with berth limits and an insurgency problem.",
+    "cue": "[VISUAL: NORTH POLAR PROJECTION. The Northern Sea Route is a thin seasonal thread, ice-class icons, a short calendar window, volume annotated as a rounding error beside Malacca. Gwadar to western China is a thin amber political line with a berth-limit marker and a security-risk hatch. Pipeline utilization needles rise but stop well below the southern deficit. Do not draw these routes thicker than their data.]"
+  },
+  {
+    "title": "One quarter forward",
+    "mood": "pressure",
+    "narration": "Run the gambit forward one quarter. Month one: ships already east of the gates discharge, and stocks draw down on a published schedule. The external price of tanker insurance spikes. Month two: southern crude is partly rerouted, partly replaced by Pacific Russian barrels, and partly lost. Pipeline utilization is forced upward. Export factories on the south coast take the first enforced holidays. Month three: if the Pacific gate is still open, the system is injured and functioning. If the Pacific gate has been closed as well, stocks approach the level where military and agricultural priorities crowd out the rest, and the industrial core contracts. This is the calculation behind China's peacetime overpayment for redundant routes. The option value equals the probability of a siege, multiplied by the output destroyed per month of shortage. These routes look overpriced until a siege probability is included in the price.",
+    "cue": "[VISUAL: QUARTER TIMELINE, three months, animated as a stock-draw chart. Month one: ships already east of the gates discharge; insurance price spikes. Month two: partial reroute, Pacific Russian barrels, forced pipeline use, south-coast factories on enforced idle. Month three splits into two branches: PACIFIC OPEN, injured and functioning; PACIFIC CLOSED, industrial core contracts. An option-value formula sits under the chart: probability of siege times output lost per month.]"
+  },
+  {
+    "title": "The third month",
+    "mood": "shock",
+    "narration": "Mearsheimer's warning sits on the third month. A continental power that watches its stocks fall does not experience the blockade as a limited navy measure. It experiences it as an attempt on the political survival of the state. The response set includes economic payback, pressure on other countries, and the risk of attacks on the blockading fleet. Such moves rest on one idea: states rank survival above the other side's rules for a fight. Washington's planners know this, which is why a real blockade is tied to a Taiwan crisis rather than switched on as a punishment by itself. The energy valve is an add-on to a larger fight, and add-ons are how larger fights get away from the people who started them.",
+    "cue": "[VISUAL: The month-three branch with Pacific closed pushes a survival gauge on a continental power into the red. Response icons appear as categories only: economic retaliation, pressure on third countries, risk to the blockading fleet. No targeting solution, no weapon cutaway. A Taiwan crisis timeline is shown as the thread on which the energy valve is hung. The valve is labeled ADJUNCT.]"
+  },
+  {
+    "title": "The second buyer",
+    "mood": "motion",
+    "narration": "Sachs would count a different loss. Allies who depend on the same strait for their own Gulf oil are asked to bless a closure that raises their prices and their shipping risk. Gulf producers are asked to give up Chinese demand, or to accept America policing their customers. The unipolar habit assumes those asks will be obeyed. A multipolar energy market gives the producers a second buyer and, after recent freezes of reserves, a reason to keep that buyer. Coercion at the strait speeds up the shift from the first episode: the next barrel billed outside the dollar, because the dollar system has shown it can stop the ship.",
+    "cue": "[VISUAL: ALLIED OIL PRICES and shipping-risk indices rise in blue-user states that also depend on the strait. Gulf producers face a fork: forgo Chinese demand, or accept enforcement of their customer. A second-buyer node in crimson stays available. A small inset replays the Episode 1 marginal-barrel contract, now triggered by the siege. Amber invoice share ticks up.]"
+  },
+  {
+    "title": "Two numbers, two maps",
+    "mood": "close",
+    "narration": "The plain result is two numbers and two maps. China can endure a Malacca-only closure for months, with damage, by drawing stocks, sending ships the long way, pushing pipelines to about one and a half million barrels a day, and leaning on Pacific crude. China cannot endure a full southern-and-Pacific energy siege for long without factories shutting down hard, and that fuller siege is a regional war, not just a strait. Beijing's gambit is to make the first closure disappointing and the second enormous. Washington's gambit is to threaten both, and hope the threat changes Chinese behavior before either closure is tried. Under unknowable intentions, meaning neither side can be sure of the other, both sides prepare for the test anyway.",
+    "cue": "[VISUAL: CLOSING SPLIT MAP. Left: Malacca-only closure, measured in months, stocks drawing, hulls diverting, pipelines maxed near one and a half million barrels a day, Pacific crude still flowing. Right: southern-plus-Pacific siege, labeled REGIONAL WAR, industrial contraction steep. Beijing's gambit highlights the left map as disappointing and the right map as enormous. Washington's gambit is a threat bracket around both. Hold. Cut to black.]"
+  }
+];
+
+const DRAWS = [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13];
+if (DRAWS.length !== STORY.length) throw new Error(`episode 3 draws ${DRAWS.length} vs story ${STORY.length}`);
+
 export default {
   title: "The Malacca Siege",
-  subtitle: "The math behind China's chokepoint gambit",
+  subtitle: "Why a narrow strait can squeeze China",
   short: "The Malacca Siege",
-  titles: ["An import equation", "The funnel", "Valve hands", "The same ships", "The arithmetic", "The surviving five million", "Every southern gate", "Demand destruction", "Overland and Arctic", "One quarter forward", "The third month", "The second buyer", "Two numbers, two maps"],
-  scenes: [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13],
+  scenes: STORY.map((scene, i) => ({ ...scene, draw: DRAWS[i] })),
 };

@@ -20,7 +20,7 @@ Everything runs locally: no API keys, no cloud services.
 
 ## How it works
 
-1. **Narration** — `src/tts.mjs` reads `../scripts/episode-0N-narration.txt` and
+1. **Narration** — each scene in `src/episodes/epN.mjs` carries its spoken paragraph, its visual cue, and a score mood. `src/tts.mjs` reads that paragraph and
    synthesizes it with **Kokoro-82M** (Apache-2.0, runs on CPU via `kokoro-js`). To sound
    read rather than listed, sentences are voiced two or three at a time so intonation
    carries across the break; short punch lines ("It breaks.") are isolated, given a beat
@@ -33,14 +33,17 @@ Everything runs locally: no API keys, no cloud services.
    faint room-tone floor keeps pauses from dropping to digital silence.
    ~11 min per episode at ~138 wpm.
 2. **Score** — `src/music.mjs` generates an ambient bed per episode from scratch (no
-   samples, no licensing): a low tonic drone, detuned pad chords that change at each
-   scene boundary through a minor progression (ending unresolved), a soft bell on scene
-   changes, a sparse plucked motif, a low heartbeat pulse under the tensest scenes, faint
-   air, all in a long reverb. Each episode has its own key. The score holds through the
-   final shot and stops on the cut to black.
-3. **Sound design** — `render.mjs --events` walks every scene and records what it puts on
-   screen (stamps landing, captions typing, tags and panels appearing, lines drawing on,
-   scene changes, lens badges). `src/sfx.mjs` turns that list into a quiet effects track:
+   samples, no licensing): a low tonic drone, detuned pad chords that follow the scene's
+   mood (establish, pressure, shock, cold, close, and the rest), a soft bell on scene
+   changes, a plucked motif that thins out in cold and shock scenes, a heartbeat under
+   pressure, shock, and fracture, faint air, all in a long reverb. A closing scene stays
+   unresolved. Each episode has its own key. The score holds through the final shot and
+   stops on the cut to black.
+3. **Sound design** — `render.mjs --events` walks every scene at 10 Hz and on each sentence
+   beat, then searches back for the moment a graphic actually appears. Unchanged scenes are
+   not redrawn. Stamps, captions, and line draws carry their own start time. Panels sound
+   when they have a title or an `sfx` name. `src/sfx.mjs` pitches those cues from the scene
+   mood and turns the list into a quiet effects track:
    whooshes on scene changes, a low thud under stamps, tuned blips for tags, typing ticks,
    a shimmer as lines draw, an ident on the title card and a hit on the final cut.
 4. **Mix** — `src/mix.mjs`: narration on top; score set ≈15 dB under the voice and ducked
@@ -49,14 +52,18 @@ Everything runs locally: no API keys, no cloud services.
    pipes raw frames into ffmpeg. Each episode module (`src/episodes/epN.mjs`) has one
    scene per narration paragraph; each scene is a direct translation of the bracketed
    visual cue that follows that paragraph in `episode-0N-script.txt`, with its beats keyed
-   to sentence start times (`S.at(i)`), so visuals land on the words that motivate them.
+   to a phrase in the sentence (`S.at("China finances")`), so inserting a line cannot slide
+   the picture off the words. A sentence index throws. The finished MP4 carries the SRT as
+   a subtitle track and a chapter marker for each scene.
    Finishing touches: a slow push-in plus a few pixels of organic camera drift, soft
    bloom on bright elements, faint drifting motes, labels that decode into place, a
    typing cursor on captions, a light sweep on scene changes, film grain and a final
    dither so dark gradients don't band (encoded with x264 `aq-mode=3`).
 6. **Maps** — Natural Earth geometry via `world-atlas` + `d3-geo`. Routes, pipelines,
    rivers and the Ukraine contact line are approximate hand-placed coordinates in
-   `src/engine/geo.mjs` (`P`, `LANES`, `PIPES`, `RIVERS`, `CONTACT_LINE`).
+   `src/engine/geo.mjs` (`P`, `LANES`, `PIPES`, `RIVERS`, `CONTACT_LINE`). Quantities drawn
+   on screen (the Malacca split, pipeline design capacities, the pre-break German gas mix,
+   and the contact-line date) are read from `src/figures.mjs`.
 
 Style follows the channel brief: charcoal ground, U.S.-aligned nodes cyber-cyan, BRICS /
 alternative corridors tactical amber, China crimson, Russia dark red. Mearsheimer, Sachs
@@ -67,17 +74,23 @@ the first time each is named in a paragraph.
 
 ```bash
 npm install                      # once
-node src/build.mjs               # everything, all five, in order (≈1 h)
+node src/build.mjs               # everything, all five; skips stages whose inputs are unchanged
+node src/build.mjs 3 --preview   # episode 3 at 960×540, 15 fps, without bloom, grain, or dither
 node src/build.mjs 3 --no-tts    # one episode, keeping its narration (after visual edits)
+node src/build.mjs 3 --force     # rebuild episode 3 even when stamps say it is current
 node src/tts.mjs 3               # narration only (≈3 min; cached per phrase)
-node src/render.mjs 3 --events   # animation -> effects cue list
+node src/render.mjs 3 --events   # animation -> effects cue list (cached per scene)
+node src/render.mjs 3 --preview  # 960×540, 15 fps, no bloom/grain/dither -> out/previews/
 node src/sfx.mjs 3 && node src/music.mjs 3 && node src/mix.mjs 3   # soundtrack
-node src/render.mjs 3            # full video for one episode (≈8 min)
+node src/render.mjs 3            # full video for one episode
 node src/render.mjs 3 --sheet    # contact sheets only (seconds)
 node src/render.mjs 3 --grid 2.5 # every scene at 2.5 s in, tiled (checks scene openings)
 node src/render.mjs 3 --stills 120.5,300   # PNG frames at absolute times
 node src/render.mjs 3 --from 60 --to 90    # preview clip -> out/previews/
+node src/check.mjs               # narration, cue, mood, and drawing still match
 ```
+
+`scripts/episode-0N-narration.txt` and `scripts/episode-0N-script.txt` are written from the episode modules (`node src/export-scripts.mjs`, or `python3 ../scripts/build_scripts.py`). Edit the module, not the text files.
 
 ### Changing the voice
 

@@ -1,6 +1,6 @@
-// Channel chrome: title card, frame overlay, film grain, and thinker "lens badges".
+// Channel chrome: title card, frame overlay, film grain, and lecturer cards.
 import { C, W, H, canvas, clamp, ease, lerp, prog, rgba, rng } from "./core.mjs";
-import { brackets, measure, roundRect, text } from "./draw.mjs";
+import { brackets, measure, roundRect, text, typed } from "./draw.mjs";
 
 // ---------------------------------------------------------------- grain + vignette (prebuilt)
 const GRAIN = [];
@@ -155,7 +155,7 @@ export function titleCard(ctx, t, ep) {
   text(ctx, `EPISODE ${ep.n} OF 5`, W / 2, 566, { kind: "mono", size: 18, tracking: 6, align: "center", color: C.dim, alpha: a2 });
   text(ctx, ep.title, W / 2, 640, { size: 46, weight: 600, tracking: 7, align: "center", alpha: a2, caps: true });
   text(ctx, ep.subtitle, W / 2, 690, { size: 24, weight: 500, tracking: 5, align: "center", color: C.mid, alpha: prog(t, 1.4, 0.7, ease.out), caps: true });
-  text(ctx, "STRUCTURAL REALISM · FINANCIAL GAME THEORY · FORECASTING", W / 2, 960, { kind: "mono", size: 13, tracking: 4, align: "center", color: C.dim, alpha: prog(t, 1.8, 0.8, ease.out) });
+  text(ctx, "POWER · MONEY · WHAT COMES NEXT", W / 2, 960, { kind: "mono", size: 13, tracking: 4, align: "center", color: C.dim, alpha: prog(t, 1.8, 0.8, ease.out) });
   brackets(ctx, 56, 56, W - 112, H - 112, { color: C.faint, len: 26, alpha: a1 });
 }
 
@@ -180,129 +180,26 @@ export function overlay(ctx, { ep, sceneIndex, sceneCount, T, total, title, sinc
   ctx.fillRect(W - 70 - pw, 98, pw * clamp(T / total), 2);
 }
 
-// ---------------------------------------------------------------- lens badges
+// ---------------------------------------------------------------- lecturers
+// Faceless on purpose. A small figure and a blackboard, not a portrait.
 export const LENSES = {
-  M: { re: /Mearsheimer/, name: "JOHN MEARSHEIMER", school: "OFFENSIVE REALISM", color: "#dfe7ef" },
-  S: { re: /Sachs/, name: "JEFFREY SACHS", school: "ANTI-IMPERIAL INSTITUTIONALISM", color: C.violet },
-  J: { re: /Jiang/, name: "PROFESSOR JIANG", school: "PREDICTIVE GAME THEORY", color: C.green },
+  M: { re: /Mearsheimer/, name: "JOHN MEARSHEIMER", short: "MEARSHEIMER", board: ["POWER, NOT PROMISES", "PLAN FOR THE WORST"], color: "#dfe7ef" },
+  S: { re: /Sachs/, name: "JEFFREY SACHS", short: "SACHS", board: ["WHO BUILT THE RULES", "AND WHO PAYS"], color: C.violet },
+  J: { re: /Jiang/, name: "PROFESSOR JIANG", short: "JIANG", board: ["THE NEXT MOVE", "AND WHAT IT COSTS"], color: C.green },
 };
 
-// Minimalist, faceless vector busts. Deliberately not likenesses.
-export function avatar(ctx, key, x, y, r, alpha = 1) {
-  const L = LENSES[key];
-  ctx.save();
-  ctx.globalAlpha *= alpha;
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, Math.PI * 2);
-  ctx.fillStyle = "#151a22";
-  ctx.fill();
-  ctx.clip();
-  const col = L.color;
-  const hx = x;
-  const hy = y - r * 0.12;
-  const hr = r * 0.34;
-  // shoulders
-  ctx.fillStyle = rgba(col, 0.22);
-  ctx.beginPath();
-  ctx.ellipse(x, y + r * 0.95, r * 0.78, r * 0.62, 0, Math.PI, 0);
-  ctx.fill();
-  // head
-  ctx.fillStyle = rgba(col, 0.32);
-  ctx.beginPath();
-  ctx.ellipse(hx, hy, hr * 0.86, hr, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = col;
-  ctx.lineWidth = Math.max(1.5, r * 0.045);
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  if (key === "M") {
-    // side-parted short hair, suit lapels + tie
-    ctx.beginPath();
-    ctx.moveTo(hx - hr * 0.86, hy - hr * 0.1);
-    ctx.quadraticCurveTo(hx - hr * 0.8, hy - hr * 1.05, hx + hr * 0.1, hy - hr * 1.02);
-    ctx.quadraticCurveTo(hx + hr * 0.8, hy - hr * 0.95, hx + hr * 0.86, hy - hr * 0.2);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(hx - hr * 0.25, hy - hr * 1.0);
-    ctx.lineTo(hx - hr * 0.15, hy - hr * 0.7);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x - r * 0.3, y + r * 0.38);
-    ctx.lineTo(x, y + r * 0.72);
-    ctx.lineTo(x + r * 0.3, y + r * 0.38);
-    ctx.stroke();
-    ctx.fillStyle = col;
-    ctx.beginPath();
-    ctx.moveTo(x, y + r * 0.42);
-    ctx.lineTo(x + r * 0.06, y + r * 0.66);
-    ctx.lineTo(x, y + r * 0.78);
-    ctx.lineTo(x - r * 0.06, y + r * 0.66);
-    ctx.closePath();
-    ctx.fill();
-  } else if (key === "S") {
-    // fuller hair crown, open collar
-    ctx.beginPath();
-    ctx.moveTo(hx - hr * 0.9, hy);
-    for (let i = 0; i <= 6; i++) {
-      const a = Math.PI + (i / 6) * Math.PI;
-      const rr = hr * (1.08 + (i % 2) * 0.1);
-      ctx.lineTo(hx + Math.cos(a) * rr * 0.92, hy - hr * 0.05 + Math.sin(a) * rr);
-    }
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x - r * 0.22, y + r * 0.4);
-    ctx.lineTo(x, y + r * 0.6);
-    ctx.lineTo(x + r * 0.22, y + r * 0.4);
-    ctx.stroke();
-  } else {
-    // short cropped hair, crew neck
-    ctx.beginPath();
-    ctx.ellipse(hx, hy - hr * 0.35, hr * 0.88, hr * 0.68, 0, Math.PI * 1.05, Math.PI * 1.95);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.ellipse(x, y + r * 0.42, r * 0.2, r * 0.07, 0, 0, Math.PI);
-    ctx.stroke();
-  }
-  // glasses (all three) — a single geometric accent, no facial features
-  ctx.lineWidth = Math.max(1.2, r * 0.035);
-  const gy = hy + hr * 0.05;
-  const gw = hr * 0.3;
-  if (key === "S") {
-    ctx.strokeRect(hx - gw * 1.25, gy - gw * 0.35, gw, gw * 0.7);
-    ctx.strokeRect(hx + gw * 0.25, gy - gw * 0.35, gw, gw * 0.7);
-  } else {
-    ctx.beginPath();
-    ctx.arc(hx - gw * 0.72, gy, gw * 0.45, 0, Math.PI * 2);
-    ctx.moveTo(hx + gw * 0.72 + gw * 0.45, gy);
-    ctx.arc(hx + gw * 0.72, gy, gw * 0.45, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-  ctx.beginPath();
-  ctx.moveTo(hx - gw * 0.27, gy);
-  ctx.lineTo(hx + gw * 0.27, gy);
-  ctx.stroke();
-  ctx.restore();
-  ctx.save();
-  ctx.globalAlpha *= alpha;
-  ctx.strokeStyle = rgba(col, 0.75);
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.restore();
-}
+const LECTURE_W = 508;
+const LECTURE_H = 168;
 
-// Build badge events from the episode's sentence timings.
+// One card per mention. A later mention of the same person extends the card instead of stacking a copy.
 export function lensEvents(timing, scenes) {
   const ev = [];
   const seen = new Set();
   timing.paragraphs.forEach((p, i) => {
     if (scenes[i]?.noBadges) return;
-    const shown = new Set();
     for (const s of p.sentences) {
       for (const [k, L] of Object.entries(LENSES)) {
-        if (shown.has(k) || !L.re.test(s.text)) continue;
-        shown.add(k);
+        if (!L.re.test(s.text)) continue;
         ev.push({ key: k, t: s.start, full: !seen.has(k) });
         seen.add(k);
       }
@@ -311,41 +208,163 @@ export function lensEvents(timing, scenes) {
   return ev;
 }
 
-const BADGE_DUR = 5.5;
+function lectureWindows(events) {
+  const wins = [];
+  for (const e of events) {
+    const span = e.full ? 8.2 : 6.6;
+    let prev = null;
+    for (let i = wins.length - 1; i >= 0; i--) {
+      if (wins[i].key === e.key) {
+        prev = wins[i];
+        break;
+      }
+    }
+    if (prev && e.t <= prev.end + 0.4) prev.end = Math.max(prev.end, e.t + span);
+    else wins.push({ key: e.key, t: e.t, end: e.t + span, full: e.full });
+  }
+  return wins;
+}
+
+function hair(ctx, key, hx, hy) {
+  ctx.beginPath();
+  if (key === "M") {
+    ctx.moveTo(hx - 12, hy - 2);
+    ctx.quadraticCurveTo(hx - 10, hy - 18, hx + 2, hy - 17);
+    ctx.quadraticCurveTo(hx + 12, hy - 15, hx + 13, hy - 2);
+  } else if (key === "S") {
+    ctx.moveTo(hx - 13, hy);
+    for (let i = 0; i <= 5; i++) {
+      const a = Math.PI + (i / 5) * Math.PI;
+      ctx.lineTo(hx + Math.cos(a) * 13, hy - 2 + Math.sin(a) * (12 + (i % 2) * 2));
+    }
+  } else {
+    ctx.ellipse(hx, hy - 8, 12, 8, 0, Math.PI, Math.PI * 2);
+  }
+  ctx.stroke();
+}
+
+function glasses(ctx, key, hx, hy) {
+  if (key === "S") {
+    ctx.strokeRect(hx - 11, hy - 3, 8, 6);
+    ctx.strokeRect(hx + 3, hy - 3, 8, 6);
+    ctx.beginPath();
+    ctx.moveTo(hx - 3, hy);
+    ctx.lineTo(hx + 3, hy);
+    ctx.stroke();
+  } else {
+    ctx.beginPath();
+    ctx.arc(hx - 5, hy, 4.2, 0, Math.PI * 2);
+    ctx.moveTo(hx + 5 + 4.2, hy);
+    ctx.arc(hx + 5, hy, 4.2, 0, Math.PI * 2);
+    ctx.moveTo(hx - 1, hy);
+    ctx.lineTo(hx + 1, hy);
+    ctx.stroke();
+  }
+}
+
+// A standing figure, arm out toward the board. No face, so it cannot be a likeness.
+function figure(ctx, key, x, foot, color, reach, aimY) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.fillStyle = rgba(color, 0.18);
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(x - 7, foot - 42);
+  ctx.lineTo(x - 11, foot);
+  ctx.moveTo(x + 6, foot - 42);
+  ctx.lineTo(x + 12, foot);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x - 16, foot - 44);
+  ctx.lineTo(x - 18, foot - 86);
+  ctx.quadraticCurveTo(x, foot - 94, x + 16, foot - 86);
+  ctx.lineTo(x + 14, foot - 44);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  const hx = x;
+  const hy = foot - 104;
+  ctx.beginPath();
+  ctx.ellipse(hx, hy, 13, 15, 0, 0, Math.PI * 2);
+  ctx.fillStyle = rgba(color, 0.28);
+  ctx.fill();
+  ctx.stroke();
+  hair(ctx, key, hx, hy);
+  glasses(ctx, key, hx, hy);
+  const shoulder = [x + 14, foot - 78];
+  const hand = [lerp(shoulder[0], x + 78, reach), lerp(shoulder[1], aimY, reach)];
+  ctx.beginPath();
+  ctx.moveTo(shoulder[0], shoulder[1]);
+  ctx.lineTo(hand[0], hand[1]);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(hand[0], hand[1]);
+  ctx.lineTo(hand[0] + 16 * reach, hand[1] - 1);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(hand[0], hand[1], 3, 0, Math.PI * 2);
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.restore();
+}
+
+function lectureCard(ctx, win, T, alpha) {
+  const L = LENSES[win.key];
+  const sway = Math.sin((T - win.t) * 1.7) * 1.3;
+  const reach = prog(T, win.t + 0.15, 0.45, ease.out);
+  const bx = 128;
+  const by = 14;
+  const bw = 356;
+  const bh = 118;
+  const aimY = by + 36 + Math.sin((T - win.t) * 2.2) * 7;
+  ctx.save();
+  ctx.translate(0, sway);
+  roundRect(ctx, bx - 7, by - 7, bw + 14, bh + 14, 4);
+  ctx.fillStyle = "#6b5138";
+  ctx.fill();
+  roundRect(ctx, bx, by, bw, bh, 2);
+  ctx.fillStyle = "#163028";
+  ctx.fill();
+  ctx.strokeStyle = rgba("#d7c4a1", 0.45);
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+  ctx.fillStyle = rgba("#0c1a14", 0.45);
+  ctx.fillRect(bx + 8, by + bh - 16, bw - 16, 5);
+  L.board.forEach((line, i) => {
+    const p = prog(T, win.t + 0.4 + i * 0.7, 0.85, ease.linear);
+    const shown = typed(line, p);
+    text(ctx, shown, bx + 18, by + 40 + i * 32, { kind: "mono", size: 16, color: "#e7f6ea", tracking: 1.1 });
+    if (p > 0.02 && p < 0.98) {
+      const tw = measure(ctx, shown, { kind: "mono", size: 16, tracking: 1.1 });
+      ctx.fillStyle = "#f4fff6";
+      ctx.fillRect(bx + 18 + tw + 2, by + 28 + i * 32, 7, 3);
+    }
+  });
+  text(ctx, L.short, bx + 18, by + bh - 8, { kind: "mono", size: 11, color: L.color, tracking: 1.6 });
+  figure(ctx, win.key, 58, 146, L.color, reach, aimY);
+  ctx.restore();
+}
 
 export function badges(ctx, T, events) {
-  const live = events.filter((e) => T >= e.t - 0.1 && T < e.t + BADGE_DUR + 0.6);
-  live.forEach((e, slot) => {
-    const L = LENSES[e.key];
-    const a = prog(T, e.t, 0.5, ease.out) * (1 - prog(T, e.t + BADGE_DUR, 0.6));
+  const live = lectureWindows(events).filter((w) => T >= w.t - 0.1 && T < w.end + 0.6);
+  live.forEach((w, slot) => {
+    const a = prog(T, w.t, 0.4, ease.out) * (1 - prog(T, w.end, 0.5));
     if (a <= 0) return;
-    const slide = (1 - prog(T, e.t, 0.6, ease.out)) * 30;
-    const big = e.full;
-    const r = big ? 40 : 26;
-    const w = big ? 470 : 360;
-    const h = big ? 104 : 70;
-    const x = W - 70 - w + slide;
-    const y = H - 70 - h - slot * (h + 14);
+    const slide = (1 - prog(T, w.t, 0.5, ease.out)) * 28;
+    const x = W - 36 - LECTURE_W + slide;
+    const y = H - 32 - LECTURE_H - slot * (LECTURE_H + 12);
     ctx.save();
     ctx.globalAlpha *= a;
-    roundRect(ctx, x, y, w, h, 6);
-    ctx.fillStyle = rgba("#0b0e13", 0.86);
+    ctx.translate(x, y);
+    roundRect(ctx, 0, 0, LECTURE_W, LECTURE_H, 8);
+    ctx.fillStyle = rgba("#07090c", 0.9);
     ctx.fill();
-    ctx.strokeStyle = rgba(L.color, 0.45);
+    ctx.strokeStyle = rgba(LENSES[w.key].color, 0.4);
     ctx.lineWidth = 1;
     ctx.stroke();
-    ctx.fillStyle = L.color;
-    ctx.fillRect(x, y + 10, 3, h - 20);
-    avatar(ctx, e.key, x + 22 + r, y + h / 2, r);
-    const tx = x + 22 + 2 * r + 20;
-    if (big) {
-      text(ctx, "LENS", tx, y + 30, { kind: "mono", size: 12, tracking: 3, color: C.dim });
-      text(ctx, L.name, tx, y + 62, { size: 26, weight: 600, tracking: 3, color: C.ice });
-      text(ctx, L.school, tx, y + 86, { kind: "mono", size: 13, tracking: 2, color: L.color });
-    } else {
-      text(ctx, L.name, tx, y + 32, { size: 20, weight: 600, tracking: 2.5, color: C.ice });
-      text(ctx, L.school, tx, y + 54, { kind: "mono", size: 11, tracking: 1.5, color: L.color, maxWidth: w - (tx - x) - 16 });
-    }
+    lectureCard(ctx, w, T, a);
     ctx.restore();
   });
 }

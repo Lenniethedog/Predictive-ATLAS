@@ -17,7 +17,8 @@ import { spawnSync } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { TIMELINE, VOICE, SPEED, ROOT, SCRIPTS, OUT } from "./config.mjs";
+import { TIMELINE, VOICE, SPEED, ROOT, OUT } from "./config.mjs";
+import { assertEpisode } from "./story.mjs";
 
 const SR = 24000;
 
@@ -31,6 +32,19 @@ const PHONEME_FIXES = [
   ["kˌæzɐkhstˈɑːn", "kˌæzɐkstˈɑːn"], // Kazakhstan
   ["sˈɛvɐstˌɑːpɑːl", "sˌɛvɐstˈoʊpəl"], // Sevastopol: sev-uh-STOH-pol
   ["jˈʌnən", "juːnˈɑːn"], // Yunnan: yoo-NAHN
+  ["kjˈɪv", "ˈkiːv"], // Kyiv: KEEV
+  ["dnˈiːpɚ", "ˈniːpɚ"], // Dnieper: NEE-per
+  ["jˈʊɹɹoʊzˌoʊn", "ˈjʊɹoʊzoʊn"], // eurozone, without the doubled r
+  ["ˈɪmf", "ˌaɪɛmˈɛf"], // IMF, letter by letter
+  ["dˈɑːnbəz", "dɑnˈbɑːs"], // Donbas: don-BAHSS
+  ["dʒjˈɑːŋ", "dʒiˈɑŋ"], // Jiang: jee-AHNG
+  ["sˈæks", "sˈɑːks"], // Sachs: SAHKS
+  ["bˌuːkɚɹˈɛst", "ˌbuːkəˈɹɛst"], // Bucharest: boo-kuh-REST
+  ["kəzmˈiːnoʊ", "koʊzˈmiːnoʊ"], // Kozmino: koz-MEE-no
+  ["tˌiːˌɛsˌɛmsˈiː", "ˌtiːɛsɛmˈsiː"], // TSMC
+  ["ˈæzməl", "ˌeɪɛsɛmˈɛl"], // ASML, letter by letter
+  ["pˈiːbˈɑːk", "ˌpiːbiːoʊˈsiː"], // PBOC
+  ["wˈɪlhɪlmʃˌeɪvən", "ˌvɪlhɛlmsˈhɑːfən"], // Wilhelmshaven
 ];
 
 const PUNCT = ';:,.!?¡¿—…"«»“”(){}[]';
@@ -66,9 +80,9 @@ async function toPhonemes(text) {
 }
 
 // ---------------------------------------------------------------- text
-export function readParagraphs(n) {
-  const raw = fs.readFileSync(path.join(SCRIPTS, `episode-0${n}-narration.txt`), "utf8");
-  return raw.split(/\n\s*\n/).map((p) => p.replace(/\s+/g, " ").trim()).filter(Boolean);
+export async function readParagraphs(n) {
+  const ep = (await import(`./episodes/ep${n}.mjs`)).default;
+  return assertEpisode(ep, Number(n)).map((s) => s.narration.replace(/\s+/g, " ").trim());
 }
 
 function splitSentences(p) {
@@ -234,7 +248,7 @@ async function buildChunks(sentences) {
   let cur = null;
   sentences.forEach((s, i) => {
     const last = cur && sentences[cur.idx[cur.idx.length - 1]];
-    const fits = cur && cur.len + ph[i].length + 1 <= 360 && cur.idx.length < 3;
+    const fits = cur && cur.len + ph[i].length + 1 <= 420 && cur.idx.length < 3;
     if (!cur || !fits || isPunch(s) || isPunch(last) || last.endsWith(":")) {
       cur = { idx: [], len: 0 };
       chunks.push(cur);
@@ -301,16 +315,14 @@ alignChunk.stats = { total: 0, fallback: 0 };
 
 // Short, declarative lines are delivered more slowly, as a narrator would.
 function phraseSpeed(base, nWords) {
-  if (nWords <= 6) return +(base * 0.9).toFixed(3);
-  if (nWords <= 12) return +(base * 0.94).toFixed(3);
-  if (nWords <= 20) return +(base * 0.97).toFixed(3);
+  if (nWords <= 6) return +(base * 0.97).toFixed(3);
   return base;
 }
 
 async function synthChunk(sentences, chunk, voice, baseSpeed) {
-  // a reader's tempo drifts a little phrase to phrase; ±1.5%, seeded by the text
+  // A very small tempo drift, so phrases are not metronomic and not wobbly.
   const h = crypto.createHash("md5").update(chunk.idx.map((i) => sentences[i]).join(" ")).digest()[0] / 255;
-  const speed = +(phraseSpeed(baseSpeed, chunk.idx.reduce((a, i) => a + words(sentences[i]), 0)) * (1 + (h - 0.5) * 0.03)).toFixed(3);
+  const speed = +(phraseSpeed(baseSpeed, chunk.idx.reduce((a, i) => a + words(sentences[i]), 0)) * (1 + (h - 0.5) * 0.012)).toFixed(3);
   if (chunk.idx.length === 1) {
     const buf = await synthSentence(sentences[chunk.idx[0]], voice, speed);
     return { buf, spans: [[0, buf.length / SR]] };
@@ -323,11 +335,11 @@ async function synthChunk(sentences, chunk, voice, baseSpeed) {
 function pauseAfter(prevText, nextText, seed) {
   const r = (Math.sin(seed * 12.9898) * 43758.5453) % 1;
   const jitter = (Math.abs(r) - 0.5) * 0.12;
-  if (prevText.endsWith(":")) return 0.32 + jitter * 0.5;
-  if (isPunch(nextText)) return 0.72 + jitter;
-  if (isPunch(prevText)) return 0.6 + jitter;
-  if (words(prevText) > 28) return 0.52 + jitter;
-  return 0.44 + jitter;
+  if (prevText.endsWith(":")) return 0.28 + jitter * 0.4;
+  if (isPunch(nextText)) return 0.5 + jitter;
+  if (isPunch(prevText)) return 0.42 + jitter;
+  if (words(prevText) > 28) return 0.38 + jitter;
+  return 0.3 + jitter;
 }
 
 // ---------------------------------------------------------------- breath + room tone
@@ -432,7 +444,7 @@ function wrap2(text) {
 // ---------------------------------------------------------------- episode
 async function buildEpisode(n, voice, speed) {
   alignChunk.stats = { total: 0, fallback: 0 };
-  const paras = readParagraphs(n);
+  const paras = await readParagraphs(n);
   const chunks = [silence(TIMELINE.titleCard)];
   const voiced = [];
   const breaths = []; // { at: speech onset (s), dur, rel: dB below speech RMS }
@@ -447,11 +459,7 @@ async function buildEpisode(n, voice, speed) {
     for (let g = 0; g < groups.length; g++) {
       const { buf, spans } = await synthChunk(sentences, groups[g], voice, speed);
       voiced.push(buf);
-      const nWords = groups[g].idx.reduce((a, i) => a + words(sentences[i]), 0);
-      const lastPause = g === 0 ? Infinity : pauseAfter(sentences[groups[g - 1].idx[groups[g - 1].idx.length - 1]], sentences[groups[g].idx[0]], n * 1000 + p * 50 + g - 1);
-      const coin = crypto.createHash("md5").update(`${n}|${p}|${g}`).digest()[1] / 255;
-      if (g === 0) breaths.push({ at: t, dur: 0.42 + coin * 0.12, rel: -28 });
-      else if (lastPause >= 0.58 && nWords >= 10 && coin < 0.55) breaths.push({ at: t, dur: 0.26 + coin * 0.08, rel: -32 });
+      // No added breath noises. They read as a machine inhaling.
       groups[g].idx.forEach((si, j) => para.sentences.push({ text: sentences[si], start: t + spans[j][0], end: t + spans[j][1] }));
       chunks.push(buf);
       t += buf.length / SR;
@@ -502,28 +510,24 @@ async function buildEpisode(n, voice, speed) {
     }
   }
   timing.breaths = breaths.length;
+  timing.align = { total: alignChunk.stats.total, fallback: alignChunk.stats.fallback };
+  if (alignChunk.stats.fallback > 0) {
+    throw new Error(
+      `ep${n}: ${alignChunk.stats.fallback} of ${alignChunk.stats.total} sentence breaks had no silence to align. Refusing to write a narration the picture cannot trust.`,
+    );
+  }
   writeWav(raw, all);
-  const ir = path.join(OUT, "audio", "room-ir.wav");
-  if (!fs.existsSync(ir)) writeRoomIR(ir);
-  // Voice chain: rumble cut, a touch of chest, softened sibilance, gentle compression,
-  // a small dry room (so silences sound like a booth, not a void), loudness to -16 LUFS.
-  const chain =
-    "[0:a]aresample=48000,highpass=f=65,bass=g=1.5:f=150:w=0.7," +
-    "equalizer=f=2800:t=q:w=1:g=0.8,equalizer=f=6800:t=q:w=1.2:g=-2.5," +
-    "acompressor=threshold=0.09:ratio=2.4:attack=12:release=220:makeup=1.6," +
-    "pan=stereo|c0=c0|c1=c0,asplit=2[dry][src];" +
-    "[src][1:a]afir=dry=10:wet=10[wet];" +
-    "[dry][wet]amix=inputs=2:weights=1 0.16:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=8[out]";
-  ffmpeg(["-i", raw, "-i", ir, "-filter_complex", chain, "-map", "[out]", "-ar", "48000", "-ac", "2", wav]);
+  // Leave the voice mostly alone. Heavy EQ, compression, and a fake room are what make it sound processed.
+  const chain = "[0:a]aresample=48000,highpass=f=70,pan=stereo|c0=c0|c1=c0,loudnorm=I=-16:TP=-1.5:LRA=11[out]";
+  ffmpeg(["-i", raw, "-filter_complex", chain, "-map", "[out]", "-ar", "48000", "-ac", "2", wav]);
   ffmpeg(["-i", wav, "-codec:a", "libmp3lame", "-b:a", "192k", mp3]);
   fs.rmSync(raw);
   fs.writeFileSync(path.join(OUT, "timing", `episode-0${n}.json`), JSON.stringify(timing, null, 2));
 
   const cues = timing.paragraphs.flatMap((p) => p.sentences.flatMap(sentenceCues));
-  fs.writeFileSync(
-    path.join(OUT, "subtitles", `episode-0${n}.srt`),
-    cues.map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.text}\n`).join("\n"),
-  );
+  const srtBody = cues.map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.text}\n`).join("\n");
+  fs.writeFileSync(path.join(OUT, "subtitles", `episode-0${n}.srt`), srtBody);
+  fs.writeFileSync(path.join(OUT, "subtitles", `episode-0${n}.vtt`), `WEBVTT\n\n${srtBody.replace(/(\d{2}:\d{2}:\d{2}),(\d{3})/g, "$1.$2")}`);
 
   console.log(
     `ep${n}: ${(t / 60).toFixed(2)} min total, ${timing.wpm} wpm spoken, synth ${((Date.now() - t0) / 1000).toFixed(0)}s, ` +
@@ -532,7 +536,7 @@ async function buildEpisode(n, voice, speed) {
 }
 
 async function voiceSamples(speed) {
-  const para = readParagraphs(1)[0];
+  const para = (await readParagraphs(1))[0];
   const dir = path.join(OUT, "voice-samples");
   fs.mkdirSync(dir, { recursive: true });
   for (const v of ["am_michael", "am_fenrir", "am_puck", "bm_george", "bm_fable", "af_heart", "bf_emma"]) {
@@ -556,6 +560,5 @@ const eps = args.filter((a, i) => /^[1-5]$/.test(a) && !["--voice", "--speed"].i
 
 if (args.includes("--samples")) await voiceSamples(speed);
 else for (const n of eps.length ? eps : [1, 2, 3, 4, 5]) await buildEpisode(n, voice, speed);
-// onnxruntime-node may print a "mutex lock failed" abort during its own static teardown
-// after everything is written. It is harmless; all outputs are complete by this point.
-process.exit(0);
+// onnxruntime-node may abort during its own teardown after the files are written.
+// That abort is outside this script. A failed alignment throws above and does not write.

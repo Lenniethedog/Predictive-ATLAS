@@ -74,10 +74,13 @@ export const ease = {
   outBack: (t) => 1 + 2.2 * Math.pow(t - 1, 3) + 1.2 * Math.pow(t - 1, 2),
 };
 
+// Pictures settle a little faster than a literal reading of the duration, so the frame keeps moving.
+const SNAP = 0.86;
+
 // Eased 0..1 progress of t through [a, a+d].
 export function prog(t, a, d = 1, fn = ease.inOut) {
-  if (d <= 0) return t >= a ? 1 : 0;
-  return fn(clamp((t - a) / d));
+  if (!(d > 0)) return t >= a ? 1 : 0;
+  return fn(clamp((t - a) / (d * SNAP)));
 }
 
 // Fade in at a over d, optionally fade out at b over d2.
@@ -106,10 +109,36 @@ export function canvas(w = W, h = H) {
 }
 
 // ---------------------------------------------------------------- scene timing
-// Scenes receive S: sentence-aligned beats relative to the scene's own clock.
-export function makeBeats(para, sceneStart, sceneEnd) {
+// Scenes receive S: beats relative to the scene clock, anchored to narration phrases.
+// S.at("nineteen seventy-one", 0.4) stays on that sentence if a line is inserted above it.
+// A sentence index throws. -1 means the last sentence.
+function sentenceIndex(anchor, sentences) {
+  if (anchor === -1) return sentences.length - 1;
+  if (typeof anchor === "number") {
+    throw new Error(`S.at(${anchor}) is a sentence index. Pass a phrase from that sentence so an inserted line cannot move the beat.`);
+  }
+  const re = anchor instanceof RegExp ? anchor : null;
+  const needle = re ? null : String(anchor).toLowerCase();
+  if (!re && !needle) throw new Error("S.at needs a narration phrase");
+  const hits = [];
+  sentences.forEach((s, i) => {
+    if (re ? re.test(s.text) : s.text.toLowerCase().includes(needle)) hits.push(i);
+  });
+  if (hits.length !== 1) {
+    throw new Error(`phrase ${JSON.stringify(String(anchor))} matched ${hits.length} sentences`);
+  }
+  return hits[0];
+}
+
+export function makeBeats(para, sceneStart, sceneEnd, pace = 1) {
   const b = para.sentences.map((s) => s.start - sceneStart);
   const e = para.sentences.map((s) => s.end - sceneStart);
+  const at = (anchor, f = 0) => {
+    const k = sentenceIndex(anchor, para.sentences);
+    // Later in a sentence, arrive a little early so the picture moves before the line is done.
+    const g = f > 0 ? f * pace : 0;
+    return b[k] + g * (e[k] - b[k]);
+  };
   return {
     dur: sceneEnd - sceneStart,
     b,
@@ -118,14 +147,9 @@ export function makeBeats(para, sceneStart, sceneEnd) {
     ps: para.start - sceneStart,
     pe: para.end - sceneStart,
     text: para.sentences.map((s) => s.text),
-    at: (i, f = 0) => {
-      const k = Math.max(0, Math.min(b.length - 1, i));
-      return b[k] + f * (e[k] - b[k]);
-    },
-    // first sentence whose text matches re (fallback to index d)
-    find: (re, d = 0) => {
-      const i = para.sentences.findIndex((s) => re.test(s.text));
-      return i < 0 ? d : i;
-    },
+    at,
+    start: (anchor) => at(anchor, 0),
+    end: (anchor) => at(anchor, 1),
+    find: (re) => sentenceIndex(re, para.sentences),
   };
 }
