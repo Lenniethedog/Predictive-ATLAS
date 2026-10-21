@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { SCRIPTS } from "./config.mjs";
-import { assertEpisode } from "./story.mjs";
+import { assertEpisode, spokenWords } from "./story.mjs";
 
 const TITLE_CARD =
   "[TITLE CARD, silent, three seconds: PREDICTIVE ATLAS, then the episode title in small caps. No host. Cut to picture on the first spoken word.]";
@@ -21,9 +21,9 @@ export function scriptText(n, ep, scenes) {
     `EPISODE ${n} OF 5`,
     `TITLE: ${title}`,
     "",
-    "SPOKEN NARRATION: 1,500 words. Read only the unbracketed paragraphs.",
+    `SPOKEN NARRATION: ${spokenWords(scenes).toLocaleString("en-US")} words. Read only the unbracketed paragraphs.`,
     "READ the bracketed blocks as silence. They are animation direction.",
-    "PACE: cold, level, unhurried. No greeting. No moral lift at the close.",
+    "PACE: measured and conversational. Follow the thought across sentences; allow contrast and conclusions to land. No greeting or theatrical close.",
     "TARGET DURATION: about 11 minutes at a measured 135 words per minute.",
     "",
     TITLE_CARD,

@@ -109,8 +109,8 @@ function s1(S) {
     const pa = prog(t, tSqueeze - 1.5, 1.5);
     D.fatArrow(ctx, view.xy([13.5, 50.2]), view.xy([w - 0.6, 50.2]), { color: C.cyan, width: 90, p: pa, alpha: 0.75 });
     D.fatArrow(ctx, view.xy([52, 49.4]), view.xy([e + 0.6, 49.4]), { color: C.darkred, width: 90, p: pa, alpha: 0.85 });
-    D.label(ctx, "WESTERN SECURITY SYSTEM", ...view.xy([12.5, 48.6]), { color: C.cyan, alpha: pa, size: 13 });
-    D.label(ctx, "RUSSIAN SECURITY SYSTEM", ...view.xy([47.5, 47.8]), { color: "#e06a72", alpha: pa, size: 13 });
+    D.label(ctx, "WESTERN ALLIANCE", ...view.xy([12.5, 48.6]), { color: C.cyan, alpha: pa, size: 13 });
+    D.label(ctx, "RUSSIAN FORCES", ...view.xy([47.5, 47.8]), { color: "#e06a72", alpha: pa, size: 13 });
   };
 }
 
@@ -123,7 +123,7 @@ function s2(S) {
     [25.96, 59.26, "F"], [28.5, 44.36, "B"],
   ].sort((a, b) => a[0] - b[0]);
   const russian = [[20.5, 54.7, "F"], [27.5, 53.3, "A"], [34.0, 45.1, "B"], [39.7, 47.2, "F"], [36.5, 51.0, "B"], [33.0, 54.5, "A"]];
-  const tCap = S.at("What can");
+  const tCap = S.at("Weapons are easier");
   const tRuCount = S.at("Russia, as");
   const tWestCount = S.at("The Western");
   const tKm = S.at("Security is");
@@ -161,7 +161,7 @@ function s2(S) {
     // allied infrastructure steps east
     allied.forEach(([lon, lat, k], i) => {
       const [x, y] = view.xy([lon, lat]);
-      icon(x, y, k, C.cyan, prog(t, tCap + (i / allied.length) * (S.end("What can") - S.start("What can") + 2), 0.4, ease.out));
+      icon(x, y, k, C.cyan, prog(t, tCap + (i / allied.length) * (S.end("Weapons are easier") - S.start("Weapons are easier") + 2), 0.4, ease.out));
     });
     const legendA = prog(t, tCap, 0.6);
     [["B", "BASES"], ["A", "INTEGRATED AIR DEFENSE"], ["F", "LONG-RANGE FIRES"]].forEach(([k, n], i) => {
@@ -252,7 +252,7 @@ function s3(S) {
       } else {
         const l = view.line([[24.0, 51.5], [27.5, 50.0], [31.0, 49.0], [34.5, 48.6], [38.5, 48.0]]);
         D.stroke(ctx, D.smoothPts(l), { color: PALE_AMBER, width: 2, glow: 12, alpha: prog(t, cE, 0.5) });
-        K.chip(ctx, "BY 2022 THE WIDTH IS A LINE", 960, 960, { color: PALE_AMBER, align: "center", alpha: prog(t, cE + 0.6, 0.6), size: 18 });
+        K.chip(ctx, "2022 · THE BUFFER HAS COLLAPSED", 960, 960, { color: PALE_AMBER, align: "center", alpha: prog(t, cE + 0.6, 0.6), size: 18 });
       }
     } else if (phase === "B") {
       // Bucharest declaration card
@@ -308,7 +308,7 @@ function s3(S) {
       const ua2 = prog(t, S.at("Minsk left", 0.5), 0.5);
       K.chip(ctx, "AUTONOMY IN THE EAST · UNRESOLVED", 420, 820, { color: PALE_AMBER, alpha: ua1, size: 15 });
       K.chip(ctx, "CONTROL OF THE BORDER · UNRESOLVED", 1500, 820, { color: PALE_AMBER, alpha: ua2, size: 15, align: "right" });
-      K.chip(ctx, "A WRITTEN RESTRAINT = A PAUSE IN REARMAMENT", 960, 900, { color: C.ice, align: "center", alpha: prog(t, S.at("Each unimplemented"), 0.5), size: 16 });
+      K.chip(ctx, "AGREEMENTS BUY TIME TO REARM", 960, 900, { color: C.ice, align: "center", alpha: prog(t, S.at("Each unimplemented"), 0.5), size: 16 });
     }
     // timeline strip
     const tx0 = 300;
@@ -366,7 +366,7 @@ function s4(S) {
     // title block
     ctx.strokeRect(x + w - 380, y + h - 116, 364, 100);
     D.text(ctx, "NEUTRAL UKRAINE · SHEET 01", x + w - 364, y + h - 80, { kind: "mono", size: 14, color: C.ice });
-    D.text(ctx, "J. SACHS · INSTITUTIONAL DESIGN", x + w - 364, y + h - 56, { kind: "mono", size: 12, color: C.mid });
+    D.text(ctx, "J. SACHS · A NEUTRALITY PROPOSAL", x + w - 364, y + h - 56, { kind: "mono", size: 12, color: C.mid });
     D.text(ctx, "REV. — · NOT BUILT", x + w - 364, y + h - 34, { kind: "mono", size: 12, color: C.dim });
     // outline
     const oa = prog(t, 0.3, 1.5);
@@ -422,7 +422,7 @@ function s4(S) {
         ctx.restore();
       });
     });
-    D.label(ctx, "VERIFICATION GRID · INSPECTION REPLACES TRUST", x + 40, y + 50, { color: C.green, alpha: prog(t, S.at("A long") + 0.8, 0.5), size: 13 });
+    D.label(ctx, "INSPECTIONS CHECK THE AGREEMENT", x + 40, y + 50, { color: C.green, alpha: prog(t, S.at("A long") + 0.8, 0.5), size: 13 });
     // Finland reference inset
     const fa = prog(t, S.at("The reference"), 0.8);
     if (fa > 0) {
@@ -449,10 +449,10 @@ function s4(S) {
       K.boxNode(ctx, bx, flowY, 280, 80, n, { color: i === 2 ? C.cyan : C.steel, alpha: prog(t, S.at("Washington and") + i * 0.6, 0.5), titleSize: 18 });
       if (i < 2) D.arrow(ctx, [[bx + 145, flowY], [bx + 195, flowY]], { color: C.mid, width: 2, head: 10, to: prog(t, S.at("Washington and") + i * 0.6 + 0.4, 0.4), alpha: fA });
     });
-    D.label(ctx, "HOW WASHINGTON AND ALLIED INSTITUTIONS TREATED NEUTRALITY", 680, flowY - 70, { color: C.mid, alpha: fA, size: 13 });
+    D.label(ctx, "NEUTRALITY AS A WAITING ROOM", 680, flowY - 70, { color: C.mid, alpha: fA, size: 13 });
     const rA = prog(t, S.at("The Military-Industrial"), 0.6);
     D.panel(ctx, 680, 430, 1140, 150, { alpha: rA, title: "Standing preference · Military-Industrial Complex" });
-    D.text(ctx, "FORWARD INFRASTRUCTURE", 720, 530, { size: 30, weight: 600, tracking: 3, color: C.cyan, alpha: rA });
+    D.text(ctx, "BASES CLOSER TO RUSSIA", 720, 530, { size: 30, weight: 600, tracking: 3, color: C.cyan, alpha: rA });
     D.text(ctx, ">", 1170, 530, { size: 36, weight: 600, color: C.ice, alpha: rA });
     D.text(ctx, "A WIDE NEUTRAL ZONE", 1220, 530, { size: 30, weight: 600, tracking: 3, color: C.mid, alpha: rA });
     // balance: concern vs pledge
@@ -544,7 +544,7 @@ function s5(S) {
       ctx.fill();
       ctx.restore();
       fortified(ctx, D.smoothPts(fl, 6), { color: C.ice, alpha: split, to: split });
-      D.text(ctx, "EUROPE'S ECONOMIC AND MILITARY ORBIT", 640, 600, { size: 22, weight: 600, tracking: 3, align: "center", alpha: prog(t, tSplit + 1, 0.6), color: PALE_AMBER });
+      D.text(ctx, "TIES TO EUROPE", 640, 600, { size: 22, weight: 600, tracking: 3, align: "center", alpha: prog(t, tSplit + 1, 0.6), color: PALE_AMBER });
       D.text(ctx, "RUSSIAN DEPTH", 1320, 600, { size: 22, weight: 600, tracking: 4, align: "center", alpha: prog(t, tSplit + 1.4, 0.6), color: "#f0a0a6" });
     }
     const boardA = 1 - split;
@@ -581,7 +581,7 @@ function s5(S) {
       const a = prog(t, 0.3 + i * 0.3, 0.6) * boardA;
       D.node(ctx, s.x, s.y, 26, s.col, { alpha: a, glow: 22 });
       D.label(ctx, s.name, s.x, s.y + (s.y > cy ? 62 : -44), { align: "center", color: C.ice, alpha: a, size: 16, weight: 600 });
-      K.chip(ctx, s.demand, s.x, s.y + (s.y > cy ? 106 : -86), { color: s.col, align: "center", alpha: fade(t, S.at("There is", 0.2 + i * 0.25), 0.5, S.at("The neutral"), 0.6) * boardA, size: 13 });
+      K.chip(ctx, s.demand, s.x, s.y + (s.y > cy ? 106 : -86), { color: s.col, align: "center", alpha: fade(t, S.at("There’s", 0.2 + i * 0.25), 0.5, S.at("The neutral"), 0.6) * boardA, size: 13 });
     });
     // the neutral-center bargain: each player's token
     const ba = prog(t, S.at("The neutral"), 0.8) * boardA;
@@ -597,7 +597,7 @@ function s5(S) {
       const ea = fade(t, rem[2], 0.3, rem[2] + 2.8, 0.6) * boardA;
       if (ea > 0) K.chip(ctx, rem[1], tx, ty + (s.y > cy ? 70 : -60), { color: C.crimson, align: "center", alpha: ea, size: 14 });
     });
-    D.caption(ctx, "Geometry after the center fails", t, S.at("The line"), { y: 1000, x: 330 });
+    D.caption(ctx, "The map after neutrality fails", t, S.at("The line"), { y: 1000, x: 330 });
   };
 }
 
@@ -633,7 +633,7 @@ function s6(S) {
     view.draw(ctx, ua, { stroke: rgba(PALE_AMBER, 0.4 + 0.4 * wa), width: 1.5 });
     // NATO halo, stops at the border
     if (halo > 0) for (const id of natoIds) view.draw(ctx, view.country(id), { stroke: C.cyan, width: 2, glow: 18, alpha: halo * 0.85 });
-    D.label(ctx, "ALLIANCE HALO STOPS AT THE BORDER", ...view.xy([19.6, 51.5]), { color: C.cyan, alpha: halo, size: 13, align: "center" });
+    D.label(ctx, "NATO PROTECTION ENDS HERE", ...view.xy([19.6, 51.5]), { color: C.cyan, alpha: halo, size: 13, align: "center" });
     // contact line
     fortified(ctx, view.line(CONTACT_LINE), { color: C.ice, to: prog(t, tLine, 3), alpha: 1 });
     D.label(ctx, contactLine.caption, ...view.xy([36.4, 47.15]), { color: C.dim, alpha: prog(t, tLine + 1.2, 0.5), size: 12, align: "center" });
@@ -643,7 +643,7 @@ function s6(S) {
     D.node(ctx, sv[0], sv[1], 10, C.darkred, { alpha: sa, glow: 24, pulseT: t });
     D.label(ctx, "SEVASTOPOL · BLACK SEA FLEET", sv[0] - 20, sv[1] + 36, { color: "#f0a0a6", alpha: sa, size: 14, align: "right" });
     const fleetA = fade(t, tCrimea + 3, 0.6, tDepth, 0.6);
-    D.label(ctx, "A HOSTILE COAST WOULD PUT THE FLEET UNDER AN OPPOSING SHORE", sv[0], sv[1] + 66, { color: C.mid, alpha: fleetA, size: 12, align: "center" });
+    D.label(ctx, "A HOSTILE COAST THREATENS THE FLEET", sv[0], sv[1] + 66, { color: C.mid, alpha: fleetA, size: 12, align: "center" });
     // depth
     const da = prog(t, tDepth + 0.6, 0.8) * (1 - c3 * 0.4);
     D.text(ctx, "DEPTH", ...view.xy([38.9, 47.55]), { size: 30, weight: 600, tracking: 10, align: "center", color: "#f0a0a6", alpha: da });
@@ -731,11 +731,11 @@ function s7(S) {
     D.series(ctx, gx, gy, gw, gh, cost, { color: C.ice, width: 3, p: cp, glow: 8, alpha: ca });
     D.series(ctx, gx, gy, gw, gh, val, { color: "#e06a72", width: 3, p: cp, glow: 8, alpha: ca });
     D.label(ctx, "MARGINAL COST", gx + gw + 14, gy + gh - 0.85 * gh, { color: C.ice, alpha: ca, size: 12 });
-    D.label(ctx, "MARGINAL SECURITY VALUE", gx + 14, gy + gh - val[0][1] * gh - 14, { color: "#e06a72", alpha: ca, size: 12 });
+    D.label(ctx, "SECURITY GAIN FROM THE NEXT KM", gx + 14, gy + gh - val[0][1] * gh - 14, { color: "#e06a72", alpha: ca, size: 12 });
     D.label(ctx, "A SECOND, LARGER WAR", X(0.55), gy + gh - (0.3 + 0.55 * 0.55) * gh - 20, { color: C.ice, alpha: prog(t, tCurves + 2, 0.6), size: 12, align: "center" });
     // move only while value exceeds cost
     const ra = prog(t, tRule, 0.6);
-    K.chip(ctx, "MOVE ONLY WHILE VALUE > COST", gx + gw - 20, gy + 36, { color: C.mid, alpha: ra, size: 13, align: "right" });
+    K.chip(ctx, "ADVANCE WHILE GAIN > COST", gx + gw - 20, gy + 36, { color: C.mid, alpha: ra, size: 13, align: "right" });
     // baseline crossing on the contact line
     const ba = prog(t, tBase, 0.5);
     const yB = gy + gh - (0.3 + 0.55 * xC) * gh;
@@ -760,10 +760,10 @@ function s8(S) {
   const occ = view.pathOf(poly(OCCUPIED));
   const tCrisis = S.at("A line");
   const tKyiv = S.at("The contact-line");
-  const tGauge = S.at("That political");
+  const tGauge = S.at("That unresolved");
   const tCols = S.at("Mearsheimer expects");
-  const tBlood = S.at("Once blood");
-  const tStamp = S.at("It is no");
+  const tBlood = S.at("Once a war");
+  const tStamp = S.at("It’s no");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
     const ga = prog(t, S.at("Sachs still"), 1) * 0.6;
@@ -778,7 +778,7 @@ function s8(S) {
       const jit = [];
       for (let i = 0; i <= 20; i++) jit.push([kx[0] - 140 + i * 14, kx[1] + Math.sin(t * 14 + i * 1.7) * 9 * (1 - Math.abs(i - 10) / 12)]);
       D.stroke(ctx, jit, { color: C.crimson, width: 2.5, glow: 10, alpha: ca });
-      K.chip(ctx, "A PERMANENT CRISIS", kx[0], kx[1] - 46, { color: C.crimson, align: "center", alpha: prog(t, S.at("It is a"), 0.4) * ca, size: 14 });
+      K.chip(ctx, "A PERMANENT CRISIS", kx[0], kx[1] - 46, { color: C.crimson, align: "center", alpha: prog(t, S.at("It leaves a crisis"), 0.4) * ca, size: 14 });
     }
     // Kyiv, far enough and close enough
     const ka = prog(t, tKyiv, 0.6);
@@ -788,13 +788,13 @@ function s8(S) {
     const near = view.xy([35.84, 47.45]);
     D.stroke(ctx, [kx, near], { color: C.ice, width: 1.5, dash: [6, 6], to: prog(t, tKyiv + 0.5, 1.2), alpha: ka });
     D.label(ctx, "≈ 500 KM TO THE FREEZE", (kx[0] + near[0]) / 2 + 16, (kx[1] + near[1]) / 2, { color: C.ice, alpha: prog(t, tKyiv + 1.4, 0.5), size: 12 });
-    D.label(ctx, "FAR ENOUGH TO ADMINISTER · CLOSE ENOUGH TO KEEP THE LOSS ALIVE", 120, 1000, { color: C.mid, alpha: prog(t, tKyiv + 3, 0.6) * (1 - prog(t, tStamp - 1, 0.5)), size: 12 });
+    D.label(ctx, "KYIV CAN GOVERN · THE LOSS REMAINS", 120, 1000, { color: C.mid, alpha: prog(t, tKyiv + 3, 0.6) * (1 - prog(t, tStamp - 1, 0.5)), size: 12 });
     // political pressure gauge
     const gA = prog(t, tGauge, 0.6);
     const v = lerp(0.2, 0.86, prog(t, tGauge + 0.3, 1.5, ease.outBack)) + 0.015 * Math.sin(t * 3);
     D.gauge(ctx, 210, 330, 70, v, { alpha: gA, zones: [[0, 0.5, C.steel], [0.5, 0.75, C.amber], [0.75, 1, C.crimson]] });
     D.label(ctx, "POLITICAL PRESSURE", 210, 368, { align: "center", color: C.mid, alpha: gA, size: 12 });
-    D.text(ctx, "UNRECONCILED", 210, 400, { size: 20, weight: 600, tracking: 4, align: "center", color: C.amber, alpha: gA });
+    D.text(ctx, "LOSS UNRESOLVED", 210, 400, { size: 20, weight: 600, tracking: 4, align: "center", color: C.amber, alpha: gA });
     // faded single neutral state behind the columns
     if (ga > 0) {
       ctx.save();
@@ -805,8 +805,8 @@ function s8(S) {
     // two occupied columns
     const col = (x, title, sub, a, lens) => {
       D.panel(ctx, x, 270, 340, 400, { alpha: a, fill: rgba("#0f141b", 0.92), sfx: title.join(" ") });
-      D.text(ctx, title[0], x + 170, 350, { size: 30, weight: 600, tracking: 5, align: "center", alpha: a });
-      D.text(ctx, title[1], x + 170, 388, { size: 30, weight: 600, tracking: 5, align: "center", alpha: a });
+      D.text(ctx, title[0], x + 170, 350, { size: 26, weight: 600, tracking: 2, align: "center", alpha: a });
+      D.text(ctx, title[1], x + 170, 388, { size: 26, weight: 600, tracking: 2, align: "center", alpha: a });
       D.text(ctx, sub, x + 170, 420, { kind: "mono", size: 12, color: C.mid, align: "center", alpha: a });
       ctx.save();
       ctx.globalAlpha = a;
@@ -822,9 +822,9 @@ function s8(S) {
       D.text(ctx, "OCCUPIED", x + 170, 630, { kind: "mono", size: 14, tracking: 3, color: C.green, align: "center", alpha: a });
       D.text(ctx, lens, x + 170, 650, { kind: "mono", size: 11, color: C.dim, align: "center", alpha: a });
     };
-    col(1120, ["DE FACTO", "PARTITION"], "THE LINE THAT HOLDS", prog(t, tCols, 0.6), "");
-    col(1500, ["DE JURE", "PROTEST"], "THE CLAIM THAT REMAINS", prog(t, tCols + 1.2, 0.6), "");
-    K.chip(ctx, "BLOOD REPRICED THE BARGAIN · NO TRADE AT THE PREWAR RATE", 1490, 760, { color: C.ice, align: "center", alpha: prog(t, tBlood, 0.6), size: 13 });
+    col(1120, ["ON THE GROUND", "DIVIDED"], "THE LINE THAT HOLDS", prog(t, tCols, 0.6), "");
+    col(1500, ["ON PAPER", "CLAIM REMAINS"], "THE CLAIM THAT REMAINS", prog(t, tCols + 1.2, 0.6), "");
+    K.chip(ctx, "WAR HAS CHANGED THE PRICE OF A DEAL", 1490, 760, { color: C.ice, align: "center", alpha: prog(t, tBlood, 0.6), size: 13 });
     // the blueprint behind, stamped
     if (ga > 0) D.text(ctx, "SINGLE NEUTRAL STATE · STILL LEGIBLE", 1490, 236, { kind: "mono", size: 13, tracking: 3, align: "center", color: C.ice, alpha: ga });
     D.stamp(ctx, "NOT THE OUTCOME", 1490, 880, t, tStamp, { color: C.crimson, size: 34, angle: -0.06 });
@@ -891,7 +891,7 @@ function s9(S) {
     D.label(ctx, "SEASONAL GAIN", 1675, 672, { align: "center", color: C.crimson, alpha: ba, size: 12 });
     D.text(ctx, ">", 1575, 520, { size: 40, weight: 600, align: "center", alpha: ba * (1 - rearm), color: C.green });
     D.text(ctx, "≈", 1575, 520, { size: 40, weight: 600, align: "center", alpha: ba * rearm, color: C.amber });
-    K.chip(ctx, "REARMAMENT CHEAPENS THE OFFENSIVE", 1570, 750, { color: C.amber, align: "center", alpha: rearm, size: 13 });
+    K.chip(ctx, "REARMING LOWERS THE COST OF ATTACK", 1570, 750, { color: C.amber, align: "center", alpha: rearm, size: 13 });
     // constraints as objects
     const cA = (i) => prog(t, tCon + i * (S.end("It rests") - S.start("It rests")) * 0.3, 0.6);
     // demilitarized band
@@ -929,7 +929,7 @@ function s9(S) {
       const y = 260 + i * 110;
       D.icon.person(ctx, mid[0] + 70, y, 26, C.green, a2);
     }
-    D.label(ctx, "MONITORS · BUDGET FIXED IF THE LINE MOVES", mid[0] + 96, 640 - 10, { color: C.green, alpha: a2, size: 12 });
+    D.label(ctx, "MONITORS KEEP FUNDING IF THE LINE MOVES", mid[0] + 96, 640 - 10, { color: C.green, alpha: a2, size: 12 });
     D.caption(ctx, "Final only while cheating stays expensive", t, tFinal, { y: 1000, x: 120, size: 26 });
   };
 }
@@ -951,7 +951,7 @@ function s10(S) {
     const sk = prog(t, 0.2, 0.8) * (1 - prog(t, tWest, 0.4));
     if (sk > 0) {
       D.panel(ctx, 140, 150, 800, 540, { alpha: sk, title: "Western state · reconstruction", titleColor: PALE_AMBER, fill: rgba(C.bg2, 0.5) });
-      D.panel(ctx, 980, 150, 800, 540, { alpha: sk, title: "Eastern zone · fiscal clearing", titleColor: "#f0a0a6", color: rgba(C.darkred, 0.6), fill: rgba(C.bg2, 0.5) });
+      D.panel(ctx, 980, 150, 800, 540, { alpha: sk, title: "Eastern zone · Russian payments", titleColor: "#f0a0a6", color: rgba(C.darkred, 0.6), fill: rgba(C.bg2, 0.5) });
       D.stroke(ctx, [[960, 170], [960, 670]], { color: C.ice, width: 2, dash: [8, 8], alpha: sk * 0.6 });
       D.text(ctx, "ONE MAP ON PAPER", 960, 730, { kind: "mono", size: 14, tracking: 3, align: "center", color: C.mid, alpha: sk });
       D.text(ctx, "TWO PATRONS IN PRACTICE", 960, 756, { kind: "mono", size: 14, tracking: 3, align: "center", color: C.ice, alpha: sk * prog(t, 1.5, 0.8) });
@@ -999,7 +999,7 @@ function s10(S) {
       D.label(ctx, "ALIGNMENT BY ANOTHER NAME", 730, 664, { align: "center", color: PALE_AMBER, alpha: prog(t, tCond + 0.6, 0.6), size: 12 });
       // eastern ledger
       const ea = prog(t, tEast, 0.6);
-      D.panel(ctx, 980, 150, 800, 540, { alpha: ea, title: "Eastern zone · fiscal clearing", titleColor: "#f0a0a6", color: rgba(C.darkred, 0.6) });
+      D.panel(ctx, 980, 150, 800, 540, { alpha: ea, title: "Eastern zone · Russian payments", titleColor: "#f0a0a6", color: rgba(C.darkred, 0.6) });
       const sink = [1600, 420];
       D.node(ctx, sink[0], sink[1], 34, C.darkred, { alpha: ea, glow: 24 });
       D.label(ctx, "RUSSIAN FISCAL &", sink[0], sink[1] + 66, { align: "center", color: "#f0a0a6", alpha: ea, size: 12 });
@@ -1012,7 +1012,7 @@ function s10(S) {
         D.stroke(ctx, pts, { color: C.darkred, width: 3, alpha: a, glow: 10 });
         K.flow(ctx, pts, t + i, { color: "#f0a0a6", n: 4, speed: 0.25, alpha: a, size: 2.2 });
       });
-      K.chip(ctx, "INCOMPATIBLE ECONOMIC UNITS · ONE MAP ON PAPER", 960, 740, { color: C.ice, align: "center", alpha: prog(t, S.at("Over time"), 0.6), size: 14 });
+      K.chip(ctx, "ONE MAP · TWO ECONOMIES", 960, 740, { color: C.ice, align: "center", alpha: prog(t, S.at("Over time"), 0.6), size: 14 });
     } else {
       // pure security board
       D.panel(ctx, 340, 170, 1240, 520, { title: "The game · pure security" });
@@ -1021,7 +1021,7 @@ function s10(S) {
         D.square(ctx, 700 - (i % 3) * 80, 280 + Math.floor(i / 3) * 160 + (i % 2) * 40, 18, PALE_AMBER, { glow: 10 });
         D.square(ctx, 1220 + (i % 3) * 80, 280 + Math.floor(i / 3) * 160 + (i % 2) * 40, 18, C.darkred, { glow: 10 });
       }
-      D.text(ctx, "NO SIDE PAYMENT", 960, 640, { kind: "mono", size: 14, tracking: 3, color: C.mid, align: "center" });
+      D.text(ctx, "NO SHARED CASH BENEFIT", 960, 640, { kind: "mono", size: 14, tracking: 3, color: C.mid, align: "center" });
     }
     ctx.restore();
     // Black Sea grain corridor
@@ -1041,9 +1041,9 @@ function s10(S) {
       K.place(ctx, view.xy(P.odesa), "ODESA", { color: C.mid, size: 11 });
       K.place(ctx, view.xy(P.istanbul), "BOSPORUS", { color: C.mid, size: 11, dx: 12, dy: -6 });
       ctx.restore();
-      D.label(ctx, "SIDE PAYMENT", 1320, 840, { color: C.gold, alpha: ga * (1 - closed), size: 13 });
+      D.label(ctx, "SHARED CASH BENEFIT", 1320, 840, { color: C.gold, alpha: ga * (1 - closed), size: 13 });
       D.label(ctx, "FOREIGN CURRENCY FOR BOTH SIDES", 1320, 866, { color: C.mid, alpha: prog(t, S.at("A corridor"), 0.6) * (1 - closed), size: 11 });
-      D.label(ctx, "→ A CASH REASON TO PREFER THE FREEZE", 1320, 886, { color: C.mid, alpha: prog(t, S.at("A corridor"), 0.6) * (1 - closed), size: 11 });
+      D.label(ctx, "→ BOTH EARN WHILE THE LINE HOLDS", 1320, 886, { color: C.mid, alpha: prog(t, S.at("A corridor"), 0.6) * (1 - closed), size: 11 });
       if (closed > 0) K.chip(ctx, "CORRIDOR CLOSED", 1320, 880, { color: C.crimson, alpha: closed, size: 14 });
     }
   };
@@ -1066,7 +1066,7 @@ function s11(S) {
       // Sachs
       const la = prog(t, tL, 0.6);
       D.text(ctx, "SACHS", 140, 190, { size: 30, weight: 600, tracking: 8, color: C.violet, alpha: la });
-      ["A MULTIPOLAR DESIGN.", "A SHARED INSPECTION REGIME.", "ONE NEUTRAL STATE.", "PARTITION = UNIPOLAR HABIT", "MEETING A GREAT POWER'S RED LINE."].forEach((l, i) => {
+      ["A MULTIPOLAR DESIGN.", "A SHARED INSPECTION REGIME.", "ONE NEUTRAL STATE.", "DIVIDED = UNIPOLAR HABIT", "MEETING A GREAT POWER'S RED LINE."].forEach((l, i) => {
         D.text(ctx, D.typed(l, prog(t, tL + 0.6 + i * 1.6, 1.2, ease.linear)), 140, 250 + i * 44, { size: 26, weight: 500, tracking: 2, color: i < 3 ? C.ice : C.mid });
       });
       // Mearsheimer
@@ -1159,13 +1159,13 @@ function s12(S) {
     D.label(ctx, contactLine.caption, ...view.xy([36.4, 47.15]), { color: C.dim, alpha: st, size: 12, align: "center" });
     // labels
     D.label(ctx, "ALLIANCE · A WALL, NOT A BUFFER", ...view.xy([22.0, 46.9]), { color: C.cyan, alpha: wall, size: 13, align: "center" });
-    D.label(ctx, "TRUNCATED STATE · ARMED FROM OUTSIDE · FINANCED FROM THE WEST", ...view.xy([29.4, 51.85]), { color: PALE_AMBER, alpha: wa, size: 12, align: "center" });
-    D.label(ctx, "UNDER RUSSIAN FORCE · SEPARATE PAYMENT RAIL", ...view.xy([39.2, 46.0]), { color: "#f0a0a6", alpha: prog(t, tEast + 0.8, 0.6), size: 12, align: "center" });
+    D.label(ctx, "WEST · WESTERN ARMS AND FUNDING", ...view.xy([29.4, 51.85]), { color: PALE_AMBER, alpha: wa, size: 12, align: "center" });
+    D.label(ctx, "EAST · RUSSIAN FORCE AND PAYMENTS", ...view.xy([39.2, 46.0]), { color: "#f0a0a6", alpha: prog(t, tEast + 0.8, 0.6), size: 12, align: "center" });
     const sv = view.xy(P.sevastopol);
     D.node(ctx, sv[0], sv[1], 7, C.darkred, { alpha: prog(t, tEast + 1, 0.6), glow: 16 });
     D.label(ctx, "FLEET HARBOR", sv[0] - 14, sv[1] + 26, { color: "#f0a0a6", alpha: prog(t, tEast + 1, 0.6), size: 11, align: "right" });
     D.label(ctx, "THE LAST WIDTH · MONITORED", ...view.xy([38.6, 49.7]), { color: C.ice, alpha: st, size: 12 });
-    D.label(ctx, "DNIEPER · THE BIGGER-WAR LINE · NOT PAID FOR", ...view.xy([33.2, 50.6]), { color: C.cyan, alpha: prog(t, tRiver, 0.8) * 0.85, size: 11 });
+    D.label(ctx, "DNIEPER · A LARGER WAR WOULD COST MORE", ...view.xy([33.2, 50.6]), { color: C.cyan, alpha: prog(t, tRiver, 0.8) * 0.85, size: 11 });
     // payment rail for the east
     const pr = prog(t, tEast + 1.5, 1.5);
     const rail = view.line([[37.8, 47.2], [40.5, 47.6], [43.5, 48.4]]);
@@ -1179,31 +1179,31 @@ const STORY = [
   {
     "title": "The width",
     "mood": "pressure",
-    "narration": "Ukraine is a strip of land. Two armed camps share a flat plain, and the land that belongs to neither is the only cushion between them. Treat the state as that cushion, and the war is a fight over how thick the cushion must be. Ask both sides to trust the cushion, and the fight has only one ending that holds. The territory splits on the ground, because trust is still the one thing this setup cannot supply.",
+    "narration": "In this model, Ukraine is a strip of land between two armed camps. The camps share a flat plain, with no mountain range to separate them. The land outside either alliance is the cushion between them. Treat the state as that cushion, and the war is a fight over how thick the cushion must be. So what happens if both sides are asked to rely on trust alone? The model points toward a division that neither side welcomes. The territory splits on the ground, because this arrangement can’t give either side confidence in the other.",
     "cue": "[VISUAL: TOP-DOWN map of the European plain from the Rhine to the Urals. Terrain relief only, no weather. A translucent band across Ukraine is labeled WIDTH. Two pressure arrows, blue from the west and dark red from the east, compress the band. The band thins until it shears.]"
   },
   {
     "title": "Capabilities, not intentions",
     "mood": "system",
-    "narration": "The European plain stores distance in towns and fields. John Mearsheimer starts from a simple claim. No world authority can make a promise stick. Intentions are hidden, and they change. What can be counted are weapons: bases, air defense, and long-range missiles. Russia, as a great power, counts those things on the open land of Ukraine and treats them as a future threat even when the stated purpose is defense. The Western alliance counts Russian weapons the same way. Security is one-sided here, because one kilometer cannot be Moscow's forward post and the alliance's at once. Relative power is how far the other side's forces sit from your own home ground.",
+    "narration": "The European plain stores distance in towns and fields. John Mearsheimer starts from a simple claim. No world authority can make a promise stick. Intentions are hidden, and they change. Weapons are easier to count: bases, air defense, and long-range missiles. Russia, as a great power, counts those things on the open land of Ukraine and treats them as a future threat even when the stated purpose is defense. The Western alliance counts Russian weapons the same way. Security is one-sided here, because one kilometer can’t be Moscow's forward post and the alliance's at once. Relative power is how far the other side's forces sit from your own home ground.",
     "cue": "[VISUAL: The same plain, now with capability markers rather than speeches. Blue squares for allied military infrastructure step eastward across the former Warsaw Pact. Dark-red markers count air defense, long-range fires, and bases on the Ukrainian steppe. A distance ruler between the two sets of markers is labeled RELATIVE POWER. The ruler shortens. Intentions are never shown as text.]"
   },
   {
     "title": "How the buffer thinned",
     "mood": "history",
-    "narration": "The record shows how that cushion got thin. After the Cold War the alliance moved east across the old Warsaw Pact. In two thousand eight, at Bucharest, it said Ukraine and Georgia would become members. It set no date. It created a hope in one capital and a deadline in another. The government in Kyiv that had tried to balance between markets was overturned in twenty fourteen. Crimea was taken. The Donbas war began. The Minsk deals tried to freeze that war inside one country. They were not carried out. Minsk left self-rule in the east, and control of the border, unresolved. Each unimplemented promise taught both sides that a written limit was only a pause while they rearmed. By twenty twenty-two the cushion was, in Russia's count of the threat, no longer thick enough to leave to time.",
+    "narration": "The record shows how that cushion became thinner, one decision at a time. After the Cold War the alliance moved east across the old Warsaw Pact. In two thousand eight, at Bucharest, it said Ukraine and Georgia would become members. It set no date, but it created a hope in one capital and a deadline in another. The government in Kyiv that had tried to balance between markets was overturned in twenty fourteen. Crimea was taken. The Donbas war began. The Minsk deals tried to freeze that war inside one country, but they weren’t carried out. Minsk left self-rule in the east, and control of the border, unresolved. Each unimplemented promise taught both sides that a written limit was only a pause while they rearmed. By twenty twenty-two the cushion was, in Russia's count of the threat, no longer thick enough to leave to time.",
     "cue": "[VISUAL: TIMELINE with four hard cuts: alliance enlargement after the Cold War; Bucharest, 2008, the sentence on Ukraine and Georgia, no date attached; 2014, Crimea and the Donbas marked as a tear in the band; Minsk documents appear and remain unsigned in practice. By 2022 the width band is a line. Camera does not linger on casualties.]"
   },
   {
     "title": "The neutral blueprint",
     "mood": "cold",
-    "narration": "Jeffrey Sachs keeps a different plan, and it is specific. A sovereign Ukraine, open to European trade, closed to both military blocs. No foreign bases. No alliance membership. A long treaty with inspectors, so checking replaces trust. The reference case is Finland after nineteen forty-five: a country that stayed independent by refusing to host someone else's army. On this account, the years when one country ran the system are what killed the plan. Washington and the allied institutions treated staying neutral as a waiting room on the way into the alliance. The Military-Industrial Complex preferred bases near the border over a wide neutral zone. Sachs claims the institutions could not treat a Russian security worry as equal to a promise of enlargement, and that the refusal produced the war they later called unprovoked.",
+    "narration": "Jeffrey Sachs keeps a different plan, and it is specific. A sovereign Ukraine, open to European trade, closed to both military blocs. No foreign bases and no alliance membership, backed by a long treaty with inspectors, so checking replaces trust. The reference case is Finland after nineteen forty-five: a country that stayed independent by refusing to host someone else's army. On this account, the years when one country ran the system are what killed the plan. Washington and the allied institutions treated staying neutral as a waiting room on the way into the alliance. The Military-Industrial Complex preferred bases near the border over a wide neutral zone. Sachs claims the institutions couldn’t treat a Russian security worry as equal to a promise of enlargement, and that the refusal produced the war they later called unprovoked.",
     "cue": "[VISUAL: A clean institutional blueprint, drawn like an architect's sheet. One Ukrainian outline. Economic arrows in steel gray toward the European Union. Military arrows absent. A verification grid of inspection sites replaces flags. A small inset of postwar Finland, labeled REFERENCE, stays non-aligned and intact. The blueprint is then slid aside, not ripped.]"
   },
   {
     "title": "Cannot be split",
     "mood": "pressure",
-    "narration": "Professor Jiang turns the argument into a game with one hard object. Military alignment is almost impossible to split. Bases, fused intelligence, and binding promises do not come in gentle doses. There is no amount of the alliance that gives Russia the depth it wants and Ukraine the protector it wants. The neutral center was the deal that needed all three players to accept a second-best result at the same time. Bucharest, the failure of Minsk, and the invasion each took one player out of that deal. Once the center is empty, the payoffs favor a split. A partition gives the west of the country to Europe's trade and weapons, and the eastern approaches to Russian depth, with a line both sides can fortify. The line is what remains when the one thing they cannot share stays unshared.",
+    "narration": "Professor Jiang turns the argument into a game with one hard object. Military alignment is almost impossible to split, because bases, fused intelligence, and binding promises don’t come in gentle doses. There’s no amount of the alliance that gives Russia the depth it wants and Ukraine the protector it wants. The neutral center was the deal that needed all three players to accept a second-best result at the same time. Bucharest, the failure of Minsk, and the invasion each took one player out of that deal. Once the center is empty, the payoffs favor a split. A partition gives the west of the country to Europe's trade and weapons, and the eastern approaches to Russian depth, with a line both sides can fortify. The line is what remains when the one thing they can’t share stays unshared.",
     "cue": "[VISUAL: GAME BOARD, three players, one object in the center labeled ALIGNMENT. The object does not divide when the cursor tries to split it. Bucharest, the failure of Minsk, and the invasion each remove a player token. With the center empty, the board redraws itself as two territories and a fortified line. Caption: GEOMETRY AFTER THE CENTER FAILS.]"
   },
   {
@@ -1215,37 +1215,37 @@ const STORY = [
   {
     "title": "The river line",
     "mood": "pressure",
-    "narration": "The second border is the river. The Dnieper is the strongest natural barrier on this plain. A line there would give Russia depth from the eastern regions to a bank it can defend, and it would give the western state a shorter frontier. The model does not pick this line as the normal result. Reaching it takes a second, larger war after a land link to Crimea already exists, and each extra kilometer buys less safety than it costs. Move the border only while the next kilometer's safety is worth more than its cost. The curves cross, in the basic case, on the present front. They cross on the river only if Moscow decides that any Western-armed force east of the water can still threaten the land bridge and the fleet, and if it is willing to pay for that judgment.",
+    "narration": "The second border is the river. The Dnieper is the strongest natural barrier on this plain, which makes it an obvious line to consider. A line there would give Russia depth from the eastern regions to a bank it can defend, and it would give the western state a shorter frontier. The model doesn’t pick this line as the normal result. Reaching it takes a second, larger war after a land link to Crimea already exists, and each extra kilometer buys less safety than it costs. Move the border only while the next kilometer's safety is worth more than its cost. The curves cross, in the basic case, on the present front. They cross on the river only if Moscow decides that any Western-armed force east of the water can still threaten the land bridge and the fleet, and if it is willing to pay for that judgment.",
     "cue": "[VISUAL: The Dnieper draws itself as a bright hydrographic line, then switches to a dashed stroke. A cost curve and a security-value curve plot against kilometers west. They intersect on the contact line in the baseline. A second, higher intersection appears on the river only when a cost dial is forced upward. Caption: RIVER LINE IS THE ESCALATION EQUILIBRIUM. Do not animate an advance.]"
   },
   {
     "title": "The capital",
     "mood": "pressure",
-    "narration": "Either result has to deal with the capital. A line that cuts through a capital is not a border. It is a crisis that never ends. The contact-line state leaves the capital in the western half, far enough from the freeze to govern, close enough that the loss stays politically alive. That political life is why the western half will not sign a cheerful recognition. Mearsheimer expects a split on the ground, and a protest that never stops. Sachs still argues one neutral country would have cost less than either line. Both can accept the same fact. Once blood has changed the price, neither side will trade at the prewar rate. The old plan remains readable. It is no longer the result that holds.",
+    "narration": "Either result has to deal with the capital. A line that cuts through a capital isn’t a workable border, because it leaves a crisis at the center of the country. The contact-line state leaves the capital in the western half, far enough from the freeze to govern, close enough that the loss stays politically alive. That unresolved loss is why the western half is unlikely to accept the division as legitimate. Mearsheimer expects a split on the ground, and a protest that never stops. Sachs still argues one neutral country would have cost less than either line. Both can accept the same fact. Once a war has changed what each side has lost and fears losing, the old bargain is no longer available. The old plan can still be drawn on paper. It’s no longer the result this model expects.",
     "cue": "[VISUAL: Kyiv marked well inside the western polity, with a political-pressure gauge beside it labeled UNRECONCILED. Two columns: DE FACTO PARTITION and DE JURE PROTEST, both occupied. A faded overlay of the single neutral state sits behind them, legible, stamped NOT THE EQUILIBRIUM. No crowd footage.]"
   },
   {
     "title": "Cheating must cost",
     "mood": "system",
-    "narration": "The freeze lasts only if the same choice comes around again. Each side can cheat. The punishment for cheating is a return to war, which is expensive, so the line holds when a quick gain from a surprise attack is smaller than the long cost of starting the war again. You cannot look inside intentions, so the game cannot rest on promises. It rests on limits that still work if the other side is hostile: an empty strip, limits on long-range weapons parked against the line, and monitors whose budgets do not grow if the line moves. Rebuilding armies so that a seasonal attack looks cheap will break the freeze. The partition is final only while cheating stays expensive.",
+    "narration": "The freeze lasts only if both sides keep choosing it. Each side can cheat, so the question is what makes cheating a bad bet. The punishment for cheating is a return to war, which is expensive, so the line holds when a quick gain from a surprise attack is smaller than the long cost of starting the war again. You can’t look inside the other side's intentions, so the game can’t rest on promises. It rests on limits that still work if the other side is hostile: an empty strip, limits on long-range weapons parked against the line, and monitors whose budgets don’t grow if the line moves. Rebuilding armies so that a seasonal attack looks cheap will break the freeze. The partition is final only while cheating stays expensive.",
     "cue": "[VISUAL: REPEATED GAME diagram. Two arrows labeled CHEAT. A punishment loop labeled RETURN TO WAR with a high cost weight. The ceasefire holds only while a bar titled COST OF CHEATING stays above a bar titled SEASONAL GAIN. Constraints appear as physical objects: a demilitarized band, a range limit on strike systems, monitors whose budget does not grow if the line moves.]"
   },
   {
     "title": "The split ledger",
     "mood": "motion",
-    "narration": "Money locks the two halves to different patrons. That is Jiang's quiet mechanism. The western state's rebuilding is priced in euros and dollars, watched by European institutions and the International Monetary Fund, and allowed only if the security policy suits those lenders. Conditionality is membership by another name. The eastern zone's fuel, pensions, and trade clear through Russian budgets and payment systems. Over time the two zones stop fitting as one economy, even if a diplomat still shows one map. Grain moving out of the Black Sea is the side payment that keeps the game quiet. A corridor that lets farming earn foreign money gives both sides a cash reason to prefer the freeze to the gun. Close the corridor, and that side payment disappears. The game returns to nothing but security.",
+    "narration": "Money locks the two halves to different patrons. That’s Jiang's quiet mechanism. The western state's rebuilding is priced in euros and dollars, watched by European institutions and the International Monetary Fund, and allowed only if the security policy suits those lenders. Conditionality is membership by another name. The eastern zone's fuel, pensions, and trade clear through Russian budgets and payment systems. Over time the two zones stop fitting as one economy, even if a diplomat still shows one map. Grain moving out of the Black Sea is the side payment that keeps the game quiet. A corridor that lets farming earn foreign money gives both sides a cash reason to prefer the freeze to the gun. Close the corridor, and that side payment disappears. The game returns to nothing but security, with one less reason for either side to hold back.",
     "cue": "[VISUAL: SPLIT LEDGER. Western reconstruction contracts stack in euros and dollars, with IMF and European institutional seals, and a conditionality stamp on the security file. Eastern fuel, pensions, and trade clear through a dark-red fiscal system. A Black Sea grain corridor is drawn as a thin gold side-payment. When the corridor closes, the gold line vanishes and the game board flips back to pure security.]"
   },
   {
     "title": "Weapons are facts",
     "mood": "shock",
-    "narration": "Sachs would still call this a failure of institutions, not a law of nature. One neutral state with shared inspectors was a plan for several centers of power. A split is what follows when one leading power meets a great power willing to spend heavily to stop a hostile army on its border. The Military-Industrial Complex only has to keep supplying the forward bases that made neutrality look like giving up. Mearsheimer's reply is that a plan exists only if the strongest players will give up the alignment. They were not willing. The buffer was then filled with weapons, and weapons are facts.",
+    "narration": "Sachs would still call this a failure of institutions, not a law of nature. One neutral state with shared inspectors was a plan for several centers of power. A split is what follows when one leading power meets a great power willing to spend heavily to stop a hostile army on its border. The Military-Industrial Complex only has to keep supplying the forward bases that made neutrality look like giving up. Mearsheimer's reply is that a plan exists only if the strongest players will give up the alignment, and they weren’t willing. The buffer was then filled with weapons, and weapons are facts.",
     "cue": "[VISUAL: Two columns of text, no narrator on screen. Left, Sachs: multipolar design, inspection, one state. Right, Mearsheimer: a design exists only if the strongest players forgo the alignment. The forward-posture supply arrow from the blue security complex continues into the map. The buffer fills with weapon icons, shown as facts, not as a montage of combat.]"
   },
   {
     "title": "What holds",
     "mood": "close",
-    "narration": "The map that comes out is spare. Blue alliance territory stands on the Polish, Slovak, Hungarian, and Romanian borders, a wall rather than a cushion. Amber and gray mark the smaller Ukrainian state, armed from outside, paid from the west, and not reconciled. A darker band marks the eastern and southern lands under Russian force, including the fleet harbor, tied to another payment system. Between them sits a thin watched strip, the last of the width. The Dnieper stays in the background as the line a bigger war would reach, drawn dashed because the basic case does not pay for it. The caption says the result holds when a promise cannot be enforced, that it costs more than the other plans, and that the center could not be shared.",
+    "narration": "The map that comes out is spare. Blue alliance territory stands on the Polish, Slovak, Hungarian, and Romanian borders, a wall rather than a cushion. Amber and gray mark the smaller Ukrainian state, armed from outside, paid from the west, and not reconciled. A darker band marks the eastern and southern lands under Russian force, including the fleet harbor, tied to another payment system. Between them sits a thin watched strip, the last of the width. The Dnieper stays in the background as the line a bigger war would reach, drawn dashed because the basic case doesn’t pay for it. The caption says the result holds when a promise can’t be enforced, that it costs more than the other plans, and that the center couldn’t be shared.",
     "cue": "[VISUAL: FINAL MAP, held. Blue alliance territory solid on the Polish, Slovak, Hungarian, and Romanian frontiers. Pale amber and steel gray for the truncated Ukrainian state. A darker band for the eastern and southern territories under Russian force, including the fleet harbor, tied to a separate payment rail. Between them, a thin monitored strip, the last width. The Dnieper remains dashed in the background. Caption, and no other: STABLE UNDER ANARCHY. Hold. Cut to black.]"
   }
 ];

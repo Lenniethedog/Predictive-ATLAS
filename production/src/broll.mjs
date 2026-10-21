@@ -10,32 +10,14 @@ import { loadImage } from "@napi-rs/canvas";
 import { OUT, ROOT } from "./config.mjs";
 import { H, W, canvas, rgba } from "./engine/core.mjs";
 import { text } from "./engine/draw.mjs";
+import { INSERTS } from "./engine/photos.mjs";
+import { writeVideoChapters, normalizeVideoClock } from "./video-metadata.mjs";
 
 const DUR = 3.2;
 const FADE = 0.35;
 const DIR = path.join(ROOT, "assets", "broll");
 
 // Only where a real photograph is the object in the sentence, not a stand-in for a different place.
-const INSERTS = {
-  1: [
-    { phrase: "oil that feeds", file: "tanker-maracaibo.jpg", label: "CRUDE TANKER", credit: "Wilfredor, CC0" },
-    { phrase: "United States Treasury", file: "treasury-highsmith.jpg", label: "U.S. TREASURY", credit: "Carol M. Highsmith, public domain" },
-    { phrase: "Chinese goods", file: "yangshan-containers.jpg", label: "A CHINESE PORT", credit: "Reb42, CC BY 3.0" },
-  ],
-  2: [
-    { phrase: "The Dnieper is the strongest", file: "kyiv-dnieper.jpg", label: "THE DNIEPER AT KYIV", credit: "Vvlasenko, CC BY 4.0" },
-  ],
-  3: [
-    { phrase: "ships that feed", file: "tanker-maracaibo.jpg", label: "CRUDE TANKER", credit: "Wilfredor, CC0" },
-  ],
-  4: [
-    { phrase: "moved by pipe", file: "gas-pipeline.jpg", label: "A GAS PIPELINE STATION", credit: "Mbrickn, CC BY 4.0" },
-    { phrase: "Seaborne liquefied", file: "lng-terminal.jpg", label: "AN LNG TERMINAL", credit: "Sigma64, CC BY 3.0" },
-  ],
-  5: [
-    { phrase: "One firm on one island", file: "cleanroom.jpg", label: "A CHIP CLEAN ROOM", credit: "Aileen Devlin, Jefferson Lab, public domain" },
-  ],
-};
 
 function atPhrase(timing, phrase) {
   const needle = phrase.toLowerCase();
@@ -115,8 +97,11 @@ async function cut(n) {
   for (const shot of shots) shot.plate = await plate(shot);
 
   const out = path.join(OUT, "video", `episode-0${n}.broll.mp4`);
-  const args = ["-hide_banner", "-loglevel", "error", "-y", "-i", video];
+  const picture = normalizeVideoClock(video, `${out}.clock.mp4`);
+  const args = ["-hide_banner", "-loglevel", "error", "-y", "-i", picture];
   shots.forEach((s) => args.push("-loop", "1", "-framerate", "30", "-t", String(DUR), "-i", s.plate));
+  const chapters = writeVideoChapters(video, `${out}.chapters.txt`);
+  args.push("-f", "ffmetadata", "-i", chapters);
   let chain = "";
   let last = "0:v";
   shots.forEach((s, i) => {
@@ -131,6 +116,7 @@ async function cut(n) {
     "-filter_complex", chain.slice(0, -1),
     "-map", `[${last}]`,
     "-map", "0:a",
+    "-map", "0:s?", "-map_metadata", "0", "-map_chapters", String(shots.length + 1), "-c:s", "copy",
     "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p", "-threads", "2",
     "-c:a", "copy",
     "-movflags", "+faststart",
@@ -149,6 +135,8 @@ async function cut(n) {
     return false;
   }
   fs.renameSync(out, video);
+  fs.unlinkSync(chapters);
+  fs.unlinkSync(picture);
   console.log(`ep${n}: photographs cut in (${((Date.now() - started) / 1000).toFixed(0)}s)`);
   return true;
 }

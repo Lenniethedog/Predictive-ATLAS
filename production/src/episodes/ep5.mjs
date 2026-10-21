@@ -112,7 +112,7 @@ function s1(S) {
       D.panel(ctx, x, 140, 580, 300, { alpha: ra, fill: rgba("#0b0e13", 0.93), color: col, titleColor: col, title: `${cap} · preference` });
       D.text(ctx, "STOPPED FACTORY", x + 40, 250, { size: 28, weight: 600, tracking: 3, alpha: ra });
       D.text(ctx, "RANKED ABOVE", x + 40, 290, { kind: "mono", size: 13, color: C.green, alpha: ra });
-      D.text(ctx, "INTACT FAB IN THE OTHER SIDE'S HANDS", x + 40, 360, { size: 24, weight: 600, tracking: 2, color: C.mid, alpha: ra, maxWidth: 450 });
+      D.text(ctx, "RIVAL RUNS THE FACTORY", x + 40, 360, { size: 24, weight: 600, tracking: 2, color: C.mid, alpha: ra, maxWidth: 450 });
       D.text(ctx, "WORST", x + 40, 400, { kind: "mono", size: 13, color: C.crimson, alpha: ra });
       D.arrow(ctx, [[x + 540, 390], [x + 540, 240]], { color: C.green, width: 2, head: 12, alpha: ra });
     }
@@ -137,7 +137,7 @@ function s1(S) {
     D.text(ctx, "PRIZE", fab[0], fab[1] + 110, { size: 26, weight: 600, tracking: 10, align: "center", color: C.gold, alpha: prizeA });
     D.text(ctx, "DENIAL TARGET", fab[0], fab[1] + 110, { size: 26, weight: 600, tracking: 8, align: "center", color: C.crimson, alpha: war });
     D.label(ctx, "WAR · CONTROL MIGHT CHANGE", 960, 548, { align: "center", color: C.crimson, alpha: war, size: 13 });
-    K.chip(ctx, "DENIAL WINS ONCE DETERRENCE FAILS", 960, 960, { color: C.ice, align: "center", alpha: prog(t, tDenial, 0.5), size: 15 });
+    K.chip(ctx, "WHEN WAR LOOMS, STOPPING OUTPUT WINS", 960, 960, { color: C.ice, align: "center", alpha: prog(t, tDenial, 0.5), size: 15 });
   };
 }
 
@@ -176,7 +176,7 @@ function s2(S) {
         ctx.stroke();
         ctx.restore();
       });
-      D.label(ctx, "CONTESTED POLITICAL REAL ESTATE", 1420, 900, { align: "center", color: C.amber, alpha: ea, size: 14 });
+      D.label(ctx, "TAIWAN · CONTESTED CONTROL", 1420, 900, { align: "center", color: C.amber, alpha: ea, size: 14 });
     }
     // the spine
     const spineY = 560;
@@ -205,7 +205,7 @@ function s2(S) {
       D.arrow(ctx, [[isl[0] - 60, isl[1] + 40], [isl[0] - 300, y]], { color: C.ice, width: 1.5, head: 10, alpha: da });
       D.label(ctx, n, isl[0] - 310, y + 26, { align: "right", color: C.ice, alpha: da, size: 12 });
     }
-    D.caption(ctx, "Whoever sets access sets a share of future capital stock", t, tCap, { y: 1000, size: 24 });
+    D.caption(ctx, "Control of chip access shapes future wealth", t, tCap, { y: 1000, size: 24 });
   };
 }
 
@@ -241,8 +241,8 @@ function s3(S) {
     tw.base(ctx, { colors: { [ID.taiwan]: rgba(WAFER, 0.2), [ID.china]: rgba(C.crimson, 0.1) }, borderAlpha: 0.4 });
     D.label(ctx, "TAIWAN", ...tw.xy([121.6, 22.6]), { color: C.ice, size: 13 });
     const ys = [620, 500, 380];
-    plate(ctx, ys[0], "1 · SEA POWER'S COMMITMENT TO AN ISLAND OFF A CONTINENTAL POWER", C.cyan, prog(t, tL1, 0.6));
-    plate(ctx, ys[1], "2 · TECHNOLOGY MONOPOLY → MILITARY + ECONOMIC CAPABILITY", WAFER, prog(t, tL2, 0.6));
+    plate(ctx, ys[0], "1 · U.S. SECURITY PROMISE TO TAIWAN", C.cyan, prog(t, tL1, 0.6));
+    plate(ctx, ys[1], "2 · ADVANCED CHIPS FEED ECONOMIES AND ARMIES", WAFER, prog(t, tL2, 0.6));
     plate(ctx, ys[2], "3 · POWER TRANSITION", C.amber, prog(t, tL3, 0.6));
     // stacking pillars down to the island
     const isl = tw.xy([120.97, 23.8]);
@@ -275,7 +275,7 @@ function s3(S) {
       D.stroke(ctx, [[x0, 790], [x1, 790]], { color: C.amber, width: 2, alpha: ga });
       D.stroke(ctx, [[x0, 780], [x0, 800]], { color: C.amber, width: 2, alpha: ga });
       D.stroke(ctx, [[x1, 780], [x1, 800]], { color: C.amber, width: 2, alpha: ga });
-      K.chip(ctx, "PERMANENT COMPUTE GAP = STRATEGIC POSITION", (x0 + x1) / 2, 836, { color: C.amber, align: "center", alpha: ga, size: 12 });
+      K.chip(ctx, "A LASTING COMPUTING GAP SHIFTS POWER", (x0 + x1) / 2, 836, { color: C.amber, align: "center", alpha: ga, size: 12 });
     }
   };
 }
@@ -321,15 +321,15 @@ function s4(S) {
     D.panel(ctx, 1560 - pw / 2, 340 - ph / 2, pw, ph, { alpha: pa, color: C.cyan, fill: rgba(C.cyan, 0.08), glow: 10, sfx: "One program" });
     D.text(ctx, "MILITARY-INDUSTRIAL COMPLEX", 1560, 330, { size: 17, weight: 600, tracking: 2, align: "center", alpha: pa });
     D.text(ctx, "+ CONTROL BUREAUCRACY", 1560, 356, { size: 17, weight: 600, tracking: 2, align: "center", alpha: pa });
-    D.text(ctx, "ONE PROGRAM · PERMANENT RESTRICTION", 1560, 384, { kind: "mono", size: 11, align: "center", color: C.cyan, alpha: pa });
+    D.text(ctx, "CONTROLS THAT NEVER END", 1560, 384, { kind: "mono", size: 11, align: "center", color: C.cyan, alpha: pa });
     // the lesson Beijing draws
     const la = prog(t, tLesson, 0.6);
     const bj = [1700, 640];
     D.node(ctx, bj[0], bj[1], 22, C.crimson, { alpha: la, glow: 22 });
     D.label(ctx, "BEIJING", bj[0], bj[1] + 50, { align: "center", color: C.crimson, alpha: la, size: 13, weight: 600 });
     D.arrow(ctx, [[gx + gw, gy + gh - 0.62 * gh], [bj[0] - 40, bj[1] - 20]], { color: C.ice, width: 2.5, head: 14, to: prog(t, tLesson + 0.5, 1), alpha: la });
-    K.chip(ctx, "TIME INSIDE THE ORDER = FALLING BEHIND", 1000, 790, { color: C.ice, alpha: prog(t, S.at("If the"), 0.6), size: 14 });
-    K.chip(ctx, "A RISKY CHANGE TO TAIWAN'S STATUS · ARGUED AS THE LESS RISKY PATH", 1000, 840, { color: C.mid, alpha: prog(t, S.at("If the", 0.5), 0.6), size: 12 });
+    K.chip(ctx, "BEIJING’S LESSON: WAITING MEANS FALLING BEHIND", 1000, 790, { color: C.ice, alpha: prog(t, S.at("If the"), 0.6), size: 14 });
+    K.chip(ctx, "TAKING A RISK CAN START TO LOOK SAFER", 1000, 840, { color: C.mid, alpha: prog(t, S.at("If the", 0.5), 0.6), size: 12 });
     // the alternative stays on the table
     const aa = prog(t, tAlt, 0.6);
     D.panel(ctx, 120, 600, 720, 200, { alpha: aa, title: "Sachs · another way to share the chips", color: C.violet, titleColor: C.violet, fill: rgba("#10161e", 0.96) });
@@ -342,30 +342,30 @@ function s4(S) {
     D.text(ctx, "OPTION · WRECKAGE", 150, 908, { size: 22, weight: 600, tracking: 4, alpha: wa, color: C.crimson });
     D.text(ctx, "PRICED, NOT PROCEDURAL", 150, 942, { kind: "mono", size: 13, color: C.mid, alpha: wa });
     D.text(ctx, "PRICE: ?", 800, 924, { kind: "mono", size: 22, align: "right", color: C.crimson, alpha: wa });
-    D.label(ctx, "WHAT A SYSTEM OF MANAGED DECLINE TEACHES THE RISING STATE", 900, 924, { color: C.mid, alpha: wa, size: 11 });
+    D.label(ctx, "RESTRICTIONS CHANGE BEIJING’S CALCULATION", 900, 924, { color: C.mid, alpha: wa, size: 11 });
   };
 }
 
 // ================================================================ 5. four outcomes
 function s5(S) {
   const cells = [
-    { n: "1", title: "CONSTRAINED STATUS QUO", sub: ["ISLAND FABRICATES · U.S. TOOL CONTROL", "CHINA GETS WHAT THE RULES ALLOW"], tag: "FAVORS WASHINGTON · WHILE BEIJING TOLERATES THE LONG RUN", col: C.cyan, t0: S.at("Outcome one"), x: 140, y: 170 },
-    { n: "2", title: "CAPTURE WITH OPERATION", sub: ["WORKFORCE STAYS · YIELDS RECOVER", "COMPUTE POSITION SHIFTS HARD"], tag: "WORST CELL FOR WASHINGTON", col: C.crimson, t0: S.at("Outcome two"), x: 980, y: 170 },
-    { n: "3", title: "DENIAL", sub: ["NO FRONTIER OUTPUT · WHOEVER HOLDS THE BUILDINGS", "BOTH LOSE THE TAIWANESE FLOW"], tag: "RELATIVE LOSER = WEAKER SUBSTITUTE", col: C.steel, t0: S.at("Outcome three"), x: 140, y: 590 },
-    { n: "4", title: "NATIONALIZATION WITHOUT CAPABILITY", sub: ["THE FLAG CHANGES", "THE YIELDS DO NOT RETURN"], tag: "PULLED TOWARD DENIAL", col: C.steel, t0: S.at("Outcome four"), x: 980, y: 590 },
+    { n: "1", title: "TODAY’S LIMITED ACCESS", sub: ["TAIWAN PRODUCES · U.S. CONTROLS TOOLS", "CHINA GETS WHAT THE RULES ALLOW"], tag: "FAVORS U.S. WHILE CHINA ACCEPTS THE RULES", col: C.cyan, t0: S.at("Outcome one"), x: 140, y: 170 },
+    { n: "2", title: "CAPTURE · FACTORY WORKS", sub: ["WORKFORCE STAYS · YIELDS RECOVER", "COMPUTING POWER SHIFTS"], tag: "WORST CELL FOR WASHINGTON", col: C.crimson, t0: S.at("Outcome two"), x: 980, y: 170 },
+    { n: "3", title: "DENIAL", sub: ["ADVANCED OUTPUT STOPS UNDER EITHER FLAG", "BOTH LOSE THE TAIWANESE FLOW"], tag: "FEWER BACKUPS = BIGGER LOSS", col: C.steel, t0: S.at("Outcome three"), x: 140, y: 590 },
+    { n: "4", title: "CAPTURE · FACTORY STOPS", sub: ["THE FLAG CHANGES", "THE YIELDS DO NOT RETURN"], tag: "PULLED TOWARD DENIAL", col: C.steel, t0: S.at("Outcome four"), x: 980, y: 590 },
   ];
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
-    D.label(ctx, "JIANG · FOUR OUTCOMES · THE FORTRESS IS THE ORDERING AMONG THEM", 960, 140, { align: "center", color: C.green, alpha: prog(t, 0.3, 0.6), size: 13 });
+    D.label(ctx, "JIANG · FOUR POSSIBLE OUTCOMES", 960, 140, { align: "center", color: C.green, alpha: prog(t, 0.3, 0.6), size: 13 });
     cells.forEach((c, i) => {
       const a = prog(t, c.t0, 0.6);
       const fr = Math.max(a, 0.5 * prog(t, 0.4 + i * 0.25, 0.6));
       D.panel(ctx, c.x, c.y, 800, 380, { alpha: fr, color: a > 0.5 ? c.col : C.border, fill: rgba(c.col, (i === 1 ? 0.1 : 0.05) * a), lw: 1.6, sfx: c.title });
       D.text(ctx, c.n, c.x + 30, c.y + 80, { size: 64, weight: 300, color: c.col, alpha: fr });
       D.text(ctx, c.title, c.x + 100, c.y + 66, { size: 26, weight: 600, tracking: 3, alpha: a, maxWidth: 660 });
-      c.sub.forEach((l, k) => D.text(ctx, l, c.x + 100, c.y + 110 + k * 26, { kind: "mono", size: 13, color: C.mid, alpha: prog(t, c.t0 + 1 + k * 1.2, 0.5) }));
+      c.sub.forEach((l, k) => D.para(ctx, l, c.x + 100, c.y + 110 + k * 46, 640, { kind: "mono", size: 16, color: C.mid, alpha: prog(t, c.t0 + 1 + k * 1.2, 0.5) }));
       const tagT = i === 0 ? S.at("This outcome") : i === 1 ? S.at("For Washington") : i === 2 ? S.at("The relative loser") : S.at("The flag");
-      K.chip(ctx, c.tag, c.x + 100, c.y + 340, { color: c.col, alpha: prog(t, tagT, 0.5), size: 13 });
+      D.para(ctx, c.tag, c.x + 100, c.y + 330, 640, { kind: "mono", size: 16, color: c.col, alpha: prog(t, tagT, 0.5) });
       // cell glyph
       const gx = c.x + 640;
       const gy = c.y + 210;
@@ -396,15 +396,15 @@ function s6(S) {
   const tWest = S.at("New fabs");
   const tNot = S.at("They do");
   const tChina = S.at("On the");
-  const tExpire = S.at("Stockpiles expire.");
-  const tTrail = S.at("Trailing nodes");
+  const tExpire = S.at("Stockpiles eventually");
+  const tTrail = S.at("older manufacturing");
   const tDelta = S.at("In denial,");
   const tBest = S.at("Washington can");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
     // western substitutes vs the island
     const wa = prog(t, tWest - 0.5, 0.6);
-    D.panel(ctx, 120, 150, 820, 430, { alpha: Math.max(wa, prog(t, 0.3, 0.6)), title: "Allied substitutes · fraction of future demand", fill: rgba("#0b0e13", 0.93) });
+    D.panel(ctx, 120, 150, 820, 430, { alpha: Math.max(wa, prog(t, 0.3, 0.6)), title: "Allied backup capacity · illustrative", fill: rgba("#0b0e13", 0.93) });
     let acc = 0;
     subs.forEach(([n, v], i) => {
       const a = prog(t, tWest + i * 1.6, 0.5);
@@ -431,7 +431,7 @@ function s6(S) {
     D.label(ctx, nodes[0], 1630, 290, { color: WAFER, alpha: ca, size: 11 });
     const tp = prog(t, tChina + 1, 3, ease.out);
     D.hbar(ctx, 1030, 300, 600, 22, C.amber, { p: lerp(0.3, 0.72, tp), alpha: ca, track: false });
-    D.label(ctx, "DOMESTIC FOUNDRIES · OLDER TECHNIQUES, NEWER CHIPS", 1030, 352, { color: C.amber, alpha: ca, size: 11 });
+    D.label(ctx, "CHINESE FABS · BEHIND THE FRONTIER", 1030, 352, { color: C.amber, alpha: ca, size: 11 });
     const gapA = prog(t, tTrail, 0.6);
     D.stroke(ctx, [[1030 + 600 * 0.72, 311], [1630, 311]], { color: C.crimson, width: 2, dash: [3, 5], alpha: gapA });
     D.label(ctx, "TRAILING NODES DO NOT REACH THE EDGE", 1770, 384, { align: "right", color: C.crimson, alpha: gapA, size: 11 });
@@ -448,14 +448,14 @@ function s6(S) {
     D.hbar(ctx, 150, 742, 740, 26, C.steel, { p: 0.32 * prog(t, tDelta + 0.4, 1.2), alpha: da });
     D.text(ctx, "UNDER CAPTURE", 150, 820, { kind: "mono", size: 13, color: C.mid, alpha: da });
     D.hbar(ctx, 150, 832, 740, 26, C.crimson, { p: 0.85 * prog(t, tDelta + 0.8, 1.2), alpha: da });
-    D.label(ctx, "DENIAL CONTEMPLATED MORE CALMLY THAN CAPTURE", 150, 930, { color: C.ice, alpha: prog(t, tBest, 0.5), size: 12 });
+    D.label(ctx, "U.S. PREFERS SHARED LOSS TO RIVAL CONTROL", 150, 930, { color: C.ice, alpha: prog(t, tBest, 0.5), size: 12 });
     // Beijing's best cell needs a living workforce
     const ba = prog(t, tBest, 0.6);
     D.panel(ctx, 980, 640, 820, 330, { alpha: ba, title: "Beijing's best cell", fill: rgba("#0b0e13", 0.93), color: C.crimson, titleColor: C.crimson });
     const present = Math.floor((t - tBest) / 2.4) % 2 === 0;
     const cellPulse = present ? 0.5 + 0.5 * Math.sin(t * 5) : 0;
     D.panel(ctx, 1040, 720, 300, 200, { alpha: ba, color: C.crimson, fill: rgba(C.crimson, 0.08 + 0.25 * cellPulse), glow: 20 * cellPulse, sfx: "Workforce" });
-    D.text(ctx, "CAPTURE WITH OPERATION", 1190, 830, { size: 15, weight: 600, align: "center", alpha: ba });
+    D.text(ctx, "CAPTURE · FACTORY WORKS", 1190, 830, { size: 15, weight: 600, align: "center", alpha: ba });
     for (let i = 0; i < 5; i++) D.icon.person(ctx, 1440 + i * 60, 820, 40, present ? C.ice : rgba(C.mid, 0.25), ba);
     D.label(ctx, present ? "WORKFORCE PRESENT" : "WORKFORCE GONE", 1560, 900, { align: "center", color: present ? C.ice : C.dim, alpha: ba, size: 12 });
   };
@@ -464,11 +464,11 @@ function s6(S) {
 // ================================================================ 7. buying denial at a higher price
 function s7(S) {
   const tTree = S.at("If the");
-  const tLocks = S.at("The machines");
+  const tLocks = S.at("The machines need constant");
   const tCard = S.at("Cleanrooms are");
   const tHold = S.at("Nationalization then");
   const tNobody = S.at("A planner");
-  const locks = [["MAINTENANCE DEPENDENCE", S.at("The machines")], ["SEVERED FOREIGN TOOL CHAIN", S.at("The tools")], ["SCATTERED PROCESS KNOWLEDGE", S.at("The people")]];
+  const locks = [["MAINTENANCE DEPENDENCE", S.at("The machines need constant")], ["SEVERED FOREIGN TOOL CHAIN", S.at("The tools")], ["SCATTERED PROCESS KNOWLEDGE", S.at("The people")]];
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
     // probability tree
@@ -486,7 +486,7 @@ function s7(S) {
     D.text(ctx, "LOW P", up[0] + 30, up[1] + 30, { kind: "mono", size: 13, color: C.mid, alpha: ta });
     D.text(ctx, "PLANT DOES NOT OPERATE", dn[0] + 30, dn[1] + 6, { size: 18, weight: 600, tracking: 2, alpha: ta, color: C.crimson });
     D.text(ctx, "HIGH P", dn[0] + 30, dn[1] + 30, { kind: "mono", size: 13, color: C.crimson, alpha: ta });
-    K.chip(ctx, "GRABBING THE PLANT = BUYING DENIAL AT A HIGHER PRICE", 1380, 330, { color: C.ice, align: "center", alpha: prog(t, tTree + 3, 0.6), size: 14 });
+    K.chip(ctx, "CAPTURE CAN BUY THE SAME LOSS AT A HIGHER COST", 1380, 330, { color: C.ice, align: "center", alpha: prog(t, tTree + 3, 0.6), size: 14 });
     // three locks, not instructions
     locks.forEach(([n, t0], i) => {
       const a = prog(t, t0, 0.6);
@@ -534,7 +534,7 @@ function s8(S) {
     const pa = prog(t, tProb, 0.6);
     D.panel(ctx, 1120, 150, 680, 230, { alpha: pa, fill: rgba("#0b0e13", 0.93), title: "Their plans stay hidden" });
     D.text(ctx, "P(CAPTURE) > 0", 1150, 250, { kind: "mono", size: 34, weight: 600, alpha: pa });
-    D.text(ctx, "→ PREPARE THE MENU THAT MAKES CAPTURE WORTHLESS", 1150, 300, { kind: "mono", size: 14, color: C.mid, alpha: prog(t, tProb + 1.5, 0.6) });
+    D.text(ctx, "→ MAKE CAPTURE LESS VALUABLE", 1150, 300, { kind: "mono", size: 14, color: C.mid, alpha: prog(t, tProb + 1.5, 0.6) });
     D.stamp(ctx, "HUBRIS", 1640, 340, t, tHubris, { color: C.violet, size: 30, angle: -0.08 });
     // yearly tightening → return to waiting
     const sa = prog(t, tSlope, 0.6);
@@ -597,7 +597,7 @@ function s9(S) {
     D.label(ctx, "MILITARY MINIMUM", minX, 214, { align: "center", color: C.green, alpha: ta, size: 12 });
     D.stroke(ctx, [[islandX, 230], [islandX, 640]], { color: WAFER, width: 2, dash: [3, 7], alpha: ta * 0.6 });
     D.label(ctx, "MATCH THE ISLAND", islandX, 214, { align: "center", color: WAFER, alpha: ta * 0.6, size: 12 });
-    K.chip(ctx, "NEITHER HAS TO MATCH THE ISLAND · ONLY MOVE THE RANKING", 960, 700, { color: C.ice, align: "center", alpha: prog(t, tNeither, 0.6), size: 13 });
+    K.chip(ctx, "BACKUPS NEED ONLY CHANGE THE CHOICE", 960, 700, { color: C.ice, align: "center", alpha: prog(t, tNeither, 0.6), size: 13 });
     const lanes = [
       ["U.S. ONSHORE FABS", C.cyan, 330, tUS],
       ["CHINESE DOMESTIC TOOLS", C.crimson, 520, tCN],
@@ -625,7 +625,7 @@ function s9(S) {
     D.text(ctx, "NATIONAL WOUND", 1180, 430, { size: 20, weight: 600, tracking: 3, color: C.crimson, alpha: ua * (1 - prog(t, tUS + 2.4, 0.5)) });
     D.text(ctx, "TOLERABLE EMERGENCY", 1180, 430, { size: 20, weight: 600, tracking: 3, color: C.cyan, alpha: ua * prog(t, tUS + 2.4, 0.5) });
     const ca = fade(t, tCN + 1, 0.6, tMid, 0.8);
-    D.text(ctx, "DETERRENT VALUE OF DENIAL ↓ · VALUE OF CAPTURE ↓", 1180, 610, { kind: "mono", size: 13, color: C.crimson, alpha: ca });
+    D.text(ctx, "STOPPAGE HURTS LESS · CAPTURE IS WORTH LESS", 1180, 610, { kind: "mono", size: 13, color: C.crimson, alpha: ca });
     // the dangerous middle (now)
     const ma = prog(t, tMid, 0.6);
     const nowX = lerp(x0, x1, nowU);
@@ -640,17 +640,17 @@ function s9(S) {
 // ================================================================ 10. three options, coarse by design
 function s10(S) {
   const opts = [
-    ["01", "DETERRENCE", "MAKE A FIGHT LOOK UNPAYABLE · STAY IN OUTCOME ONE", "BOTH", C.cyan, S.at("One option")],
-    ["02", "SEEK CONTROL", "ATTEMPT TO RUN WHAT IS CAPTURED · FAILS IF THE PEOPLE AND THE TOOL CHAIN ARE GONE", "MAINLY BEIJING", C.crimson, S.at("A second")],
-    ["03", "WORKING TRANSFER = UNACCEPTABLE", "PLAN FOR YEARS OF INTERRUPTED FRONTIER OUTPUT", "BOTH", C.steel, S.at("A third")],
+    ["01", "DETERRENCE", "MAKE WAR TOO COSTLY · KEEP TODAY’S ACCESS", "BOTH", C.cyan, S.at("One option")],
+    ["02", "SEEK CONTROL", "RUN THE CAPTURED FACTORY · NEEDS PEOPLE AND TOOLS", "MAINLY BEIJING", C.crimson, S.at("A second")],
+    ["03", "PREVENT RIVAL OUTPUT", "PREPARE FOR YEARS WITHOUT ADVANCED OUTPUT", "BOTH", C.steel, S.at("A third")],
   ];
-  const cats = ["EVACUATION OF SPECIALIZED LABOR", "LEGAL BLOCKS ON SERVICING THE MACHINES", "ORDINARY FRAGILITY OF THE PLANTS UNDER FIRE"];
+  const cats = ["SPECIALIST WORKFORCE LEAVES", "MACHINE SERVICING IS BLOCKED", "WAR DISRUPTS FRAGILE PLANTS"];
   const tCats = S.at("Evacuation of");
-  const tNot = S.at("They are not");
-  const tWhy = S.at("They are the");
+  const tNot = S.at("They aren’t");
+  const tWhy = S.at("They’re the");
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.2 });
-    D.label(ctx, "THE STRATEGIC MENU · COARSER THAN AN ENGINEERING CHECKLIST", 120, 150, { color: C.mid, alpha: prog(t, 0.3, 0.6), size: 13 });
+    D.label(ctx, "THREE STRATEGIC CHOICES", 120, 150, { color: C.mid, alpha: prog(t, 0.3, 0.6), size: 13 });
     opts.forEach(([n, title, sub, who, col, t0], i) => {
       const a = prog(t, t0, 0.6);
       const fr = Math.max(a, 0.5 * prog(t, 0.4 + i * 0.3, 0.6));
@@ -670,7 +670,7 @@ function s10(S) {
       D.panel(ctx, 120, 820, 1060, 120, { alpha: na, color: C.crimson, fill: rgba(C.crimson, 0.08), lw: 2, sfx: "Not a sequence of instructions" });
       D.text(ctx, "NOT A SEQUENCE OF INSTRUCTIONS", 650, 896, { size: 40, weight: 700, tracking: 8, align: "center", color: C.crimson, alpha: na });
     }
-    K.chip(ctx, "WHY OUTCOME THREE IS PLAUSIBLE EVEN TO PLANNERS WHO PREFER OUTCOME ONE", 120, 1000, { color: C.mid, alpha: prog(t, tWhy, 0.6), size: 13 });
+    K.chip(ctx, "WHY BOTH SIDES PREPARE FOR A STOPPAGE", 120, 1000, { color: C.mid, alpha: prog(t, tWhy, 0.6), size: 13 });
   };
 }
 
@@ -733,9 +733,10 @@ function s11(S) {
     tag(120, "Mearsheimer", "#dfe7ef", "THE WINDOW IS ABOUT POWER, NOT BUSINESS.", "NOT LEFT TO COMPANY BOARDS", prog(t, tM, 0.6));
     tag(690, "Sachs", C.violet, "THE CONTROLS MEANT TO HOLD THE WINDOW OPEN ARE WHAT MAKE IT FEEL LIKE A CAGE.", "", prog(t, tS, 0.6));
     const ja = prog(t, tJ, 0.6);
-    D.panel(ctx, 1260, 620, 540, 330, { alpha: ja, color: C.green, fill: rgba(C.green, 0.05), title: "Jiang · numerical", titleColor: C.green });
-    D.text(ctx, "EV(CAPTURE) × P(WORKING PLANT)", 1286, 700, { kind: "mono", size: 18, weight: 500, alpha: ja });
-    D.text(ctx, "<  EV(DENIAL)", 1286, 732, { kind: "mono", size: 18, weight: 500, alpha: ja });
+    D.panel(ctx, 1260, 620, 540, 330, { alpha: ja, color: C.green, fill: rgba(C.green, 0.05), title: "Jiang · the crossover", titleColor: C.green });
+    D.text(ctx, "CAPTURE VALUE × CHANCE IT WORKS", 1286, 700, { kind: "mono", size: 16, weight: 500, alpha: ja });
+    D.text(ctx, "<  VALUE OF STOPPING OUTPUT", 1286, 732, { kind: "mono", size: 16, weight: 500, alpha: ja });
+    D.label(ctx, "ILLUSTRATIVE · VALUE OF EACH CHOICE", 1290, 760, { size: 10, alpha: ja, color: C.mid });
     const cx = 1290;
     const cy = 770;
     const ev1 = Array.from({ length: 21 }, (_, i) => [i / 20, 0.8 - 0.65 * (i / 20)]);
@@ -757,7 +758,7 @@ function s12(S) {
   const blue = [[[150, 300], "NETHERLANDS ←", true], [P.kumamoto, "JAPAN", false], [P.pyeongtaek, "KOREA", false], [[1790, 520], "→ UNITED STATES", true]];
   const tw = P.hsinchu;
   const tWall = 0.2;
-  const tOrder = S.at("It is");
+  const tOrder = S.at("It’s an order");
   const tBlue = S.at("Blue supply-chain");
   const tAmber = S.at("The amber");
   const tIsland = S.at("The island");
@@ -793,13 +794,13 @@ function s12(S) {
       D.node(ctx, p[0], p[1], 9, C.cyan, { alpha: a, glow: 16 });
       D.label(ctx, n, p[0], p[1] + 30, { align: "center", color: C.cyan, alpha: a, size: 12 });
     });
-    D.label(ctx, "TOOL MASTERS · INCOMPLETE SUBSTITUTES", 120, 1000, { color: C.cyan, alpha: prog(t, tBlue + 2, 0.5), size: 13 });
+    D.label(ctx, "TOOL SUPPLIERS · PARTIAL BACKUPS", 120, 1000, { color: C.cyan, alpha: prog(t, tBlue + 2, 0.5), size: 13 });
     // the trailing second source
     const ma = prog(t, tAmber, 0.6);
     const sh = view.xy(P.shanghai);
     D.node(ctx, sh[0], sh[1], 10, C.amber, { alpha: ma, glow: 16 });
-    D.label(ctx, "TRAILING SECOND SOURCE", sh[0] - 20, sh[1] - 22, { align: "right", color: C.amber, alpha: ma, size: 12 });
-    D.label(ctx, "IMMENSELY PRODUCTIVE · SAFE ONLY WHILE BOTH PREFER A LIVING FAB", isl[0] + 50, isl[1] + 80, { color: WAFER, alpha: prog(t, tIsland, 0.6), size: 11 });
+    D.label(ctx, "CHINESE BACKUP · STILL BEHIND", sh[0] - 20, sh[1] - 22, { align: "right", color: C.amber, alpha: ma, size: 12 });
+    D.label(ctx, "SAFE WHILE BOTH SIDES PREFER A WORKING FACTORY", isl[0] + 50, isl[1] + 80, { color: WAFER, alpha: prog(t, tIsland, 0.6), size: 11 });
     ctx.restore();
     // the switch: deterrence failed
     const sa = prog(t, tSwitch - 0.4, 0.5);
@@ -845,73 +846,74 @@ const STORY = [
   {
     "title": "The fortress",
     "mood": "establish",
-    "narration": "A working advanced chip factory in the other side's hands is, for both Washington and Beijing, worse than a factory that has stopped. That single ranking builds the semiconductor fortress. Taiwan's leading-edge plants are a prize only in peacetime, when both sides can still draw on them under rules the leader sets. In a war where control might change, the same plants become something each side would rather shut down than hand over. Denial is what wins once the threat of a fight no longer holds people back.",
+    "narration": "A working advanced chip factory in the other side's hands can be, in this model, worse for either capital than a factory that has stopped. It sounds strange until you ask what each side is most afraid of losing. That single ranking builds the semiconductor fortress. Taiwan's leading-edge plants are a prize only in peacetime, when both sides can still draw on them under rules the leader sets. In a war where control might change, the same plants become something each side would rather shut down than hand over. Denial is what wins once the threat of a fight no longer holds people back.",
     "cue": "[VISUAL: A two-cell ranking. INTACT FAB IN THE OTHER SIDE'S HANDS sits below STOPPED FACTORY for both Washington and Beijing. The ranking itself is labeled THE FORTRESS. A peacetime state shows both ecosystems drawing wafers under blue rules. A wartime state flips the asset from prize to denial target.]"
   },
   {
     "title": "A global machine",
     "mood": "system",
-    "narration": "The concentration is the fact under the drama. One firm on one island makes the dominant share of the world's most advanced logic chips, the processors at the hard end of the process, the parts that advanced computing and modern weapons both need. The tools that print those chips come from a narrow chain: Dutch machines at the extreme end, American equipment for laying down and etching material, Japanese materials and optics. A frontier plant is therefore a global machine that happens to sit on land both sides claim. Whoever sets the rules of access to that machine sets a share of the future wealth of every rich economy.",
+    "narration": "The concentration is what makes the argument matter. One firm on one island makes the dominant share of the world's most advanced logic chips. These are the processors that advanced computing and modern weapons both depend on. The tools that print those chips come from a narrow chain: Dutch lithography machines, American equipment for depositing and etching material, and Japanese materials and optics. A frontier plant is therefore a global machine that happens to sit on land both sides claim. Whoever sets the rules of access to that machine has a say in what the economies depending on it can produce in the future.",
     "cue": "[VISUAL: SUPPLY CHAIN as a single narrow spine. One firm, one island, dominant share of the leading-edge logic stack. Upstream: Dutch lithography, American deposition and etch, Japanese materials and optics, each a chokepoint bead. The island is marked contested political real estate. A final caption: WHOEVER SETS ACCESS SETS A SHARE OF FUTURE CAPITAL STOCK. No fab interior tutorial.]"
   },
   {
     "title": "Three problems, one island",
     "mood": "pressure",
-    "narration": "John Mearsheimer puts Taiwan where three problems meet, and he will not separate them. The first is a security promise by a sea power to an island off a rising land power. The second is a technology monopoly that feeds both armies and economies. The third is a shift in power, where the rising state cannot know the leader's intentions, and the leader cannot know the rising state's. Capabilities are what get planned against. The capability in the plants is the ability to outproduce the other side in the chips that train and run advanced systems. Relative power, in this view, includes who has more computing power. A state that expects a long rivalry treats a lasting gap in computing as a threat to its position.",
+    "narration": "John Mearsheimer puts Taiwan where three problems meet, and he won’t separate them. The first is a security promise by a sea power to an island off a rising land power. The second is a technology monopoly that feeds both armies and economies. The third is a shift in power, where the rising state can’t know the leader's intentions, and the leader can’t know the rising state's. Capabilities are what get planned against. The capability in the plants is straightforward: they can make more of the chips needed to train and run advanced systems. Relative power, in this view, includes who has more computing power. A state that expects a long rivalry treats a lasting gap in computing as a threat to its position.",
     "cue": "[VISUAL: THREE PROBLEM LAYERS stacked on Taiwan. Layer one: a blue security commitment from a sea power to an island off a continental power. Layer two: a technology monopoly feeding military and economic capability. Layer three: a power transition, intentions shown as sealed envelopes, capabilities shown as open books. Relative compute is added to the relative-power scale. A permanent compute gap is tagged STRATEGIC POSITION.]"
   },
   {
     "title": "A policy, not a law",
     "mood": "cold",
-    "narration": "Jeffrey Sachs reads the fortress as a policy, not as a law. Export controls on advanced chips and on the tools that make them, subsidies to move a slice of production onto allied soil, and talk of a technology ceiling for China are the tools of a manager trying to freeze who is on top. The Military-Industrial Complex and the control offices share a taste for a restriction that never ends. The cost, on this reading, is the lesson Beijing draws. If the hierarchy is frozen by decree, then time inside the present order is time spent falling behind, and a risky attempt to change Taiwan's political status can be argued as the less risky path. Sachs' alternative is a deal among several centers: commercial access, with checked limits on military use. A system that offers the rising state only a managed decline should expect that state to treat wreckage as an option it might pay for.",
+    "narration": "Jeffrey Sachs reads the fortress as a policy, not as a law. Export controls on advanced chips and on the tools that make them, subsidies to move a slice of production onto allied soil, and talk of a technology ceiling for China are the tools of a manager trying to freeze who is on top. The Military-Industrial Complex and the control offices both have reasons to keep the restrictions in place. The cost, on this reading, comes from the lesson Beijing draws about its future inside the system. If the hierarchy is frozen by decree, staying inside the present order means falling further behind. A risky attempt to change Taiwan's political status can then be argued as the less risky path. Sachs' alternative is a deal among several centers: commercial access, with checked limits on military use. A system that offers the rising state only a managed decline should expect that state to treat wreckage as an option it might pay for.",
     "cue": "[VISUAL: POLICY STACK, blue. Export controls on chips and tools. Subsidies relocating a slice of production to allied soil. A ceiling graphic labeled over the Chinese technology trajectory. The Military-Industrial Complex and the control bureaucracy share one growing program box. A lesson arrow into Beijing: time inside the order equals falling behind. An alternative sheet, commercial access under verified military-end-use limits, stays on the table and is not selected. Wreckage appears only as a priced option, not as a procedure.]"
   },
   {
     "title": "Four outcomes",
     "mood": "system",
-    "narration": "Professor Jiang sets this as a game with four outcomes, and the fortress ranks them. Outcome one is today's limited setup. The island keeps making chips under American control of the tools, and China receives only what the rules allow. This outcome favors Washington only while Beijing accepts the long run. Outcome two is capture that still works. Beijing controls the plants, the workforce stays, yields recover, and computing power shifts hard. For Washington this is the worst cell. Outcome three is denial. The plants no longer run at the leading edge, whoever holds them. Both sides lose the Taiwan flow. The relative loser is whichever side has the weaker substitute. Outcome four is a takeover that cannot run the plants. The flag changes and the yields do not return.",
+    "narration": "Professor Jiang sets this as a game with four outcomes, and the fortress ranks them. Outcome one is today's limited setup. The island keeps making chips under American control of the tools, and China receives only what the rules allow. This outcome favors Washington only while Beijing accepts where the rules leave it over time. Outcome two is capture that still works. Beijing controls the plants, the workforce stays, yields recover, and computing power shifts hard. For Washington this is the worst outcome in the model. Outcome three is denial. The plants no longer run at the leading edge, whoever holds them. Both sides lose the Taiwan flow. The relative loser is whichever side has fewer workable alternatives when the island stops producing. Outcome four is a takeover that can’t run the plants. The flag changes, but the plants don’t recover their ability to make usable chips.",
     "cue": "[VISUAL: FOUR-CELL MATRIX. Outcome one, constrained status quo: island fabricating, American tool control, China receiving only what the rules allow, cell shaded favorable to Washington while the long run looks tolerable. Outcome two, capture with operation: workforce stays, yields recover, compute shifts, worst cell for Washington. Outcome three, denial: frontier output stops whoever holds the buildings, relative loser is the side with the weaker substitute. Outcome four, nationalization without capability: flag changes, yields do not return, cell pulled toward denial.]"
   },
   {
     "title": "The substitutes decide",
     "mood": "motion",
-    "narration": "The substitutes decide who can afford denial. New fabs in the American southwest, in Japan, and in Europe, plus whatever leading-edge capacity sits in Korea, can take a fraction of future demand after a delay of years. They do not replace the island's volume or pace inside a crisis. On the Chinese side the substitutes are domestic foundries running behind the frontier, using older techniques to approximate newer chips, plus whatever stockpile of imported parts was built before the rules tightened. Stockpiles expire. Trailing nodes do not reproduce the leading edge. In denial, the side with the higher substitute base loses less relative power. Washington can therefore contemplate denial more calmly than capture, and Beijing's best cell is a living workforce.",
+    "narration": "The substitutes decide who can afford denial. New fabs in the American southwest, in Japan, and in Europe, plus whatever leading-edge capacity sits in Korea, can take a fraction of future demand after a delay of years. They don’t replace the island's volume or pace inside a crisis. On the Chinese side the substitutes are domestic foundries running behind the frontier, using older techniques to approximate newer chips, plus whatever stockpile of imported parts was built before the rules tightened. Stockpiles eventually run out, and older manufacturing processes can’t reproduce the leading edge. In denial, the side with the higher substitute base loses less relative power. Washington can therefore contemplate denial more calmly than capture, and Beijing's best cell is a living workforce.",
     "cue": "[VISUAL: SUBSTITUTE BARS, incomplete on purpose. American southwest, Japan, Europe, and Korean leading-edge capacity, a fraction of future demand, delayed by years, below the island's volume and pace. Chinese domestic foundries behind the frontier, plus a stockpile that expires. Trailing nodes fail to reach the leading edge on the graph. A relative-power delta shows Washington losing less under denial than under capture. Beijing's best cell pulses only when the workforce icon is still present.]"
   },
   {
     "title": "Buying denial",
     "mood": "shock",
-    "narration": "Once a fight looks likely, the fortress forces a calculation. If the probability of operating the fabs after a violent change of control is low, then a strategy of grabbing them is a strategy of buying denial at a higher price. The machines are maintenance-dependent. The tools at the frontier require a foreign supply chain that a war will sever. The people who hold the process in their heads can scatter, and a scattered process does not yield wafers. Cleanrooms are a promise about air and vibration, and war breaks that promise without a special plan. Nationalization then yields Outcome four unless staff, spares, power, and water are held for a long time. A planner who still ranks the other side's success as the worst cell will prefer that nobody gets a working plant.",
+    "narration": "Once a fight looks likely, the fortress forces a calculation: what are the plants actually worth if you can’t keep them running? If the probability of operating the fabs after a violent change of control is low, then a strategy of grabbing them is a strategy of buying denial at a higher price. The machines need constant maintenance. The tools at the frontier require a foreign supply chain that a war will sever. The people who know how to run the process can leave. The machines can’t replace that experience on their own. Cleanrooms are a promise about air and vibration, and war breaks that promise without a special plan. Nationalization then yields Outcome four unless staff, spare parts, power, and water remain available for a long time. A planner who still sees the other side's success as the worst outcome will prefer that nobody gets a working plant.",
     "cue": "[VISUAL: PROBABILITY TREE, abstract. Branch: violent change of control. Sub-branch: low probability that the plant still operates. Grabbing the plant is labeled BUYING DENIAL AT A HIGHER PRICE. Maintenance dependence, a severed foreign tool chain, and scattered process knowledge are shown as three locks, not as instructions. Cleanroom fragility is a single property card: air and vibration. Outcome four unless staff, spares, power, and water are held. The preferred end state if the rival's success is the worst cell: NOBODY GETS A WORKING PLANT.]"
   },
   {
     "title": "The prepared menu",
     "mood": "pressure",
-    "narration": "Mearsheimer needs each capital to rank the rival's exclusive control as more dangerous than a loss they share. Hidden intentions do the rest. If you cannot be sure the other side will leave the plants alone, you give their capture a real chance, and you prepare the menu that makes capture worthless. Sachs would call that prepared menu a product of pride. A leader that tries to lock a technology monopoly by tightening controls every year teaches the other player that waiting loses money. The institutional bargain, access with checks, exists to keep both players inside Outcome one. Collapse the bargain, and the game slides toward the squares where the plants die.",
+    "narration": "Mearsheimer needs each capital to rank the rival's exclusive control as more dangerous than a loss they share. Hidden intentions do the rest. If you can’t be sure the other side will leave the plants alone, you give their capture a real chance, and you prepare the menu that makes capture worthless. Sachs would call those preparations a product of pride. A leader that tries to lock a technology monopoly by tightening controls every year teaches the other player that waiting loses money. The institutional bargain, access with checks on military use, exists to give both players a reason to stay inside Outcome one. Collapse the bargain, and the game slides toward the squares where the plants die.",
     "cue": "[VISUAL: Both capitals place EXCLUSIVE RIVAL CONTROL above SHARED LOSS on an identical card. A probability of capture above zero forces a menu that makes capture worthless. Sachs tags the menu HUBRIS. A yearly tightening of controls is a downward slope labeled RETURN TO WAITING. The institutional bargain, access with verification, is a corridor back to Outcome one. Remove the corridor and the token slides toward the cells where the fabs die.]"
   },
   {
     "title": "The dangerous middle",
     "mood": "fracture",
-    "narration": "The peacetime race is therefore a race to make denial survivable. Onshore fabs and domestic Chinese tools each reduce the relative pain of a stoppage. Neither project has to match the island to matter. It has to move the ranking of outcomes. When Washington believes its substitutes cover the military minimum, denial becomes a tolerable emergency rather than a national wound. When Beijing reaches the same belief, denial deters less and capture is worth less. The present is the dangerous middle, with a unique prize and incomplete substitutes.",
+    "narration": "The peacetime race is therefore a race to make denial survivable. Onshore fabs and domestic Chinese tools each reduce the relative pain of a stoppage. Neither project has to match the island to matter. It just has to change which outcome looks least costly. When Washington believes its substitutes cover the military minimum, denial becomes a tolerable emergency rather than a national wound. When Beijing reaches the same belief, denial deters less and capture is worth less. The present is the dangerous middle: the prize is still unique, and the substitutes aren’t ready.",
     "cue": "[VISUAL: PEACETIME RACE, two tracks. Onshore fabs and domestic Chinese tools each shave the pain of a stoppage without matching the island. A ranking meter moves. When Washington's substitutes cover a military minimum, denial reclassifies from national wound to tolerable emergency. When Beijing reaches the same belief, the deterrent value of denial falls and so does the value of capture. The present is marked DANGEROUS MIDDLE: unique prize, incomplete substitutes.]"
   },
   {
     "title": "Three options",
     "mood": "cold",
-    "narration": "The strategic menu is coarser than an engineering checklist, and the coarseness is the point. One option is to keep the status quo by making a fight look unpayable, which is deterrence aimed at Outcome one. A second option, available mainly to Beijing in the model, is to seek control and attempt to run what is captured, knowing that the attempt fails if the people and the tool chain are gone. A third option, available to both, is to treat a working transfer as unacceptable and to plan for a world in which the island's frontier output is interrupted for years. Evacuation of specialized labor, legal blocks on servicing the machines, and the ordinary fragility of the plants under fire all sit in that third option as categories of state choice. They are not a sequence of instructions. They are the reasons Outcome three is plausible even to planners who would profit from Outcome one forever.",
+    "narration": "The strategic menu has three broad choices. Each is a decision about the outcome a state wants, rather than the mechanics of a plant. One option is to keep the status quo by making a fight look unpayable, which is deterrence aimed at Outcome one. A second option, available mainly to Beijing in the model, is to seek control and attempt to run what is captured, knowing that the attempt fails if the people and the tool chain are gone. A third option, available to both, is to treat a working transfer as unacceptable and to plan for a world in which the island's frontier output is interrupted for years. Evacuation of specialized labor, legal blocks on servicing the machines, and the ordinary fragility of the plants under fire all sit in that third option as categories of state choice. They aren’t a sequence of instructions. They’re the reasons Outcome three is plausible even to planners who would profit from Outcome one forever.",
     "cue": "[VISUAL: THREE OPTIONS as a menu, coarse by design, no engineering layer underneath. Option one: deterrence, fight looks unpayable, stay in Outcome one. Option two, mainly Beijing in this model: seek control and attempt to run what is captured; the attempt fails if people and the tool chain are gone. Option three, both: treat a working transfer as unacceptable and plan for years of interrupted frontier output. Categories only, as labeled chips: evacuation of specialized labor, legal blocks on servicing, ordinary fragility under fire. A hard caption: NOT A SEQUENCE OF INSTRUCTIONS.]"
   },
   {
     "title": "The narrowing window",
+    "noBadges": true,
     "mood": "pressure",
-    "narration": "Demand for artificial intelligence tightens the screws. As more money chases the same leading-edge wafers, the peacetime prize grows, and a growing prize raises both the urge to capture and the urge to deny. States experience it as a narrowing window in which today's setup still wins. Mearsheimer's prediction is that the window is about power, not about business, and that a rising state and a leading state will not leave it to company boards. Sachs' prediction is that the controls meant to hold the window open are what convince the rising state the window is a cage. Jiang's prediction is a number. When capture, cut by the low chance of a working plant, is worth less than denial, both sides will act, in a crisis, to make the plant unusable rather than let the other side try.",
+    "narration": "Demand for artificial intelligence tightens the screws. As more money chases the same leading-edge wafers, the peacetime prize grows, and a growing prize raises both the urge to capture and the urge to deny. States experience it as a narrowing window in which today's setup still wins. Mearsheimer's prediction is that the window is about power, not about business, and that a rising state and a leading state won’t leave it to company boards. Sachs' prediction is that the controls meant to hold the window open are what convince the rising state the window is a cage. Jiang's prediction is a number. When capture, cut by the low chance of a working plant, is worth less than denial, both sides will act, in a crisis, to make the plant unusable rather than let the other side try.",
     "cue": "[VISUAL: AI DEMAND CURVE steepens. More capital competes for the same leading-edge wafers. The prize grows. Capture incentive and denial incentive rise together. A window labeled STATUS QUO STILL DOMINATES narrows. Three prediction tags: Mearsheimer, the window is a power fact; Sachs, the controls convince the other side the window is a cage; Jiang, a numeric crossover where the expected value of capture, cut by the low probability of a working plant, falls below the expected value of denial.]"
   },
   {
     "title": "The fortress redrawn",
     "mood": "close",
-    "narration": "The fortress, then, is not a wall around Taiwan. It is an order of preferences around a factory. Blue supply-chain nodes in the Netherlands, Japan, Korea, and the United States remain the masters of the tools, and substitutes that are not yet enough. The amber domestic effort on the mainland remains the second source, still behind. The island sits between them, immensely productive, and safe only while both capitals still prefer a living plant to a dead one. The day the threat stops working, that preference flips for both at once. The rational move then stops being possession. It becomes prevention. The most advanced chips on earth are, in that hour, less dangerous to each capital as rubble in a clean room than as output in the rival's arsenal, and both capitals can still do that sum without raising their voices.",
+    "narration": "The fortress, then, isn’t a wall around Taiwan. It’s the way the two capitals compare their choices. It’s an order of preferences around a factory: keep it running, control it, or accept that it stops. Blue supply-chain nodes in the Netherlands, Japan, Korea, and the United States remain the masters of the tools, and substitutes that aren’t yet enough. The amber domestic effort on the mainland remains the second source, still behind. The island sits between them, immensely productive, and safe only while both capitals still prefer a living plant to a dead one. The day the threat stops working, that preference flips for both at once. The rational move then stops being possession. It becomes prevention, because stopping the rival looks safer than keeping the prize. The most advanced chips on earth are, in that hour, less dangerous to each capital as rubble in a clean room than as output in the rival's arsenal, and both capitals can still do that sum without raising their voices.",
     "cue": "[VISUAL: THE FORTRESS REDRAWN. It is not a wall around the island. It is a preference ordering around a factory. Blue nodes in the Netherlands, Japan, Korea, and the United States: tool masters and incomplete substitutes. Amber mainland effort: trailing second source. The island between them, immensely productive. A single switch labeled DETERRENCE FAILED flips both capitals from possession to prevention at once. Final comparison, held in silence after the last line: rubble in a cleanroom against output in the rival's arsenal. Cut to black.]"
   }
 ];

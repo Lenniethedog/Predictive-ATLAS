@@ -17,6 +17,7 @@ import { setFrame } from "./engine/draw.mjs";
 import * as SFX from "./engine/sfx-rec.mjs";
 import { engineFiles, fileDigest } from "./stamp.mjs";
 import { assertEpisode } from "./story.mjs";
+import { loadPhotos, drawPhotos, PHOTO_DURATION } from "./engine/photos.mjs";
 
 const args = process.argv.slice(2);
 const opt = (k, d) => (args.includes(k) ? args[args.indexOf(k) + 1] : d);
@@ -48,7 +49,8 @@ const scenes = factories.map((factory, i) => {
   draw.S = S;
   return draw;
 });
-const events = lensEvents(timing, scenes);
+const events = lensEvents(timing, meta);
+const photos = args.includes("--events") ? [] : await loadPhotos(n, timing);
 
 // ---------------------------------------------------------------- frame
 const sampling = ["--events", "--sheet", "--stills", "--grid", "--audit"].some((k) => args.includes(k));
@@ -58,7 +60,10 @@ const outW = Math.round(W * SCALE);
 const outH = Math.round(H * SCALE);
 const main = canvas(outW, outH);
 const ctx = main.getContext("2d");
-const aux = canvas(outW, outH);
+// Cue recording uses geometry, labels and alpha, never the rendered pixels.
+// Keep the real Canvas API (including font measurement and save/restore) while
+// discarding raster work outside one pixel.
+const aux = args.includes("--events") ? canvas(1, 1) : canvas(outW, outH);
 const actx = aux.getContext("2d");
 const glow = canvas(W / 4, H / 4);
 const gctx = glow.getContext("2d");
@@ -180,8 +185,9 @@ export function renderFrame(T, frame) {
   }
   motes(ctx, T);
   if (!PREVIEW) bloom(ctx, 0.24);
+  drawPhotos(ctx, photos, T);
   overlay(ctx, { ep, sceneIndex: i, sceneCount: scenes.length, T, total: END, title: meta[i].title, since: T - starts[i] });
-  badges(ctx, T, events);
+  if (!photos.some((shot) => T >= shot.start && T < shot.start + PHOTO_DURATION)) badges(ctx, T, events);
   if (!PREVIEW) finish(ctx, frame);
   ctx.restore();
 }

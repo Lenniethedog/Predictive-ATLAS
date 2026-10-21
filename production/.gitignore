@@ -2,3 +2,4 @@ node_modules/
 out/
 assets/broll/*.plate.png
 assets/broll/.cap*
+.venv/

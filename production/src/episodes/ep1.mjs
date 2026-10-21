@@ -78,7 +78,7 @@ function s1(S) {
   const tThreads = S.at("China finances", 0.32);
   const tRebound = S.at("China finances", 0.55);
   const tMirror = S.at("This is");
-  const tBar = S.at("Beijing's industrial");
+  const tBar = S.at("Beijing's export");
   const crack = D.crackPts([1010, 300], [990, 520], 11, 0.08, 10);
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.5 });
@@ -96,7 +96,7 @@ function s1(S) {
     const bx = lerp(960, g[0], ease.inOut(pull));
     const by = lerp(560, g[1], ease.inOut(pull));
     barrelMacro(ctx, bx, by, bs, 1 - prog(t, tGlobe + 0.4, 0.8), t);
-    K.chip(ctx, "INVOICED IN USD", 960 + 250, 380, { color: C.cyan, alpha: fade(t, S.at("It is"), 0.5, tBack + 0.6, 0.5), size: 22 });
+    K.chip(ctx, "INVOICED IN USD", 960 + 250, 380, { color: C.cyan, alpha: fade(t, S.at("It’s"), 0.5, tBack + 0.6, 0.5), size: 22 });
 
     // invoice threads Gulf -> China
     for (let i = 0; i < buoys.length; i++) {
@@ -278,8 +278,8 @@ function s3(S) {
   ];
   const tLoop = S.at("The financial");
   const tDef = S.at("Deficits could");
-  const tGray = S.at("The hub's", 0.15);
-  const tWeapon = S.at("The hub's", 0.7);
+  const tGray = S.at("The mistake", 0.15);
+  const tWeapon = S.at("The mistake", 0.7);
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.35 });
     // edge institutions desaturate to gray
@@ -345,7 +345,7 @@ function s4(S) {
   const tZoom = 0.2;
   const tWTO = S.at("Joining the");
   const tOut = S.at("The surplus arrived");
-  const tCrude = S.at("A rising");
+  const tCrude = S.at("while more");
   const tBars = S.at("At each");
   const tDom = S.at("Recycling was");
   return (ctx, t) => {
@@ -409,9 +409,9 @@ function s4(S) {
 // ================================================================ 5. reserve and hostage
 function s5(S) {
   const tStack = 0.2;
-  const tHead = S.at("They are", 0.25);
-  const tHost = S.at("They are", 0.6);
-  const tCust = S.at("A hostage is");
+  const tHead = S.at("It’s savings", 0.25);
+  const tHost = S.at("It’s savings", 0.6);
+  const tCust = S.at("The money stays");
   const tEnv = S.at("Mearsheimer assumes");
   const tSlider = S.at("A careful");
   const tSmall = S.at("For years");
@@ -554,7 +554,7 @@ function s7(S) {
   ];
   const goldV = [260, 330];
   const tFlat = S.at("Fewer fresh");
-  const tGold = S.at("More gold.");
+  const tGold = S.at("more gold");
   const tOil = S.at("More state-to-state");
   const tSwap = S.at("More swap");
   const tRail = S.at("More attempts");
@@ -656,8 +656,8 @@ function s7(S) {
 
 // ================================================================ 8. the grip
 function s8(S) {
-  const tPress = S.at("The grip is not");
-  const tStrike = S.at("The grip is not", 0.6);
+  const tPress = S.at("The grip isn’t");
+  const tStrike = S.at("The grip isn’t", 0.6);
   const tMesh = S.at("The grip is the");
   const tCut = S.at("An adversary");
   const tGraph = S.at("Energy is");
@@ -896,7 +896,7 @@ function s10(S) {
 function s11(S) {
   const tLines = S.at("If official");
   const tOne = S.at("The weapon and");
-  const tSplit = S.at("Use of");
+  const tSplit = S.at("using the weapon");
   const tFast = S.at("It speeds");
   const obj = (ctx, x, y, s, half, a, spin) => {
     if (a <= 0) return;
@@ -1047,8 +1047,8 @@ function s12(S) {
 // ================================================================ 13. the refusal at the margin
 function s13(S) {
   const tWalls = S.at("Tariffs, technology");
-  const tThick = S.at("They tell");
-  const tEnd = S.at("It is not");
+  const tThick = S.at("telling the country");
+  const tEnd = S.at("It isn’t");
   const tPath = S.at("The mirror");
   const crack = D.crackPts([960, 220], [960, 840], 41, 0.05, 26);
   const walls = [
@@ -1109,79 +1109,79 @@ const STORY = [
   {
     "title": "The mirror",
     "mood": "establish",
-    "narration": "The trap is not a debt. It is a simple price rule. China finances the American government because the oil that feeds Chinese factories is billed in dollars, and the only safe pile large enough to store those dollars is United States Treasury debt. This is the whole picture. Beijing's industrial surplus shows up, on the far side of the glass, as Washington's room to borrow and spend. The mirror holds only while the next barrel must be bought in dollars. When that rule fails, the loop does not bend. It breaks.",
+    "narration": "The trap isn’t a debt. It’s a simple rule about how oil gets paid for, and it connects two countries that would rather depend less on each other. China finances the American government because the oil that feeds Chinese factories is billed in dollars, and the only safe pile large enough to store those dollars is United States Treasury debt. This is the connection that matters. Beijing's export earnings become Washington's room to borrow and spend. Follow the money from the factory, through the oil bill, to the government bond. The mirror holds only while the next barrel must be bought in dollars. When that rule fails, the loop doesn’t bend. It breaks.",
     "cue": "[VISUAL: MACRO on a single crude barrel. PULL BACK to a black globe. Ice-white invoice threads run from Gulf loading buoys to crimson Chinese ports, then rebound as a thicker thread into a blue vault stenciled U.S. TREASURIES. A mirror wipe shows the same flow as a rising bar of what Washington can borrow. Hold on the mirror.]"
   },
   {
     "title": "1971 to 1975",
     "mood": "history",
-    "narration": "In nineteen seventy-one the United States stopped promising gold for dollars. The dollar no longer promised metal. It promised that the world would keep needing it, and that need had to be built. The deal with Saudi Arabia supplied it. Oil would be priced in dollars. Surpluses would be parked in dollar assets. Every importer, whatever its flag, would need dollars to buy energy. John Mearsheimer reads this as a great power locking in its lead. The leading state does not trust promises. It ties each partner's survival to its currency, so the lead grows. A rival currency that can buy oil claims the same oil. One side's safety is the other side's risk.",
+    "narration": "In nineteen seventy-one the United States stopped promising gold for dollars. The dollar no longer promised metal. It promised something else: that the world would keep needing it. But that need had to be built. The deal with Saudi Arabia supplied it. Oil would be priced in dollars, so the money left over would need somewhere to go. Surpluses would be parked in dollar assets. Every importer, whatever its flag, would need dollars to buy energy. John Mearsheimer reads this as a great power locking in its lead. The leading state doesn’t trust promises. It ties each partner's survival to its currency, so the lead grows. A rival currency that can buy oil claims the same oil. One side's safety is the other side's risk.",
     "cue": "[VISUAL: TIMELINE, 1971 to 1975, left to right. The gold peg snaps and falls off the bottom of frame. Saudi loading terminals lock to a blue dollar glyph. Importer capitals across Europe and Asia recolor as their oil contracts flip to dollar settlement. Lower-third caption: THE OIL BILL KEEPS THE DOLLAR ON TOP.]"
   },
   {
     "title": "One circuit",
     "mood": "system",
-    "narration": "Jeffrey Sachs reads the same setup as a privilege the system later mistook for a law of nature. The financial center and the arms industry became one circuit. Deficits could run for years because foreigners had to hold the paper. The hub's mistake was to treat a lucky break in history as a permanent right, and then to turn the pipes that made the break possible into a weapon.",
+    "narration": "Jeffrey Sachs reads the same setup as a privilege the system later mistook for a law of nature. The financial center and the arms industry came to depend on the same flow of money. Deficits could run for years because foreigners had to hold the paper. The mistake was to treat an advantage built at a particular moment in history as a permanent right. Then the system that carried the money became a way to put pressure on other countries.",
     "cue": "[VISUAL: CIRCUIT DIAGRAM on black. Three blue nodes pulse as one loop: Pentagon buying, Treasury borrowing, Gulf oil money coming back. Older ideas for a shared world money sit at the frame edge and fade to gray. Label the center HUB. No faces. No flags except as small node markers.]"
   },
   {
     "title": "China enters",
     "mood": "motion",
-    "narration": "China entered the loop through trade, not through an alliance. Joining the World Trade Organization opened demand in rich countries to Chinese goods. The surplus arrived in dollars. A rising share of the fuel that kept the factories running came by sea, from producers who billed in dollars. Professor Jiang treats the move as forced. At each round, Beijing could park dollars in Treasuries, or try to swap them and find the next oil cargo still for sale only in dollars. Recycling was the best move on the board. The Treasury market was deep enough to take the surplus without pushing the price against the seller. The arrangement held because China, alone, could not change what the world paid for energy.",
+    "narration": "China entered the loop through trade, not through an alliance. Joining the World Trade Organization opened demand in rich countries to Chinese goods. The surplus arrived in dollars, while more of the fuel keeping the factories running came by sea, from producers who also billed in dollars. Professor Jiang treats the move as forced. At each round, Beijing could park dollars in Treasuries, or try to swap them and find the next oil cargo still for sale only in dollars. Recycling was the best move on the board. The Treasury market was deep enough to take the surplus without pushing the price against the seller. The arrangement held because China, alone, couldn’t change what the world paid for energy.",
     "cue": "[VISUAL: ZOOM IN to the Yangtze and Pearl River deltas. Factory clusters burn white. Container arcs leave for North America and Europe. A return arc of dollar balances splits: one branch buys Gulf crude, the other settles into a bar chart of official Treasury holdings that climbs through the early 2010s and then bends down. China in crimson. Treasury bars in blue.]"
   },
   {
     "title": "Savings, and a hostage",
     "mood": "pressure",
-    "narration": "Call the Treasury pile what it really is. They are savings, and they are a hostage. A hostage is savings that keep their worth only if the keeper shows restraint. Mearsheimer assumes that restraint cannot be known ahead of time. Intentions stay hidden. A careful state therefore puts a chance on a freeze, a seizure, or a political condition, even when Washington's public language is mild. For years that chance looked small. China's Treasuries helped pay for the American household that bought Chinese goods. Each side needed the other, and that need passed for trust.",
+    "narration": "Call the Treasury pile what it really is. It’s savings that someone else can block, even when the owner needs the money. The money stays usable only while the country holding it chooses to leave it alone. Mearsheimer assumes that restraint can’t be known ahead of time, because intentions stay hidden. A careful state therefore allows for a freeze, a seizure, or a political condition, even when Washington's public language sounds reassuring. For years that chance looked small. China's Treasuries helped pay for the American household that bought Chinese goods. Each side needed the other, and that need passed for trust.",
     "cue": "[VISUAL: SPLIT LEDGER. The same stack of Treasuries sits under two headings, RESERVE and HOSTAGE. A slider labeled FREEZE RISK rests near zero, marked LOOKS UNLIKELY. A thin white line connects the stack to American household buying, labeled EACH SIDE NEEDS THE OTHER. The slider does not move yet.]"
   },
   {
     "title": "The freeze",
     "mood": "shock",
-    "narration": "The chance moved when the dollar system froze the savings of a nuclear-armed oil seller. What mattered was the lesson other countries drew. If government bonds held in American banks could be switched off over a weekend, then Treasuries had looked safer than they were for any country that might face Washington. Sachs places that choice in a habit of punishment from the top. Sanctions had replaced a negotiated deal. The cost was delayed. It was paid in trust. Surplus countries had treated dollar savings as normal savings, and then changed their minds. The change does not reverse when a spokesman calls the case unique. What people believe about the keeper is updated by deeds.",
+    "narration": "The chance moved when the dollar system froze the savings of a nuclear-armed oil seller. What mattered was the lesson other countries drew. If government bonds held in American banks could be switched off over a weekend, then Treasuries had looked safer than they were for any country that might face Washington. Sachs places that choice in a habit of punishment from the top. Sanctions had replaced a negotiated deal, and the cost came later, as other countries began to trust the system less. Surplus countries had treated dollar savings as normal savings, and then changed their minds. The change doesn’t reverse when a spokesman calls the case unique. What people believe about the custodian changes when they see what it actually does.",
     "cue": "[VISUAL: A central-bank reserve block over Russia desaturates and locks with a hard blue bracket. Identical pale blocks over other surplus countries flicker in sequence. A trust line on a graph steps down once and does not recover. Amber nodes for other big exporters brighten. No explosion, no courtroom.]"
   },
   {
     "title": "Around New York",
     "mood": "motion",
-    "narration": "Mearsheimer draws a plain conclusion, with no sermon attached. China cannot stay the workshop of a system whose banker can switch off China's savings. Staying free to act means holding less national wealth in a form a rival can cancel. Real power slips if a country must ask permission to use its own savings. The answer is a small change at the edge, not a grand speech. Fewer fresh purchases of Treasuries. More gold. More state-to-state oil contracts. More swap lines between central banks. More attempts to settle trade on rails that do not end in New York.",
+    "narration": "Mearsheimer draws a plain conclusion, with no sermon attached. China can’t stay the workshop of a system whose banker can switch off China's savings. Staying free to act means holding less national wealth in a form a rival can cancel. Real power slips if a country has to ask a rival for permission to use its own savings. The answer is a series of small decisions about where the next payment goes. Fewer fresh purchases of Treasuries, more gold, and more state-to-state oil contracts. More swap lines between central banks, and more attempts to settle trade through payment systems that don’t end in New York.",
     "cue": "[VISUAL: China's blue Treasury bar flattens. Parallel pipes draw themselves in amber: a yuan payment rail, a gold allocation, a web of central-bank swap lines. New York's bank node stays blue and bright. The new pipes route around it and never touch it. Camera drifts along the amber pipes.]"
   },
   {
     "title": "The grip",
     "mood": "pressure",
-    "narration": "Jiang names what holds. The grip is not the printing press. The grip is the web of partner banks, the message system that carries payment orders, and the law that can tell those banks to stop. An adversary breaks that grip where a real good changes hands. Energy is the right place, because energy is the biggest bill that keeps coming due. Currency pegs are the support underneath. A producer tied to the dollar prefers to be paid in dollars. A producer that can be paid in money it spends on Chinese machines, or in gold, or in a mixed basket, has a second way to get paid. Security patrons, arms suppliers, and long-term buyers change the political price of using that second way.",
+    "narration": "Jiang names what keeps the system together. The grip isn’t the printing press. The grip is the web of partner banks, the message system that carries payment orders, and the law that can tell those banks to stop. An adversary breaks that grip where a real good changes hands. Energy is the right place to look, because the bill comes back with every cargo. Currency pegs reinforce that dependence: they tie the producer's own money to the dollar. A producer tied to the dollar prefers to be paid in dollars. A producer that can be paid in money it spends on Chinese machines, or in gold, or in a mixed basket, has a second way to get paid. Security patrons, arms suppliers, and long-term buyers change the political price of using that second way.",
     "cue": "[VISUAL: PAYMENT DIAGRAM. Invoice, partner bank, message rail, legal gate. The gate is labeled THE GRIP and glows blue. CUT TO the same oil cargo moving on an amber rail that skips the gate. A small line graph tracks dollars in China's next oil bill, with a flatter ghost line for a typical barrel.]"
   },
   {
     "title": "The next barrel",
     "mood": "fracture",
-    "narration": "This is why the break is narrower than a collapse of the dollar. The loop that traps China does not need every barrel on earth priced in dollars. It needs China's next barrel priced in dollars. The pressure applies only to the next purchase, not to the oil already bought. The pile of Treasuries already owned can sit quietly for a full decade. New buying stops when export earnings no longer have to be turned into the currency of the next cargo. A Gulf producer, with enough output to cover the growth in China's imports by sea, bills a standing volume of its crude in yuan and clears that payment on a rail that never enters American hands. The volume need not be most of that producer's sales to the world. It must be most of the extra barrels China would otherwise have bought with new dollars.",
+    "narration": "This is why the break is narrower than a collapse of the dollar. The loop that traps China doesn’t need every barrel on earth priced in dollars. It needs China's next barrel priced in dollars. The pressure applies only to the next purchase, not to the oil already bought. The pile of Treasuries already owned can sit quietly for a full decade. New buying stops when export earnings no longer have to be turned into the currency of the next cargo. A Gulf producer, with enough output to cover the growth in China's imports by sea, bills a standing volume of its crude in yuan and clears that payment on a rail that never enters American hands. The volume need not be most of that producer's sales to the world. It must be most of the extra barrels China would otherwise have bought with new dollars.",
     "cue": "[VISUAL: ZOOM IN on Persian Gulf loading terminals at night. One contract thread, thicker than the others, leaves a single buoy and lands on the Chinese coast in amber, tagged YUAN, with a gap where a New York detour would have been. Caption, held: CHINA'S NEXT BARREL, NOT EVERY BARREL. Beneath, new Treasury purchases fall below the line needed to hold the pile steady.]"
   },
   {
     "title": "Buying, the pile, the payment",
     "mood": "system",
-    "narration": "Then the math changes direction. China's goods surplus can continue. Dollars can still arrive from buyers in the United States and in allied markets. The forced bid for Treasuries, the bid that existed only because the oil seller would take nothing else, is gone. What remains is a choice about where to keep the money, and that choice feels the hostage problem. Washington's sensible reply to a yuan oil contract is a reminder that the pile already held can still be frozen. The reminder is meant to scare others away from leaving. If plans stay hidden, the reminder points the wrong way. It raises the guessed chance of confiscation, and so it raises the gain from cutting the pile before a crisis rather than during one. Sachs would call this the center writing its own exit. Each show of force teaches surplus countries that a second way to pay is not a taste. It is insurance against seizure.",
+    "narration": "Then the math changes direction. China's goods surplus can continue, and dollars can still arrive from buyers in the United States and in allied markets. The forced bid for Treasuries, the bid that existed only because the oil seller would take nothing else, is gone. What remains is a choice about where to keep the money, and that choice feels the hostage problem. Washington's sensible reply, in this model, is to remind Beijing that the Treasuries it already owns can still be frozen. The reminder is meant to scare others away from leaving. If plans stay hidden, the reminder points the wrong way. It raises the estimated risk of confiscation, which gives Beijing more reason to reduce its exposure before a crisis begins. Sachs would call this the center writing its own exit. Each show of force gives countries with export surpluses another reason to find an alternative payment system. It’s insurance against seizure.",
     "cue": "[VISUAL: THREE-PANEL GRAPH, moving with the narration. Top, NEW BUYING: fresh official Treasury buying drops after the yuan contract. Middle, THE PILE ALREADY HELD: it starts a controlled decline. A blue line labeled THREAT TO FREEZE THE PILE makes that decline steeper. Bottom: the share paid outside dollars rises.]"
   },
   {
     "title": "One machine",
     "mood": "shock",
-    "narration": "The arms industry arrives as another claim on the same loop. A dollar that foreign central banks must buy is a dollar that helps fund the security services of the leading state. If official foreign demand thins out, the interest needed to sell new Treasury debt has to come from home savers and allied private money. That shift is a fact about power. Higher borrowing costs tax the country that uses financial sanctions as a tool. Jiang closes on one plain point. The weapon and the funding base are one object. Use of the weapon wears down the funding base. Depreciation stays slow while China's next barrel forces the recycling. It speeds up after the barrel moves, because that barrel was the requirement.",
+    "narration": "The arms industry arrives as another claim on the same loop. A dollar that foreign central banks must buy is a dollar that helps fund the security services of the leading state. If official foreign demand thins out, the interest needed to sell new Treasury debt has to come from home savers and allied private money. That shift is a fact about power. Higher borrowing costs tax the country that uses financial sanctions as a tool. Jiang closes on one plain point. The weapon and the funding base depend on the same system, so using the weapon gradually wears down the funding base. Depreciation stays slow while China's next barrel forces the recycling. It speeds up after the oil bill moves to another currency, because that bill was what kept the recycling going.",
     "cue": "[VISUAL: A single object, half munition and half Treasury bond, rotates and splits along a seam. Left piece stays blue. Right piece fades. A cost-of-borrowing line trends up as a foreign-government-buying line trends down. Only the two lines on a black field.]"
   },
   {
     "title": "One crack",
     "mood": "fracture",
-    "narration": "Nothing here requires Beijing to win a popularity contest for its currency. A spare way to pay can be messy, expensive, and still enough. Local money, gold as a neutral bridge, and a basket instead of the dollar are enough if they cover energy and some machinery. The United States remains the deepest market for savings. Allies remain inside the blue system because their protection is written there, and because depending on it limits what they can plan. The break is not the whole world walking out. The break is the exit of the one surplus economy whose oil bill made the mirror necessary.",
+    "narration": "Nothing here requires Beijing to win a popularity contest for its currency. A spare way to pay can be messy, expensive, and still enough. Local money, gold as a neutral bridge, and a basket instead of the dollar are enough if they cover energy and some machinery. The United States remains the deepest market for savings. Allies remain inside the blue system because their protection is written there, and because depending on it limits what they can plan. The break isn’t the whole world walking out. The break is the exit of the one surplus economy whose oil bill made the mirror necessary.",
     "cue": "[VISUAL: WORLD MAP, borders quiet. Allied money centers stay blue and steady. China's energy routes with a handful of producers glow amber. A glass mirror cracks only along the path factory, barrel, bond. Every other dollar path on the map stays intact. Slow drift, no shake.]"
   },
   {
     "title": "The refusal",
     "mood": "close",
-    "narration": "Mearsheimer adds the last limit. The leading state will not accept a gentle loss of its money weapon if it can make leaving expensive. Tariffs, technology denial, and the threat of being cut off from finance are attempts to restore the old payoffs. They are also new information. They tell the country that the leading state's intentions are hostile enough to justify speed. The two sides can therefore jump from a slow shift to a fast shift without either side wanting a crisis. That is how the trap ends. It is not a crash of the dollar against every good. It is a refusal, at the edge, to park China's surplus in claims on the American state. The mirror does not shatter everywhere. It shatters along the single path that ran from the factory, to the barrel, to the bond.",
+    "narration": "Mearsheimer adds the last limit. The leading state won’t accept a gentle loss of its money weapon if it can make leaving expensive. Tariffs, technology denial, and the threat of being cut off from finance are attempts to restore the old payoffs. They’re also new information, telling the country that the leading state's intentions are hostile enough to justify moving faster. The two sides can therefore jump from a slow shift to a fast shift without either side wanting a crisis. That’s how the trap ends. It isn’t a crash of the dollar against every good. It’s a refusal, at the edge, to park China's surplus in claims on the American state. The mirror doesn’t shatter everywhere. It shatters along the single path that ran from the factory, to the barrel, to the bond.",
     "cue": "[VISUAL: SLOW ZOOM OUT. The cracked mirror holds center frame. Tariff walls, export-control gates, and sanction lists fade in as thin blue barriers. Amber corridors thicken in response, not everywhere, only on the energy path. End on China's next barrel, settled outside the mirror, with the Treasury pile quietly declining on a graph beneath. Hold four seconds. Cut to black.]"
   }
 ];

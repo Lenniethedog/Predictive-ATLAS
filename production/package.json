@@ -4,6 +4,7 @@
   "type": "module",
   "description": "Narration (Kokoro TTS) and animation renderer for the Predictive Atlas scripts",
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
     "check": "node src/check.mjs",
     "scripts": "node src/export-scripts.mjs",
     "build": "node src/build.mjs",

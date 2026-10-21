@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Predictive Atlas · Player</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #07090c; color: #e7eef5; font: 14px/1.4 ui-sans-serif, system-ui, sans-serif; }
+  main { max-width: 1600px; margin: 0 auto; padding: 16px; }
+  h1 { font: 600 15px/1 ui-monospace, Menlo, monospace; letter-spacing: .25em; text-transform: uppercase; margin: 6px 0 14px; color: #9aa7b4; }
+  video { width: 100%; aspect-ratio: 16 / 9; background: #000; display: block; }
+  .transport { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+  button { background: #121820; color: #e7eef5; border: 1px solid #2a333f; border-radius: 4px; padding: 8px 12px; font: 600 14px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; }
+  button:hover { border-color: #19d3ff; color: #19d3ff; }
+  input[type="range"] { flex: 1; accent-color: #19d3ff; }
+  #clock { font: 13px/1 ui-monospace, Menlo, monospace; color: #9aa7b4; min-width: 9em; text-align: right; }
+  nav { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+  a { color: #19d3ff; text-decoration: none; border: 1px solid #2a333f; padding: 4px 10px; border-radius: 4px; }
+  a.on { border-color: #19d3ff; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="t">Predictive Atlas</h1>
+  <video id="v" controls preload="auto" playsinline></video>
+  <div class="transport">
+    <button id="back" type="button">Rewind 10s</button>
+    <button id="fwd" type="button">Forward 10s</button>
+    <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Position">
+    <span id="clock">0:00 / 0:00</span>
+  </div>
+  <nav id="n"></nav>
+</main>
+<script>
+  const titles = ["The Dollar Trap", "Buffer States", "The Malacca Siege", "The German Pivot", "The Semiconductor Fortress"];
+  const ep = Math.min(5, Math.max(1, parseInt(new URLSearchParams(location.search).get("ep") || "1", 10)));
+  const pad = String(ep).padStart(2, "0");
+  document.getElementById("t").textContent = `Predictive Atlas · Episode ${ep} · ${titles[ep - 1]}`;
+  document.title = `Episode ${ep} · Predictive Atlas`;
+  const v = document.getElementById("v");
+  const scrub = document.getElementById("scrub");
+  const clock = document.getElementById("clock");
+  v.src = `video/episode-${pad}.mp4?v=${Date.now()}`;
+  const tr = document.createElement("track");
+  Object.assign(tr, { kind: "subtitles", label: "English", srclang: "en", src: `subtitles/episode-${pad}.vtt` });
+  v.appendChild(tr);
+
+  const fmt = (s) => {
+    if (!Number.isFinite(s)) return "0:00";
+    const m = Math.floor(s / 60);
+    const r = Math.floor(s % 60);
+    return `${m}:${String(r).padStart(2, "0")}`;
+  };
+  const jump = (delta) => {
+    const end = Number.isFinite(v.duration) ? v.duration : 0;
+    v.currentTime = Math.min(end, Math.max(0, (v.currentTime || 0) + delta));
+  };
+  document.getElementById("back").onclick = () => jump(-10);
+  document.getElementById("fwd").onclick = () => jump(10);
+  let dragging = false;
+  scrub.addEventListener("pointerdown", () => { dragging = true; });
+  scrub.addEventListener("pointerup", () => { dragging = false; });
+  scrub.addEventListener("input", () => {
+    if (!Number.isFinite(v.duration)) return;
+    v.currentTime = (scrub.value / 1000) * v.duration;
+  });
+  v.addEventListener("timeupdate", () => {
+    if (!dragging && Number.isFinite(v.duration) && v.duration > 0) scrub.value = Math.round((v.currentTime / v.duration) * 1000);
+    clock.textContent = `${fmt(v.currentTime)} / ${fmt(v.duration)}`;
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.target.closest("input, a, button")) return;
+    if (e.key === "ArrowLeft") { jump(-10); e.preventDefault(); }
+    if (e.key === "ArrowRight") { jump(10); e.preventDefault(); }
+  });
+
+  const n = document.getElementById("n");
+  titles.forEach((x, i) => {
+    const a = document.createElement("a");
+    a.href = `?ep=${i + 1}`;
+    a.textContent = `${i + 1} · ${x}`;
+    if (i + 1 === ep) a.className = "on";
+    n.appendChild(a);
+  });
+</script>
+</body>
+</html>

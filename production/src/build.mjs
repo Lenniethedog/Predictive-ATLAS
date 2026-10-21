@@ -14,9 +14,14 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { OUT, ROOT, SPEED, TIMELINE, VOICE } from "./config.mjs";
+import { OUT, ROOT, SPEED, TIMELINE, NARRATOR } from "./config.mjs";
 import { digest, engineFiles, fileDigest, isFresh, markFresh } from "./stamp.mjs";
 import { assertEpisode } from "./story.mjs";
+import { photoFiles } from "./engine/photos.mjs";
+import { writeVideoChapters, normalizeVideoClock } from "./video-metadata.mjs";
+import { narrationFingerprint } from "./tts.mjs";
+import { VOICE_REVISION } from "./narration.mjs";
+import { timingMatchesPolicy } from "./timing-policy.mjs";
 
 const args = process.argv.slice(2);
 const force = args.includes("--force");
@@ -45,7 +50,9 @@ function mustUpdate(file, started) {
 function narrationMatches(scenes, timingPath) {
   if (!fs.existsSync(timingPath)) return false;
   const timing = JSON.parse(fs.readFileSync(timingPath, "utf8"));
-  if (timing.voice !== VOICE || Number(timing.speed) !== Number(SPEED)) return false;
+  if (timing.voice !== NARRATOR || Number(timing.speed) !== Number(SPEED)) return false;
+  if (timing.revision !== VOICE_REVISION || timing.fingerprint !== narrationFingerprint()) return false;
+  if (!timingMatchesPolicy(timing, TIMELINE)) return false;
   const norm = (s) => String(s).replace(/\s+/g, " ").trim();
   const got = (timing.paragraphs ?? []).map((p) => norm(p.sentences.map((s) => s.text).join(" ")));
   const want = scenes.map((s) => norm(s.narration));
@@ -54,13 +61,17 @@ function narrationMatches(scenes, timingPath) {
 
 function remux(video, audio) {
   const tmp = `${video}.tmp.mp4`;
+  const chapters = writeVideoChapters(video, `${video}.chapters.txt`);
+  const picture = normalizeVideoClock(video, `${video}.clock.mp4`);
   const r = spawnSync(
     "ffmpeg",
-    ["-hide_banner", "-loglevel", "error", "-y", "-i", video, "-i", audio, "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "256k", "-shortest", tmp],
+    ["-hide_banner", "-loglevel", "error", "-y", "-i", picture, "-i", audio, "-f", "ffmetadata", "-i", chapters, "-map", "0:v:0", "-map", "1:a:0", "-map", "0:s?", "-map_metadata", "0", "-map_chapters", "2", "-c:v", "copy", "-c:s", "copy", "-c:a", "aac", "-b:a", "256k", tmp],
     { stdio: "inherit" },
   );
   if ((r.status ?? 1) !== 0) process.exit(r.status ?? 1);
   fs.renameSync(tmp, video);
+  fs.unlinkSync(chapters);
+  fs.unlinkSync(picture);
 }
 
 function stage(n, name, hash, outputs, skip, build) {
@@ -89,8 +100,7 @@ for (const n of list) {
   const narration = path.join(OUT, "audio", `episode-0${n}-narration.wav`);
   const srt = path.join(OUT, "subtitles", `episode-0${n}.srt`);
   const vtt = path.join(OUT, "subtitles", `episode-0${n}.vtt`);
-  // phrase-v5 is the flowing English read. A voice-chain edit bumps this and reruns TTS.
-  const voiceHash = digest([storyHash, VOICE, SPEED, TIMELINE, "phrase-v5"]);
+  const voiceHash = digest([storyHash, NARRATOR, SPEED, TIMELINE, VOICE_REVISION, narrationFingerprint()]);
   const voiceOuts = [timing, narration, srt, vtt];
 
   if (!noTts) {
@@ -119,8 +129,10 @@ for (const n of list) {
   const timingHash = fileDigest([timing]);
   // Drawing only. The spoken story sits in the same file and must not force a redraw.
   const pictureHash = digest([
-    digest(scenes.map((s) => s.draw.toString())),
-    fileDigest([path.join(ROOT, "src/render.mjs"), ...engines]),
+    fs.readFileSync(path.join(ROOT, `src/episodes/ep${n}.mjs`), "utf8").split(/^const STORY\b/m)[0],
+    digest(scenes.map((s) => [s.draw.toString(), s.title, s.noBadges ?? false])),
+    digest([ep.title, ep.subtitle, ep.short, ep.pace ?? 0.9]),
+    fileDigest([path.join(ROOT, "src/render.mjs"), ...engines, ...photoFiles(n)]),
   ]);
   const eventsOut = path.join(OUT, "sfx", `episode-0${n}.json`);
   stage(n, "events", digest([pictureHash, timingHash]), [eventsOut], "animation cues unchanged", () => {
@@ -204,12 +216,4 @@ for (const n of list) {
     return r.started;
   });
 
-  if (!preview) {
-    const brollScript = path.join(ROOT, "src/broll.mjs");
-    stage(n, "broll", digest([fileDigest([videoOut, brollScript])]), [videoOut], "photographs unchanged", () => {
-      const r = run("src/broll.mjs", n);
-      if (r.status !== 0) process.exit(r.status);
-      return r.started;
-    });
-  }
 }

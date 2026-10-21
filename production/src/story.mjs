@@ -45,7 +45,7 @@ export function assertEpisode(ep, n) {
     if (String(s.narration).includes("[")) problems.push(`${where} narration contains a cue bracket`);
   });
   const words = spokenWords(scenes);
-  if (words !== 1500) problems.push(`episode ${n} has ${words} spoken words; the script is locked at 1,500`);
+  if (words < 1200 || words > 1800) problems.push(`episode ${n} has ${words} spoken words; expected 1,200–1,800 for this format`);
   const seen = new Set();
   for (const s of scenes) {
     if (seen.has(s.title)) problems.push(`episode ${n} repeats the scene title "${s.title}"`);

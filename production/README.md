@@ -17,21 +17,40 @@ Everything runs locally: no API keys, no cloud services.
 | `timing/episode-0N.json` | Paragraph + sentence timings the animation is synced to |
 | `voice-samples/*.mp3` | Episode 1's opening paragraph in seven alternative voices |
 | `sheets/epN/scene-NN.png` | Contact sheets (4 frames per scene) used for visual QA |
+| `shorts/short-0N.mp4` | YouTube Short per episode: 1080×1920, under 60 s, burned-in captions |
+| `shorts/short-0N.txt` | Title, description, photo credits and hashtags for that Short |
 
 ## How it works
 
-1. **Narration** — each scene in `src/episodes/epN.mjs` carries its spoken paragraph, its visual cue, and a score mood. `src/tts.mjs` reads that paragraph and
-   synthesizes it with **Kokoro-82M** (Apache-2.0, runs on CPU via `kokoro-js`). To sound
-   read rather than listed, sentences are voiced two or three at a time so intonation
-   carries across the break; short punch lines ("It breaks.") are isolated, given a beat
-   of air either side, and delivered slightly slower. Sentence timings are recovered from
-   the silences in each chunk. Pauses vary (≈0.4–0.8 s between sentences, ≈1.3–2 s
-   between paragraphs). Proper nouns are corrected at the phoneme level
-   (`PHONEME_FIXES`). The voice chain adds a little chest, softens sibilance, compresses
-   gently and places the read in a small dry room. Soft synthesized breaths sit before
-   each paragraph and some longer phrases, tempo drifts ±1.5% phrase to phrase, and a
-   faint room-tone floor keeps pauses from dropping to digital silence.
-   ~11 min per episode at ~138 wpm.
+1. **Narration engine** — `ENGINE` in `src/config.mjs` selects **Chatterbox** (Resemble
+   AI, MIT licence, runs locally on the Mac's GPU) or the original **Kokoro**. Chatterbox
+   reads with far more human prosody. It is matched to the channel's British narrator from
+   a 10-second reference clip (`assets/voice/george-reference.wav`), so the voice keeps its
+   identity. `src/voice_worker.py` voices passages of one to three sentences, transcribes
+   each take straight back with Whisper, and regenerates any take whose words don't match
+   the script (skipped phrases, repeats, garbled names), keeping the best. Sentence
+   boundaries come from Whisper's word timings. Expressiveness follows the scene's mood.
+   All Chatterbox audio carries Resemble's inaudible PerTh watermark, left intact. Setup:
+   `uv venv --python 3.11 .venv && uv pip install --python .venv/bin/python chatterbox-tts
+   faster-whisper`, with model files in `.venv/models/` (see Notes). Set
+   `NARRATION_ENGINE=kokoro` to use the original engine.
+
+   Delivery policy — each scene in `src/episodes/epN.mjs` carries its spoken
+   paragraph, visual cue, and score mood. `src/tts.mjs` uses **Kokoro-82M** locally
+   in full precision. The British `bm_george` narrator receives British phonemes;
+   American voices receive American phonemes. Proper-name corrections cover both
+   accents. Small groups of sentences keep connected thoughts together. Delivery
+   slows for quantities, conclusions, and a few deliberate punch lines, while
+   explanatory passages keep moving. Pauses respond to connective phrases and
+   contrast rather than following one fixed interval. Quiet consonants and natural
+   release tails survive trimming. Uncertain sentence boundaries trigger a new
+   read of individual sentences; estimated boundaries never drive the animation.
+   The output retains the model's own breaths. No synthetic breath noise, pitch
+   wobble, fake room reverb, or added room noise is used. A light de-esser, low-cut
+   filter, and loudness normalization finish the read at −16 LUFS, 48 kHz stereo.
+   Scripts stay around 1,500 words without padding to hit an exact count. Timings,
+   captions, and the score rebuild from the revised read. Older audio is backed up
+   in `out/archive/narration-v5/` and `out/archive/narration-v6/` for comparison.
 2. **Score** — `src/music.mjs` generates an ambient bed per episode from scratch (no
    samples, no licensing): a low tonic drone, detuned pad chords that follow the scene's
    mood (establish, pressure, shock, cold, close, and the rest), a soft bell on scene
@@ -94,7 +113,7 @@ node src/check.mjs               # narration, cue, mood, and drawing still match
 
 ### Changing the voice
 
-The default is `am_michael` (American male). Listen to `out/voice-samples/`, then either
+The default is `bm_george` (British male), at speed `0.96`. Listen to `out/voice-samples/`, then either
 edit `VOICE` / `SPEED` in `src/config.mjs`, or pass them on the CLI, and re-render:
 
 ```bash
@@ -110,7 +129,25 @@ To use an external voice (e.g. a studio read or ElevenLabs), replace the narrati
 keep the timing file: the renderer only needs `out/timing/episode-0N.json` (sentence
 start/end times) and `out/audio/episode-0N-narration.wav`.
 
+## Shorts
+
+`node src/shorts.mjs` (or `node src/shorts.mjs 3`) cuts one vertical Short per episode
+from the finished film: the episode's opening thesis plus, where it fits, a payoff line
+from later in the film (choices in `SHORTS` at the top of the file). Picture and
+narration come from the same moments, so sync is exact. The layout keeps clear of the
+Shorts interface: headline at the top, the full 16:9 picture in the middle (nothing
+cropped), large word-by-word captions with the spoken word lit, and an end card pointing
+to the full episode. Word timings come from Whisper (`src/words.py`). The score runs
+continuously under the cuts, a whoosh marks each cut, and the mix finishes at −14 LUFS
+for phone playback. Each Short gets an upload text with photo credits for any credited
+photograph inside its cut. Re-run after re-rendering the films.
+
 ## Notes
+
+- Model files (not in git): `.venv/models/chatterbox/` holds `t3_cfg.safetensors`,
+  `s3gen.safetensors`, `ve.safetensors`, `tokenizer.json` and `conds.pt` from
+  `ResembleAI/chatterbox`; `.venv/models/whisper-small.en/` holds
+  `Systran/faster-whisper-small.en`. On a slow line, `aria2c -x 16 -c` resumes reliably.
 
 - The data shown on screen is either from the scripts themselves (the 11 mb/d split,
   800 mn bbl stock, pipeline design capacities, etc.) or explicitly labeled
@@ -120,3 +157,50 @@ start/end times) and `out/audio/episode-0N-narration.wav`.
   onnxruntime tearing down after all files are written; it is harmless.
 - Episode 5's cues stay at the level of categories and priced options, never procedures,
   as the script directs.
+
+### Continuing Episode 1’s visual treatment
+
+Episodes 2–5 use shorter, plain-language screen labels and retain narration around
+1,500 words. Four-outcome cards wrap their explanations; hypothetical
+backup-capacity bars and payoff curves are labeled illustrative. Scenes that
+already contain thinker cards can set `noBadges: true` to avoid duplicate overlays.
+
+Credited photo cutaways live in `src/engine/photos.mjs` and render directly into
+full films, previews, and contact sheets. Each photograph settles from a closer
+crop, drifts forward, and exits with a gentle tilt, accelerating zoom, and soft
+dissolve into the moving scene underneath. Captions remain level and fade before
+the exit. Overscan keeps the frame covered throughout the movement.
+The photo files participate in build
+stamps, so changing a cutaway rebuilds the picture. Subtitles, chapter markers,
+and the final silent hold survive soundtrack updates. `src/broll.mjs` remains a
+manual tool for older animation-only exports; normal builds include photos already.
+The Jefferson Lab cleanroom is shown on the cleanroom-fragility line, with its
+location in the caption, rather than presented as a Taiwanese chip factory.
+
+To review the updated episodes: `node src/render.mjs 2 --preview` (repeat for 3–5).
+For final exports with updated effects: `node src/build.mjs 2 3 4 5 --no-tts`.
+
+### Voice revision and checks
+
+The current `spoken-v7-conversation` read joins related short statements, uses
+more direct spoken wording, and keeps up to four sentences in a connected
+passage when the model's token limit allows. Its base speed is 0.96, with shorter
+pauses for continuations and a separate pause for questions. Figures and closing
+thoughts still receive more time. `node src/review.mjs` writes `out/review.html`
+with all five recordings, the previous read, passage seeking, and full-film links.
+
+`src/narration.mjs` holds the delivery policy. Narration timing files record the
+voice, accent, speed, policy revision, and a fingerprint of the synthesis code.
+Builds check those values before reusing audio. A changed voice treatment therefore
+cannot silently reuse an older recording. Adoption also checks the actual title
+hold, paragraph gaps, and closing hold against the current timeline policy.
+`npm test` checks accent phonemes,
+phrase pacing, quiet consonants, photo timing, and every animation anchor against
+the authored text. Cue-recording checks verify that skipping pixel rasterization
+preserves the same effects events. `npm run check` checks script exports and
+episode structure.
+
+`node src/build.mjs --preview` rebuilds all five soundtracks and review films;
+`node src/build.mjs` produces the final 1080p films. A new read needs a new picture
+render because its sentence timings have changed; do not use `--remux` for it.
+A natural-sounding synthetic read does not carry any guarantee about AI detectors.

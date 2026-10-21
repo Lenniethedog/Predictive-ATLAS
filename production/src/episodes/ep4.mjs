@@ -211,7 +211,7 @@ function s2(S) {
   const tSteps = S.at("The molecule");
   const tUse = S.at("It fed");
   const tFeed = S.at("In German");
-  const tGap = S.at("They experience");
+  const tGap = S.at("For those plants");
   const tBreak = S.at("The pipelines") - 0.6;
   const tContested = S.at("Who destroyed");
   const tZero = S.at("The economic");
@@ -375,12 +375,12 @@ function s3(S) {
     D.text(ctx, "1900", ix + 30, iy + 340, { kind: "mono", size: 11, color: C.dim, alpha: ia });
     D.text(ctx, "2022", ix + 670, iy + 340, { kind: "mono", size: 11, color: C.dim, align: "right", alpha: ia });
     D.stroke(ctx, [[ix + 70, iy + 336], [ix + 630, iy + 336]], { color: C.faint, width: 1, alpha: ia });
-    K.chip(ctx, "DEPENDENCE IS USEFUL WHEN INTENTIONS ARE OPAQUE", ix, iy + 410, { color: C.mid, alpha: fade(t, S.at("Dependence is"), 0.5, tCapt, 0.6), size: 13 });
+    K.chip(ctx, "DEPENDENCE LIMITS AN ALLY’S CHOICES", ix, iy + 410, { color: C.mid, alpha: fade(t, S.at("Dependence is"), 0.5, tCapt, 0.6), size: 13 });
     D.caption(ctx, "Survival for a trading state is the productive base", t, tCapt, { x: 600, y: 1000, size: 24 });
     // umbrella that arrives bundled with deindustrialization
     const ua = prog(t, tUmb, 0.8);
     umbrella(ctx, 260, capY - 70, 90, C.cyan, ua);
-    D.label(ctx, "A GENUINE UMBRELLA · BUNDLED WITH DEINDUSTRIALIZATION", 1100, 900, { color: C.cyan, alpha: ua, size: 13 });
+    D.label(ctx, "SECURITY COVER · INDUSTRIAL COST", 1100, 900, { color: C.cyan, alpha: ua, size: 13 });
   };
 }
 
@@ -416,7 +416,7 @@ function s4(S) {
     const sa = prog(t, tStab, 0.6) * (1 - prog(t, tVice, 0.2));
     D.text(ctx, "STABILIZER", 960, py - 52, { size: 30, weight: 600, tracking: 10, align: "center", color: C.green, alpha: sa });
     D.stamp(ctx, "VICE", 960, py - 64, t, tVice, { color: C.cyan, size: 40, angle: -0.06 });
-    D.label(ctx, "RECLASSIFIED BY THE UNIPOLAR PROJECT", 960, py + 66, { align: "center", color: C.cyan, alpha: prog(t, tVice + 0.4, 0.5), size: 12 });
+    D.label(ctx, "SACHS · POLICY RECASTS THE PARTNERSHIP", 960, py + 66, { align: "center", color: C.cyan, alpha: prog(t, tVice + 0.4, 0.5), size: 12 });
     ["SANCTIONS", "SEVERED PIPELINE PROJECTS", "REORIENT TO SEABORNE ALLIED GAS"].forEach((n, i) => K.chip(ctx, n, 330 + i * 470, py + 120, { color: C.ice, alpha: prog(t, tSever + i * 0.9, 0.5), size: 13, align: "center" }));
     // costs fall, gains rise
     const axisY = 640;
@@ -443,7 +443,7 @@ function s4(S) {
       D.para(ctx, n, x, axisY + 40, 190, { kind: "mono", size: 11, color: C.cyan, alpha: a, caps: true, lineHeight: 1.3 });
     });
     D.label(ctx, "GAINS", 1180, axisY - 220, { color: C.cyan, alpha: prog(t, tGain, 0.5), size: 13, weight: 600 });
-    K.chip(ctx, "ALLIED AUTONOMY = ALLIED RISK → EUROPEAN INDUSTRY TRADED FOR AMERICAN COMFORT", 960, 1000, { color: C.mid, align: "center", alpha: fade(t, tSys, 0.6, tSheet + 1, 0.5), size: 13 });
+    K.chip(ctx, "LESS GERMAN AUTONOMY · MORE U.S. CONTROL", 960, 1000, { color: C.mid, align: "center", alpha: fade(t, tSys, 0.6, tSheet + 1, 0.5), size: 13 });
     // the multipolar alternative: shown, then filed
     const sh = prog(t, tSheet, 0.6);
     if (sh > 0) {
@@ -501,7 +501,7 @@ function s5(S) {
       D.label(ctx, n, p[0] + 14, p[1] - 10, { color: C.ice, alpha: a, size: 12 });
     });
     const pa = prog(t, tTerm + 2.5, 0.5);
-    K.chip(ctx, "PHYSICAL ABSENCE OF THE MOLECULE · SOLVED", 120, 1000, { color: C.green, alpha: pa, size: 14 });
+    K.chip(ctx, "GAS IS AVAILABLE · PRICE IS THE PROBLEM", 120, 1000, { color: C.green, alpha: pa, size: 14 });
     // the price regime stays elevated
     const ca = prog(t, tPrice, 0.6);
     D.panel(ctx, 1240, 330, 580, 250, { alpha: ca, title: "German gas price regime · illustrative", fill: rgba("#0b0e13", 0.92) });
@@ -526,7 +526,7 @@ function s5(S) {
     K.chip(ctx, "SECURITY WITH A VETO ATTACHED", 1240, 900, { color: C.ice, alpha: prog(t, tVeto, 0.6), size: 14 });
     // weaponized interdependence: one state touches both umbrella and invoice
     const ja = prog(t, tJiang, 0.6);
-    D.text(ctx, "WEAPONIZED INTERDEPENDENCE", 1240, 980, { size: 26, weight: 600, tracking: 5, color: C.green, alpha: ja });
+    D.text(ctx, "DEPENDENCE USED AS PRESSURE", 1240, 980, { size: 26, weight: 600, tracking: 5, color: C.green, alpha: ja });
     const ba = prog(t, tBoth, 0.6);
     if (ba > 0) {
       const n0 = [1100, 560];
@@ -593,7 +593,7 @@ function s6(S) {
       D.text(ctx, `T${i + 1} · ${(w * 100).toFixed(0)}%`, wx + 12, 727, { kind: "mono", size: 13, color: C.ice, alpha: wa });
       wx += 1680 * w;
     });
-    D.label(ctx, "A QUIET PIVOT IS A REWEIGHTING", 1800, 690, { align: "right", color: C.ice, alpha: prog(t, tW, 0.6), size: 12 });
+    D.label(ctx, "A QUIET PIVOT CHANGES THE MIX", 1800, 690, { align: "right", color: C.ice, alpha: prog(t, tW, 0.6), size: 12 });
     // NATO membership stays a solid check
     const na = prog(t, tNato, 0.5);
     D.panel(ctx, 1280, 800, 520, 90, { alpha: na, fill: rgba("#0b0e13", 0.92), color: C.cyan, sfx: "NATO membership" });
@@ -648,7 +648,7 @@ function s7(S) {
     D.panel(ctx, 660, 160, 480, 420, { alpha: Math.max(wa, prog(t, 0.6, 0.6)), fill: rgba("#10161e", 0.97), title: "Chemical capacity · write-off" });
     for (let i = 0; i < 6; i++) D.stroke(ctx, [[690, 240 + i * 46], [690 + (i % 3 === 2 ? 240 : 380), 240 + i * 46]], { color: C.border, width: 3, alpha: wa });
     D.stamp(ctx, "POSTPONED", 900, 420, t, tWrite + 1.5, { color: C.amber, size: 34, angle: -0.08 });
-    K.chip(ctx, "WHICH MOLECULE COULD RETURN QUIETLY?", 900, 540, { color: C.mid, align: "center", alpha: prog(t, tWrite + 3, 0.5), size: 12 });
+    K.chip(ctx, "WHICH GAS SUPPLY COULD RETURN?", 900, 540, { color: C.mid, align: "center", alpha: prog(t, tWrite + 3, 0.5), size: 12 });
     // finance ministry chart
     const fa = prog(t, tFin, 0.6);
     D.panel(ctx, 1200, 160, 600, 420, { alpha: Math.max(fa, prog(t, 0.9, 0.6)), title: "Finance ministry", fill: rgba("#0b0e13", 0.94) });
@@ -768,8 +768,8 @@ function s8(S) {
     const p = prog(t, tPV + 0.3, 3);
     D.series(ctx, gx, gy, gw, gh, prot, { color: C.cyan, width: 3, p, alpha: pa, glow: 6 });
     D.series(ctx, gx, gy, gw, gh, lost, { color: GER, width: 3, p, alpha: pa, glow: 6 });
-    D.label(ctx, "PV · LOST CHEMICAL, GLASS, METAL, MACHINE-TOOL CAPACITY", gx + 10, gy + gh + 26, { color: GER, alpha: pa, size: 11 });
-    D.label(ctx, "PV · PROTECTION IN THE AMERICAN UMBRELLA", gx + 10, gy + gh - 0.55 * gh - 14, { color: C.cyan, alpha: pa, size: 11 });
+    D.label(ctx, "FUTURE COST · LOST INDUSTRIAL CAPACITY", gx + 10, gy + gh + 26, { color: GER, alpha: pa, size: 11 });
+    D.label(ctx, "FUTURE VALUE · U.S. SECURITY COVER", gx + 10, gy + gh - 0.55 * gh - 14, { color: C.cyan, alpha: pa, size: 11 });
     const xc = gx + 0.62 * gw;
     D.stroke(ctx, [[xc, 340], [xc, gy + gh]], { color: C.amber, width: 1.5, dash: [5, 5], alpha: prog(t, tPV + 3, 0.8) });
     K.chip(ctx, "THE CROSSING · A QUARTER, NOT A DAY", xc, gy - 14, { color: C.amber, align: "center", alpha: prog(t, tPV + 3.3, 0.6), size: 13 });
@@ -782,7 +782,7 @@ function s8(S) {
       D.text(ctx, h, x + 20, 742, { size: 18, weight: 600, tracking: 3, alpha: a });
       D.para(ctx, s, x + 20, 772, 360, { kind: "mono", size: 12, color: C.mid, alpha: a, caps: true });
     });
-    K.chip(ctx, "STATES DO NOT ADVERTISE THE MOMENT THEY BEGIN TO HEDGE A PATRON", 120, 880, { color: C.mid, alpha: prog(t, tPattern, 0.6), size: 13 });
+    K.chip(ctx, "BERLIN CAN CHANGE COURSE WITHOUT AN ANNOUNCEMENT", 120, 880, { color: C.mid, alpha: prog(t, tPattern, 0.6), size: 13 });
     D.caption(ctx, "The hedge is assembled from exceptions", t, tHedge, { y: 990 });
   };
 }
@@ -795,7 +795,7 @@ function s9(S) {
     ["FRANCE", [1240, 560], "NUCLEAR-HEAVY POWER"],
     ["CENTRAL EUROPE", [1180, 790], "SUPPLY CHAINS"],
   ];
-  const tParts = S.at("German intermediates");
+  const tParts = S.at("German components");
   const tHollow = S.at("A hollowed");
   const tFrance = S.at("France, with");
   const tComm = S.at("The Commission");
@@ -887,7 +887,7 @@ function s9(S) {
     ctx.fill();
     ctx.restore();
     D.label(ctx, "DOLLAR GATE", pc[0] - 120, pc[1] + 110, { color: C.cyan, alpha: ya, size: 11 });
-    D.label(ctx, "EUR INVOICING · BILATERAL NETTING", pc[0] + 30, pc[1] - 140, { color: GER, alpha: prog(t, S.at("Trade that"), 0.6), size: 11, align: "center" });
+    D.label(ctx, "EURO BILLS · DIRECT SETTLEMENT", pc[0] + 30, pc[1] - 140, { color: GER, alpha: prog(t, S.at("Trade that"), 0.6), size: 11, align: "center" });
   };
 }
 
@@ -958,9 +958,9 @@ function s10(S) {
       items.forEach((it, i) => D.text(ctx, it, x + 30, 815 + i * 56, { size: 22, weight: 600, tracking: 3, alpha: a * (stampTxt ? 0.5 : 1) }));
       if (stampTxt) D.stamp(ctx, stampTxt, x + 560, 890, t, t0, { color: C.mid, size: 30, angle: -0.1 });
     };
-    sheet(140, "Institutional answer", ["STORAGE MANDATES", "A DIVERSE CONTRACT BOOK", "NO SINGLE SUPPLIER AS A VETO"], C.violet, prog(t, tInst, 0.6), "ABANDONED", tInst + 3);
+    sheet(140, "Institutional answer", ["STORAGE MANDATES", "A DIVERSE CONTRACT BOOK", "NO SUPPLIER CAN DICTATE THE TERMS"], C.violet, prog(t, tInst, 0.6), "ABANDONED", tInst + 3);
     const ra2 = prog(t, tReal, 0.6);
-    sheet(1000, "Realist answer · now", ["ALLIED GAS = BASE LOAD", "EASTERN MOLECULE = THE MARGIN", ""], C.ice, ra2, null, 0);
+    sheet(1000, "Realist answer · now", ["ALLIED GAS = BASE LOAD", "EASTERN GAS = THE NEXT UNIT", ""], C.ice, ra2, null, 0);
     if (ra2 > 0) {
       const tp = prog(t, tReal + 4, 0.5);
       K.chip(ctx, "U.S. · POWER", 1030, 960, { color: C.cyan, alpha: tp, size: 15 });
@@ -1039,19 +1039,19 @@ function s11(S) {
     D.text(ctx, "HUB OVERREACH", 150, 966, { size: 30, weight: 600, tracking: 6, alpha: sa });
     D.panel(ctx, 980, 880, 820, 110, { alpha: ma2, color: "#dfe7ef", fill: rgba("#dfe7ef", 0.04), sfx: "Relative-power maintenance" });
     D.text(ctx, "MEARSHEIMER", 1010, 924, { kind: "mono", size: 13, color: C.mid, alpha: ma2 });
-    D.text(ctx, "RELATIVE-POWER MAINTENANCE", 1010, 966, { size: 30, weight: 600, tracking: 4, alpha: ma2 });
+    D.text(ctx, "INDUSTRIAL STRENGTH SUPPORTS DEFENSE", 1010, 966, { size: 30, weight: 600, tracking: 4, alpha: ma2 });
   }, { noBadges: true });
 }
 
 // ================================================================ 12. a European coat on a German frame
 function s12(S) {
-  const claim = "A CONTINENT WITHOUT A CHEMICAL AND MACHINE BASE IS NOT A DEFENSE BASE — DEFENSE GOODS ARE INDUSTRIAL GOODS.";
+  const claim = "DEFENSE NEEDS CHEMICALS, METALS AND MACHINES.";
   const tCoat = 0.3;
-  const tClaim = S.at("The coat is the");
-  const tLanes = S.at("The body");
+  const tClaim = S.at("The European argument is the");
+  const tLanes = S.at("The practical result");
   const tAll = S.at("The alliance");
-  const tUmb = S.at("The umbrella remains.");
-  const tMono = S.at("The monopoly");
+  const tUmb = S.at("so does the umbrella");
+  const tMono = S.at("What changes");
   const lanes = [
     ["ENERGY · WITHOUT A SPEECH", 0.18],
     ["EXPORTS · WITHOUT A FIGHT", 0.42],
@@ -1105,13 +1105,13 @@ function s12(S) {
     D.text(ctx, "EUROPEAN COAT", cx, cy + 300, { size: 18, weight: 600, tracking: 6, align: "center", color: C.violet, alpha: coat });
     D.text(ctx, "GERMAN FRAME", cx, cy + 326, { kind: "mono", size: 12, align: "center", color: GER, alpha: fa });
     // the claim types itself
-    D.para(ctx, claim, 900, 220, 900, { size: 30, weight: 600, tracking: 2, reveal: prog(t, tClaim, Math.max(4, S.end("The coat is the") - S.start("The coat is the")), ease.linear), lineHeight: 1.35 });
+    D.para(ctx, claim, 900, 220, 900, { size: 30, weight: 600, tracking: 2, reveal: prog(t, tClaim, Math.max(4, S.end("The European argument is the") - S.start("The European argument is the")), ease.linear), lineHeight: 1.35 });
     // three exception lanes reopen toward Eurasia (from under the coat)
     lanes.forEach(([n, f], i) => {
       const y = cy - 120 + i * 120;
-      const p = prog(t, tLanes + f * (S.end("The body") - S.start("The body")), 1.6);
+      const p = prog(t, tLanes + f * (S.end("The practical result") - S.start("The practical result")), 1.6);
       const pts = D.smoothPts([[cx + 150, y], [cx + 450, y + 10], [1300, y - 20], [1760, y - 60]], 10);
-      D.thread(ctx, pts, t, tLanes + f * (S.end("The body") - S.start("The body")), 1.6, { color: C.amber, width: 3, particles: 6, speed: 0.12, glow: 14 });
+      D.thread(ctx, pts, t, tLanes + f * (S.end("The practical result") - S.start("The practical result")), 1.6, { color: C.amber, width: 3, particles: 6, speed: 0.12, glow: 14 });
       D.label(ctx, n, cx + 470, y - 16, { color: C.amber, alpha: p, size: 13 });
     });
     D.label(ctx, "EURASIA →", 1760, cy - 230, { align: "right", color: C.amber, alpha: prog(t, tLanes + 1, 0.6), size: 13 });
@@ -1124,7 +1124,7 @@ function s12(S) {
     D.label(ctx, "UMBRELLA · REMAINS", 1440, 880, { color: C.cyan, alpha: ua, size: 13 });
     // monopoly over the strategy map does not
     const ma = prog(t, tMono, 0.5);
-    D.text(ctx, "MONOPOLY OVER THE STRATEGY MAP", 1000, 960, { size: 26, weight: 600, tracking: 4, alpha: ma, color: C.ice });
+    D.text(ctx, "CONTROL OVER EUROPE’S CHOICES", 1000, 960, { size: 26, weight: 600, tracking: 4, alpha: ma, color: C.ice });
     const strike = prog(t, tMono + 1.2, 0.5);
     D.stroke(ctx, [[992, 950], [992 + 640 * strike, 950]], { color: C.crimson, width: 3, alpha: ma });
   };
@@ -1135,19 +1135,19 @@ const STORY = [
   {
     "title": "Two prices",
     "mood": "establish",
-    "narration": "Germany's postwar bargain had two prices. Security was priced in Washington. Energy was priced in Siberia. The second price has been deleted. Pipeline gas from Russia is offline. In the state's own sums, losing that gas is a cost shock. When the energy price leaves the equation, the security price stops being a gift and becomes a tax on industry. Berlin's rational question is how much of that tax the factories can pay before they stop being the core.",
+    "narration": "Germany's postwar bargain had two prices. Security was priced in Washington, while energy was priced in Siberia. The second price has changed, sharply. Pipeline gas from Russia is offline, and German factories have to work with the cost of the alternatives. In the state's own sums, losing that gas pushes up the cost of making almost everything that depends on it. When the energy price leaves the equation, the security price stops being a gift and becomes a tax on industry. Berlin's rational question is how much of that extra cost its factories can absorb before the industrial base starts to shrink.",
     "cue": "[VISUAL: A two-term equation. SECURITY priced as a blue Washington node. ENERGY priced as a pipeline from Siberia. The energy term is deleted with a hard cut. The security term recolors from a gift icon to a tax icon sitting on a German industrial core. The core's output gauge sags.]"
   },
   {
     "title": "The cheap molecule",
     "mood": "history",
-    "narration": "Before the break, more than half of Germany's imported gas came from Russia. The molecule was cheap because it moved by pipe, without liquefaction, without a long ocean leg, and without a regasification toll. It fed boilers, and it fed chemistry. In German industry gas is a feedstock as well as a fuel. A nitrogen plant and a specialty-chemical line do not experience a price spike as a household experiences a bill. They experience it as a competitor in the United States or in China who still buys energy at a lower structural cost. The pipelines that carried the Siberian gas were destroyed in twenty twenty-two. Who destroyed them remains contested. The economic fact is not contested. The gas is not flowing, and nothing in current allied policy intends to turn it back on.",
+    "narration": "Before the break, more than half of Germany's imported gas came from Russia. The molecule was cheap because it moved by pipe. It didn’t have to be cooled into liquid, carried across an ocean, and turned back into gas. It fed boilers, but it also went directly into making chemicals. In German industry gas is a feedstock as well as a fuel. A nitrogen plant and a specialty-chemical line don’t experience a price spike the way a household does. For those plants, the price spike means losing ground to a competitor in the United States or China whose energy costs remain lower. The pipelines that carried the Siberian gas were destroyed in twenty twenty-two. Who destroyed them remains contested. The economic fact isn’t contested. The gas isn’t flowing, and nothing in current allied policy intends to turn it back on.",
     "cue": "[VISUAL: PRE-BREAK Sankey of German gas imports, more than half from Russia, moving by pipe with three cost steps crossed out: no liquefaction, no ocean leg, no regasification toll. Split end use: boilers and chemical feedstock. A competitor price gap opens versus the United States and China. Then the Baltic pipelines go dark. A small caption: ATTRIBUTION CONTESTED. A larger caption: FLOW IS ZERO.]"
   },
   {
     "title": "The cap",
     "mood": "pressure",
-    "narration": "John Mearsheimer looks at this shock through who is stronger. Germany is the country best able to anchor a Europe that stands on its own, which is why other powers spent a century blocking a lasting German-Russian pairing, and why Washington wants Germany dependent on American security. Dependence is useful when plans stay hidden, because you cannot see the other side's intentions. A Germany that can fuel itself from the east and sell machines in every direction is a Germany that can say no. A Germany that must buy expensive allied energy, host allied forces, and clear its exports through sanctions is a Germany whose power is capped. The cap starts to close factories. Survival for a trading state means keeping the factories that make it rich. A security umbrella that arrives together with the loss of industry fails that test, even when the umbrella is real.",
+    "narration": "John Mearsheimer looks at this shock through who is stronger. Germany is the country best able to anchor a Europe that stands on its own, which is why other powers spent a century blocking a lasting German-Russian pairing, and why Washington wants Germany dependent on American security. Dependence is useful when plans stay hidden, because you can’t see the other side's intentions. A Germany that can fuel itself from the east and sell machines in every direction is a Germany that can say no. A Germany that must buy expensive allied energy, host allied forces, and clear its exports through sanctions is a Germany whose power is capped. The cap starts to close factories, and survival for a trading state means keeping the factories that make it rich. A security umbrella that arrives together with the loss of industry fails that test, even when the umbrella is real.",
     "cue": "[VISUAL: EUROPEAN POWER RANKING, abstract blocks, Germany the largest industrial block inside the continent. A century-scale inset shows repeated external efforts to prevent a durable German-Russian combination, drawn as blocked corridors, not as a war montage. A cap descends: expensive allied energy, hosted forces, sanctions clearance. Factory icons under the cap switch off one by one. Caption: SURVIVAL FOR A TRADING STATE IS THE PRODUCTIVE BASE.]"
   },
   {
@@ -1159,50 +1159,50 @@ const STORY = [
   {
     "title": "The dearer substitute",
     "mood": "system",
-    "narration": "The substitute on offer is real, and it costs more by its nature. Seaborne liquefied gas must be cooled, shipped, and warmed again. Terminals on the German coast, built in a hurry, solved the simple absence of the gas. They did not solve the price. Long-term purchases from the United States and from other exporters also carry a political extra charge. A cargo that arrives from an ally can be delayed by that ally's home politics, sent to a higher bidder, or tied to a wider diplomatic ask. Energy security bought in that market is security with a veto attached. Professor Jiang's point is plain: a link you depend on can be used against you. The same state that holds the security umbrella can touch the energy bill. The customer with no second system pays for both.",
+    "narration": "The substitute on offer is real, but getting it to Germany involves more work and more cost. Seaborne liquefied gas must be cooled, shipped, and warmed again. Terminals on the German coast, built in a hurry, solved the simple absence of the gas. They didn’t solve the price problem that German industry was left with. Long-term purchases from the United States and from other exporters also carry a political extra charge. A cargo that arrives from an ally can be delayed by that ally's home politics, sent to a higher bidder, or tied to a wider diplomatic ask. Energy security bought in that market is security with a veto attached. Professor Jiang's point is plain: a link you depend on can be used against you. The same state that holds the security umbrella can touch the energy bill. The customer with no second system pays for both.",
     "cue": "[VISUAL: LNG PROCESS, clinical. Cool, ship, warm. Coastal terminals at Wilhelmshaven and the other new German sites light up and solve a physical-absence icon. The price regime stays elevated. A political-premium tag hangs on long-term allied cargoes: delay, redirect, diplomatic ask. Professor Jiang's label appears: WEAPONIZED INTERDEPENDENCE. One state supplies the umbrella and can touch the invoice.]"
   },
   {
     "title": "Three terms",
     "mood": "cold",
-    "narration": "Place Berlin's choice in three terms. The first term is the unit cost of energy relative to the United States and to China, the two rivals for the next factory. The second term is export revenue, especially machinery and vehicles sold into the Chinese market, which remains among Germany's largest external demand pools. The third term is the insurance value of American protection, including the nuclear questions Germany has chosen not to answer alone. A quiet pivot is a reweighting of these terms. Formal membership in the alliance can stay. The change is in the constraints Germany will accept on the first two terms in order to keep the third.",
+    "narration": "Place Berlin's choice in three terms: energy costs, export earnings, and the value of protection. The first term is the unit cost of energy relative to the United States and to China, the two rivals for the next factory. The second term is export revenue, especially machinery and vehicles sold into the Chinese market, which remains among Germany's largest external demand pools. The third term is the insurance value of American protection, including the nuclear questions Germany has chosen not to answer alone. A quiet pivot means changing how much weight Berlin gives each of these terms. Formal membership in the alliance can stay. The change is in the constraints Germany will accept on the first two terms in order to keep the third.",
     "cue": "[VISUAL: THREE-TERM DASHBOARD for Berlin. Term one: unit energy cost versus the United States and China. Term two: export revenue, machinery and vehicles, with China among the largest external pools. Term three: insurance value of American protection, including a sealed nuclear file Germany does not open. Weights animate. Formal NATO membership stays a solid blue check. The constraint sliders on terms one and two loosen.]"
   },
   {
     "title": "Documents, not speeches",
     "mood": "motion",
-    "narration": "Watch how the reweighting shows up in decisions that look technical. German diplomats resist the widest version of secondary sanctions, the version that would block ordinary industrial sales to China. German executives delay the write-off of chemical capacity and ask which molecule could return quietly. The finance ministry discovers that a shrunken industrial tax base makes the defense spending pledged under alliance pressure harder to fund. Jiang would call this a feedback loop. The security tax reduces the industrial surplus that was supposed to pay the security tax. Past a threshold, loyalty and capacity move in opposite directions. The state then chooses capacity.",
+    "narration": "Watch how the reweighting shows up in ordinary decisions about licenses, contracts, and spending. German diplomats resist the widest version of secondary sanctions, the version that would block ordinary industrial sales to China. German executives delay writing off chemical plants and ask which gas supply could come back without a public confrontation. The finance ministry discovers that a shrunken industrial tax base makes the defense spending pledged under alliance pressure harder to fund. Jiang would call this a feedback loop. The security tax reduces the industrial surplus that was supposed to pay for it. Past a threshold, keeping the alliance satisfied and keeping the factories open start to pull in opposite directions. The state then chooses capacity.",
     "cue": "[VISUAL: DOCUMENTS, not speeches. A secondary-sanctions draft aimed at ordinary industrial sales to China is narrowed by a German pen. A chemical-capacity write-off is postponed. A finance-ministry chart shows the industrial tax base shrinking while a defense-spending pledge stays fixed, the funding gap widening. A loop graphic: security tax reduces the surplus that pays the security tax. Past the cross, the capacity line is chosen.]"
   },
   {
     "title": "The unannounced crossing",
     "mood": "shock",
-    "narration": "The threshold has a date only in the model. Call it the quarter when the present value of lost chemical, glass, metal, and machine-tool capacity exceeds the present value of the protection embedded in the American umbrella. No one announces the crossing. It appears as a change in the default answer to a licensing question, as a long-term gas contract written with a non-allied supplier through a broker, as a refusal to fund a sanctions package that would hit the auto export lane, as a quiet argument inside the eurozone that industrial survival is a European interest. Mearsheimer would recognize the pattern. States do not advertise the moment they begin to hedge a patron. The hedge is assembled from exceptions.",
+    "narration": "The threshold has a date only in the model. Call it the quarter when the present value of lost chemical, glass, metal, and machine-tool capacity exceeds the present value of the protection embedded in the American umbrella. No one announces the crossing. It appears as a change in the default answer to a licensing question, as a long-term gas contract written with a non-allied supplier through a broker, as a refusal to fund a sanctions package that would hit the auto export lane, as a quiet argument inside the eurozone that industrial survival is a European interest. Mearsheimer would recognize the pattern. States don’t advertise the moment they begin to hedge a patron. The hedge is assembled from exceptions, one licensing decision or contract at a time.",
     "cue": "[VISUAL: A calendar with no public holiday marked. The crossing is a quarter, defined as the point where the present value of lost chemical, glass, metal, and machine-tool capacity exceeds the present value of umbrella protection. Manifestations, small and technical: a changed default on a license, a brokered gas contract, a refused sanctions line on the auto lane, a eurozone argument. Caption: THE HEDGE IS ASSEMBLED FROM EXCEPTIONS.]"
   },
   {
     "title": "The eurozone multiplier",
     "mood": "system",
-    "narration": "The eurozone is the multiplier. German intermediates sit inside Italian, French, and Central European products. A hollowed German core becomes a fiscal event for the currency union. France, with a nuclear-heavy power system, does not feel the gas deletion in the same organs, and will not lead this pivot. The Commission has a different objective function, closer to rule consistency and to the American file. Berlin therefore moves more slowly in Brussels than in its own licensing offices, and the gap between the European speech and the national permission is the width of the pivot. Currency follows the same gap. Trade that can be invoiced in euros, or netted on a bilateral basis with non-dollar partners, reduces the share of German commerce that a dollar sanction can reach.",
+    "narration": "The eurozone is the multiplier. German components and materials sit inside products made in Italy, France, and Central Europe. A hollowed German core means weaker tax revenues and harder budget choices across the currency union. France, with a power system built heavily around nuclear energy, doesn’t feel the gas shock in the same way. In this model, it won’t lead the pivot. The Commission has a different set of priorities, closer to consistent rules and the relationship with Washington. Berlin therefore moves more slowly in Brussels than in its own licensing offices, and the gap between the European speech and the national permission is the width of the pivot. Currency follows the same gap. Trade that can be invoiced in euros, or netted on a bilateral basis with non-dollar partners, reduces the share of German commerce that a dollar sanction can reach.",
     "cue": "[VISUAL: EUROZONE EXPLODED DIAGRAM. German intermediate goods sit inside Italian, French, and Central European products. A hollow German core propagates as a fiscal event. France's nuclear-heavy power mix stays stable and does not lead. The Commission node stays close to the American file. Two speeds: slow speech in Brussels, faster permissions in Berlin. Euro invoicing and bilateral netting peel a slice of trade off the dollar gate.]"
   },
   {
     "title": "The molecule, without romance",
     "mood": "cold",
-    "narration": "Russia's role at the end should be stated without romance. The Siberian gas remains the cheapest large supply that can reach Central Europe by pipe, if the pipes exist and if politics allow. Germany's model does not require loving the supplier. It requires a price and a reliability number. A renewed flow, even a partial one, even on a route that is not the destroyed Baltic lines, changes the cost per unit right away. It also carries the risk that Moscow will use the valve later. Offensive realism says that risk is permanent, because intentions stay unknown. The institutional answer is the one Germany dropped under pressure: required storage, contracts with many suppliers, and a refusal to let any one supplier, east or west, hold a veto. The realist answer now is uglier. Accept a managed dependence on the east for the extra gas, while keeping allied gas as the base, and treat both suppliers as powers rather than friends.",
+    "narration": "Russia's role at the end should be stated without romance. The Siberian gas remains the cheapest large supply that can reach Central Europe by pipe, if the pipes exist and if politics allow. Germany's model doesn’t require loving the supplier. It requires a price it can afford and a level of reliability it can manage. A renewed flow, even a partial one, even on a route that isn’t the destroyed Baltic lines, changes the cost per unit right away. It also carries the risk that Moscow will use the valve later. Offensive realism says that risk is permanent, because intentions stay unknown. The institutional answer is the one Germany dropped under pressure: required storage, contracts with many suppliers, and a refusal to let any one supplier, east or west, hold a veto. The realist answer now is uglier. Accept a managed dependence on the east for the extra gas, while keeping allied gas as the base, and treat both suppliers as powers rather than friends.",
     "cue": "[VISUAL: SIBERIAN GAS as a cost curve, the lowest large piped supply into Central Europe if a route exists. No romantic imagery, no folk motifs. A valve risk is permanent and drawn as a standing red flag. Two answer sheets: the abandoned institutional sheet, storage plus a diverse book plus no single veto; the current realist sheet, allied gas as base load, a managed eastern molecule at the margin, both suppliers marked POWERS.]"
   },
   {
     "title": "The export hinge",
     "mood": "pressure",
-    "narration": "China is the other hinge, and it is about exports. A Germany that loses the Chinese market while paying an American energy premium loses twice. A Germany that keeps the Chinese market must disappoint Washington at the edge of technology and investment controls. The disappointment will be described as precision. Controls aimed at genuine military technology stay. Controls aimed at the broad industrial relationship are worn down, delayed, and read narrowly. This is how a trading state runs a security argument it thinks it cannot win in public. Sachs would call the American pressure the overreach of a center that wants its allies' trade to match its picture of the threat. Mearsheimer would call the German resistance a way of staying strong. Both can be true in the same quarter.",
+    "narration": "China is the other hinge. Here, the issue is exports. A Germany that loses the Chinese market while paying an American energy premium loses twice. A Germany that keeps the Chinese market must disappoint Washington at the edge of technology and investment controls. The disappointment will be described as precision. Controls aimed at genuine military technology stay. Controls aimed at the broad industrial relationship are worn down, delayed, and read narrowly. This is how a trading state runs a security argument it thinks it can’t win in public. Sachs would call the American pressure the overreach of a center that wants its allies' trade to match its picture of the threat. Mearsheimer would call the German resistance a way of staying strong. Both can be true in the same quarter.",
     "cue": "[VISUAL: DUAL LOSS diagram. Lose the Chinese market while paying an American energy premium: two downward arrows. Keep the Chinese market: a narrow disappointment inside technology controls. A filter sorts controls: military technology stays blocked in blue; the broad industrial relationship is delayed, narrowed, and interpreted down. Sachs label: HUB OVERREACH. Mearsheimer label: RELATIVE-POWER MAINTENANCE. Both labels remain on screen together.]"
   },
   {
     "title": "A European coat",
     "mood": "close",
-    "narration": "The day the eurozone chooses industrial survival is a German day wearing a European coat. The coat is the claim that a continent without a chemical and machine base cannot defend itself anyway, because weapons are industrial goods. The body under the coat is a set of exceptions that reopen a commercial lane across Eurasia: energy bought without a speech, exports licensed without a fight, payments that avoid a dollar gate. The alliance remains. The umbrella remains. The monopoly of that umbrella over German strategy does not. When nobody can enforce a promise, that is what a turn looks like if the country is still too exposed to slam a door, and too industrial to keep paying a tax that closes its factories.",
-    "cue": "[VISUAL: A European coat on a German frame. The coat's claim types itself: a continent without a chemical and machine base is not a defense base, because defense goods are industrial goods. Under the coat, three exception lanes reopen toward Eurasia: energy without a speech, exports without a fight, payments that avoid a dollar gate. The alliance flag and the umbrella remain. Their monopoly over the strategy map does not. Hold. Cut to black.]"
+    "narration": "The day the eurozone chooses industrial survival begins with a German argument made in European terms. The European argument is the claim that Europe needs its chemical plants and machine makers to defend itself. Weapons have to be made somewhere. The practical result is a set of practical exceptions: energy contracts agreed quietly, exports licensed without a confrontation, and payments settled outside the dollar system. The alliance remains, and so does the umbrella. What changes is how far that protection gets to determine the rest of German strategy. When nobody can enforce a promise, that is what a turn looks like if the country is still too exposed to slam a door, and too industrial to keep paying a tax that closes its factories.",
+    "cue": "[VISUAL: A European coat on a German frame. The European argument's claim types itself: a continent without a chemical and machine base is not a defense base, because defense goods are industrial goods. Under the coat, three exception lanes reopen toward Eurasia: energy without a speech, exports without a fight, payments that avoid a dollar gate. The alliance flag and the umbrella remain. Their monopoly over the strategy map does not. Hold. Cut to black.]"
   }
 ];
 

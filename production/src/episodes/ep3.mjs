@@ -145,7 +145,7 @@ function s1(S) {
     // the equation
     D.panel(ctx, 110, 870, 1050, 110, { alpha: prog(t, tEq, 0.6), fill: rgba("#0b0e13", 0.9), sfx: "Import equation" });
     equation(ctx, 140, 940, t, tEq + 0.2, { STOCKS: prog(t, tBuy, 0.8), PACIFIC: prog(t, tBuy + 0.4, 0.8), PIPELINES: prog(t, tBuy + 0.8, 0.8) });
-    D.label(ctx, "TWO DECADES BUYING DOWN THE SHORTFALL →", 140, 900, { color: C.amber, alpha: prog(t, tBuy + 1, 0.6), size: 12 });
+    D.label(ctx, "20 YEARS BUILDING BACKUP SUPPLY →", 140, 900, { color: C.amber, alpha: prog(t, tBuy + 1, 0.6), size: 12 });
   };
 }
 
@@ -239,7 +239,7 @@ function s2(S) {
 // ================================================================ 3. valve hands
 function s3(S) {
   const tGrip = S.at("It has");
-  const tCap = S.at("Under anarchy,");
+  const tCap = S.at("Nobody is in charge");
   const tDep = S.at("Energy dependence");
   const tZero = S.at("Security is");
   const tDecide = S.at("Relative power");
@@ -261,7 +261,7 @@ function s3(S) {
     ctx.fillRect(cx + 80, 140, W - cx - 80, 760);
     ctx.restore();
     D.text(ctx, "OUTER SEA", 240, 230, { size: 30, weight: 600, tracking: 8, color: C.cyan, alpha: prog(t, 0.3, 0.6) });
-    D.text(ctx, "INDIAN OCEAN SIDE · OFFSHORE HEGEMON", 240, 260, { kind: "mono", size: 13, color: C.mid, alpha: prog(t, 0.6, 0.6) });
+    D.text(ctx, "INDIAN OCEAN · U.S. SEA POWER", 240, 260, { kind: "mono", size: 13, color: C.mid, alpha: prog(t, 0.6, 0.6) });
     D.text(ctx, "INDUSTRIAL DEMAND", 1680, 230, { size: 30, weight: 600, tracking: 8, color: C.crimson, align: "right", alpha: prog(t, S.at("The United"), 0.6) });
     D.text(ctx, "PACIFIC SIDE · CHINESE INDUSTRY", 1680, 260, { kind: "mono", size: 13, color: C.mid, align: "right", alpha: prog(t, S.at("The United") + 0.3, 0.6) });
     // pipe
@@ -306,9 +306,9 @@ function s3(S) {
     const capA = prog(t, tCap, 0.6);
     K.chip(ctx, "PLANS AGAINST: CAPABILITY", 240, 720, { color: C.ice, alpha: capA, size: 15 });
     K.chip(ctx, "NOT AGAINST: ASSURANCE", 240, 776, { color: C.mid, alpha: prog(t, tCap + 1, 0.6), size: 15 });
-    K.chip(ctx, "ENERGY DEPENDENCE = ASSET OF THE OUTER-SEA SIDE", 1680, 720, { color: C.cyan, alpha: prog(t, tDep, 0.6), size: 15, align: "right" });
+    K.chip(ctx, "OIL DEPENDENCE GIVES SEA POWER A LEVER", 1680, 720, { color: C.cyan, alpha: prog(t, tDep, 0.6), size: 15, align: "right" });
     D.caption(ctx, "One side's open lane is the other side's closed valve", t, tZero + 0.4, { y: 960, x: 960, align: "center" });
-    K.chip(ctx, "RELATIVE POWER = DECIDING WHICH VALVE IS WHICH", 960, 870, { color: C.ice, align: "center", alpha: prog(t, tDecide, 0.6), size: 15 });
+    K.chip(ctx, "WHO CAN CUT THE OTHER SIDE’S SUPPLY?", 960, 870, { color: C.ice, align: "center", alpha: prog(t, tDecide, 0.6), size: 15 });
   };
 }
 
@@ -366,14 +366,14 @@ function s4(S) {
       D.node(ctx, p[0], p[1], 7, i === 4 ? C.crimson : C.amber, { alpha: prog(t, tCoal + i * 0.2, 0.6), glow: 10 + 14 * ca });
       D.label(ctx, n, p[0] + 12, p[1] - 10, { color: C.amber, alpha: prog(t, tCoal + i * 0.2, 0.6), size: 12 });
     });
-    K.chip(ctx, "A EURASIAN ENERGY COALITION LOOKS LIKE PRUDENCE", 960, 990, { color: C.amber, align: "center", alpha: prog(t, tCoal + 2, 0.6), size: 15 });
+    K.chip(ctx, "LAND ROUTES BECOME INSURANCE", 960, 990, { color: C.amber, align: "center", alpha: prog(t, tCoal + 2, 0.6), size: 15 });
   };
 }
 
 // ================================================================ 5. the arithmetic
 function s5(S) {
   const tSrc = S.at("Set Chinese");
-  const tSplit = S.at("Split the");
+  const tSplit = S.at("split that flow");
   const tSouth = S.at("Six million barrels");
   const tPac = S.at("The other");
   const tDial = S.at("Put a");
@@ -384,7 +384,7 @@ function s5(S) {
   return (ctx, t) => {
     D.bg(ctx, { gridAlpha: 0.25 });
     D.stamp(ctx, "SCENARIO", 1640, 190, t, 0.4, { color: C.amber, size: 30, angle: -0.06 });
-    D.label(ctx, "PLANNING CASE · NOT A CENSUS", 1640, 250, { align: "center", color: C.amber, size: 12, alpha: prog(t, 0.8, 0.6) });
+    D.label(ctx, "ILLUSTRATIVE SUPPLY SCENARIO", 1640, 250, { align: "center", color: C.amber, size: 12, alpha: prog(t, 0.8, 0.6) });
     // Sankey
     const x0 = 330;
     const x1 = 860;
@@ -417,7 +417,7 @@ function s5(S) {
     const gy = 560;
     D.gauge(ctx, gx, gy, 150, 0.8 * prog(t, tDial + 0.3, 1.5, ease.out), { alpha: da, color: C.ice });
     D.text(ctx, String(malacca.stockMbbl), gx, gy + 70, { kind: "mono", size: 48, weight: 600, align: "center", alpha: da });
-    D.text(ctx, "MN BBL · HYPOTHETICAL STOCK", gx, gy + 100, { kind: "mono", size: 13, align: "center", color: C.mid, alpha: da });
+    D.text(ctx, "MILLION BARRELS · ASSUMED STOCK", gx, gy + 100, { kind: "mono", size: 13, align: "center", color: C.mid, alpha: da });
     // readouts
     const r1 = prog(t, tAll, 0.6);
     const r2 = prog(t, tSouthOnly, 0.6);
@@ -428,7 +428,7 @@ function s5(S) {
     D.text(ctx, orderOf(malacca.stockMbbl, malacca.southernMbd), 1264, 882, { size: 34, weight: 600, tracking: 3, alpha: r2, color: C.crimson });
     D.text(ctx, `IF ONLY THE SOUTHERN ${malacca.southernMbd} STOP · ${malacca.stockMbbl} ÷ ${malacca.southernMbd}`, 1264, 908, { kind: "mono", size: 12, color: C.mid, alpha: r2 });
     D.label(ctx, "RATIONING STARTS BEFORE EMPTY", 180, 980, { color: C.amber, alpha: prog(t, tRation, 0.6), size: 15, weight: 600 });
-    K.chip(ctx, "DIVIDING BY TOTAL IMPORTS OVERSTATES THE SPEED OF A NARROW CLOSURE", 180, 930, { color: C.mid, alpha: prog(t, tLit, 0.6), size: 13 });
+    K.chip(ctx, "COUNT ONLY THE SUPPLY THAT IS CUT", 180, 930, { color: C.mid, alpha: prog(t, tLit, 0.6), size: 13 });
   };
 }
 
@@ -480,7 +480,7 @@ function s6(S) {
       const a = view.xy([124, 47]);
       const b = view.xy([176, 24]);
       D.brackets(ctx, a[0], a[1], b[0] - a[0], b[1] - a[1], { color: C.crimson, len: 22, lw: 2.5, alpha: wa });
-      D.label(ctx, "INCLUDE THE PACIFIC → A LARGER WAR", a[0] + 10, b[1] + 30, { color: C.crimson, alpha: wa, size: 13 });
+      D.label(ctx, "CUT PACIFIC SUPPLY → WIDEN THE WAR", a[0] + 10, b[1] + 30, { color: C.crimson, alpha: wa, size: 13 });
     }
     // design-capacity bars
     const pa = prog(t, S.at("Design capacity"), 0.6);
@@ -563,7 +563,7 @@ function s7(S) {
       D.text(ctx, "THE LARGEST TANKERS ALREADY PREFER IT", lb[0] + 140, lb[1] + 160, { kind: "mono", size: 11, color: C.mid, alpha: dA });
     }
     D.caption(ctx, "A real closure must price every southern gate", t, tCap, { y: 990 });
-    K.chip(ctx, "THE OFFSHORE POWER WANTS A VALVE · THE GEOGRAPHY OFFERS AN ARCHIPELAGO", 960, 900, { color: C.ice, align: "center", alpha: prog(t, tValve, 0.6), size: 14 });
+    K.chip(ctx, "ONE BLOCKADE · MANY ALTERNATIVE STRAITS", 960, 900, { color: C.ice, align: "center", alpha: prog(t, tValve, 0.6), size: 14 });
   };
 }
 
@@ -593,7 +593,7 @@ function s8(S) {
     const x = 160;
     const w = 520;
     let y = 920;
-    D.label(ctx, "CRUDE ALLOCATION · PRIORITY STACK", x, 150, { color: C.mid, size: 13 });
+    D.label(ctx, "WHO GETS THE REMAINING OIL?", x, 150, { color: C.mid, size: 13 });
     segs.forEach(([n, v, kind]) => {
       let a = prog(t, 0.2, 0.8);
       let col = C.steel;
@@ -645,7 +645,7 @@ function s8(S) {
       D.arrow(ctx, broken ? D.slice(pts, 0, 0.4) : pts, { color: broken ? C.crimson : C.ice, width: 2, head: 10, alpha: fa });
     }
     nodes.forEach(([n, a]) => D.label(ctx, n, loopC[0] + Math.cos(a) * loopR * 1.25, loopC[1] + Math.sin(a) * loopR * 1.25 + 5, { align: "center", color: C.ice, alpha: fa, size: 12 }));
-    K.chip(ctx, "AN ENERGY SIEGE AND A DOLLAR SIEGE ARE COMPLEMENTS", 1340, 540, { color: C.crimson, align: "center", alpha: brk, size: 13 });
+    K.chip(ctx, "CUTTING OIL AND PAYMENTS WORKS TOGETHER", 1340, 540, { color: C.crimson, align: "center", alpha: brk, size: 13 });
     // insurance goes dark; remaining cargoes retag amber
     const tankers = [[1060, 760], [1240, 820], [1420, 760], [1600, 830], [1760, 770]];
     tankers.forEach(([tx, ty], i) => {
@@ -718,7 +718,7 @@ function s9(S) {
     D.text(ctx, "NSR · ALL CARGO", 1384, 392, { kind: "mono", size: 12, color: C.mid, alpha: va });
     D.hbar(ctx, 1384, 402, 410, 18, C.ice, { p: 0.025 * prog(t, tVol + 0.5, 1), alpha: va });
     D.text(ctx, "ROUNDING ERROR", 1420, 418, { kind: "mono", size: 12, color: C.amber, alpha: prog(t, tVol + 1, 0.5) });
-    K.chip(ctx, "A RELIEF VALVE, NOT A REPLACEMENT ARTERY", 1360, 490, { color: C.ice, alpha: prog(t, S.at("It is"), 0.6), size: 13 });
+    K.chip(ctx, "PARTIAL RELIEF · LIMITED VOLUME", 1360, 490, { color: C.ice, alpha: prog(t, S.at("It can ease"), 0.6), size: 13 });
     // pipeline needles vs southern deficit
     const pa = prog(t, tPipes + 1, 0.6);
     D.panel(ctx, 1360, 560, 460, 170, { alpha: pa, title: "Pipelines vs southern deficit", fill: rgba("#0b0e13", 0.92) });
@@ -832,9 +832,9 @@ function s10(S) {
     // option value formula
     const fa = prog(t, tForm, 0.6);
     D.panel(ctx, 260, 820, 1500, 120, { alpha: fa, fill: rgba("#0b0e13", 0.92), title: "Why redundant routes look overpriced", titleColor: C.mid });
-    D.text(ctx, "OPTION VALUE  =  P(SIEGE)  ×  OUTPUT LOST PER MONTH OF SHORTAGE", 290, 900, { kind: "mono", size: 26, weight: 500, alpha: fa, color: C.ice });
-    K.chip(ctx, "PRICE IN P(SIEGE) AND THE PEACETIME OVERPAYMENT DISAPPEARS", 1760, 800, { color: C.amber, align: "right", alpha: prog(t, tPrice, 0.6), size: 12 });
-    D.label(ctx, "CHINA'S PEACETIME OVERPAYMENT FOR REDUNDANT ROUTES", 1760, 770, { color: C.mid, align: "right", alpha: prog(t, tCalc, 0.6) * (1 - prog(t, tPrice, 0.4)), size: 12 });
+    D.text(ctx, "INSURANCE VALUE = SIEGE RISK × OUTPUT AT RISK", 290, 900, { kind: "mono", size: 26, weight: 500, alpha: fa, color: C.ice });
+    K.chip(ctx, "BACKUP ROUTES PAY OFF WHEN SIEGE RISK COUNTS", 1760, 800, { color: C.amber, align: "right", alpha: prog(t, tPrice, 0.6), size: 12 });
+    D.label(ctx, "CHINA PAYS MORE FOR BACKUP ROUTES", 1760, 770, { color: C.mid, align: "right", alpha: prog(t, tCalc, 0.6) * (1 - prog(t, tPrice, 0.4)), size: 12 });
   };
 }
 
@@ -842,7 +842,7 @@ function s10(S) {
 function s11(S) {
   const tGauge = S.at("A continental");
   const tRed = S.at("It experiences");
-  const tResp = S.at("The response");
+  const tResp = S.at("Beijing could respond");
   const tPrem = S.at("Such moves");
   const tTaiwan = S.at("Washington's planners");
   const tEscape = S.at("The energy");
@@ -864,7 +864,7 @@ function s11(S) {
     ];
     D.label(ctx, "RESPONSE SET · CATEGORIES ONLY", 900, 250, { color: C.mid, alpha: prog(t, tResp, 0.6), size: 12 });
     cats.forEach(([n, k], i) => {
-      const a = prog(t, tResp + i * (S.end("The response") - S.start("The response")) * 0.28, 0.5);
+      const a = prog(t, tResp + i * (S.end("Beijing could respond") - S.start("Beijing could respond")) * 0.28, 0.5);
       const y = 300 + i * 110;
       D.panel(ctx, 900, y, 460, 84, { alpha: a, fill: rgba("#0b0e13", 0.9), color: C.crimson, sfx: n });
       D.text(ctx, n, 990, y + 50, { size: 19, weight: 600, tracking: 2.5, alpha: a });
@@ -887,7 +887,7 @@ function s11(S) {
         ctx.restore();
       }
     });
-    K.chip(ctx, "PREMISE: SURVIVAL RANKS ABOVE THE OTHER SIDE'S RULES OF ENGAGEMENT", 900, 680, { color: C.ice, alpha: prog(t, tPrem, 0.6), size: 13 });
+    K.chip(ctx, "A STATE FACING SURVIVAL MAY WIDEN THE WAR", 900, 680, { color: C.ice, alpha: prog(t, tPrem, 0.6), size: 13 });
     // a Taiwan-crisis thread, with the energy valve hung on it
     const ta = prog(t, tTaiwan, 0.8);
     const y0 = 830;
@@ -940,7 +940,7 @@ function s12(S) {
     D.label(ctx, "ACCEPT ENFORCEMENT", g[0] + 140, g[1] + 156, { align: "center", color: C.ice, alpha: fa, size: 12 });
     D.label(ctx, "OF THEIR CUSTOMER", g[0] + 140, g[1] + 174, { align: "center", color: C.ice, alpha: fa, size: 12 });
     D.label(ctx, "GULF PRODUCERS", g[0], g[1] - 22, { align: "center", color: C.ice, alpha: fa, size: 13, weight: 600 });
-    K.chip(ctx, "THE UNIPOLAR HABIT ASSUMES THE ASKS WILL BE OBEYED", 960, 190, { color: C.mid, align: "center", alpha: fade(t, tHabit, 0.5, tBuyer + 3, 0.6), size: 13 });
+    K.chip(ctx, "PRESSURE ASSUMES THE OTHER SIDE WILL YIELD", 960, 190, { color: C.mid, align: "center", alpha: fade(t, tHabit, 0.5, tBuyer + 3, 0.6), size: 13 });
     // the second buyer stays available
     const cb = view.xy([108, 33]);
     const ba = prog(t, tBuyer, 0.6);
@@ -978,7 +978,7 @@ function s13(S) {
   L.setCam(K.camFor(L, [113, 17], 0.55, 500, 455));
   R.setCam(K.camFor(R, [113, 17], 0.55, 1420, 455));
   const tL = S.at("China can endure");
-  const tR = S.at("China cannot");
+  const tR = S.at("China can’t");
   const tBeijing = S.at("Beijing's gambit");
   const tWash = S.at("Washington's gambit");
   const panel = (ctx, view, x, title, sub, a, t, siege) => {
@@ -1037,7 +1037,7 @@ function s13(S) {
       D.brackets(ctx, 70 - pad, 150 - pad, 1780 + pad * 2, 780 + pad * 2, { color: C.cyan, len: 46, lw: 4, alpha: wa });
       D.label(ctx, "WASHINGTON'S GAMBIT · THREATEN BOTH", 960, 960, { align: "center", color: C.cyan, alpha: wa, size: 14, weight: 600 });
     }
-    K.chip(ctx, "BOTH SIDES BUILD FOR THE TEST ANYWAY", 960, 1010, { color: C.ice, align: "center", alpha: prog(t, S.at("Under unknowable"), 0.6), size: 14 });
+    K.chip(ctx, "BOTH SIDES BUILD FOR THE TEST ANYWAY", 960, 1010, { color: C.ice, align: "center", alpha: prog(t, S.at("Neither side can be sure"), 0.6), size: 14 });
   };
 }
 
@@ -1046,31 +1046,31 @@ const STORY = [
   {
     "title": "An import equation",
     "mood": "establish",
-    "narration": "Closing the Strait of Malacca is a supply problem before it is a navy story. China can be cut off from the Gulf only as far as its oil still comes through a southern gate, and only while stocks, Pacific deliveries, and pipelines fail to fill the gap. Beijing has spent twenty quiet years and a great deal of money still trying to shrink that gap.",
+    "narration": "Closing the Strait of Malacca is a supply problem before it is a navy story. China can be cut off from the Gulf only as far as its oil still comes through a southern gate, and only while stocks, Pacific deliveries, and pipelines fail to fill the gap. Beijing has spent twenty years and a great deal of money trying to shrink that gap. The question is how much of it can be closed in a crisis.",
     "cue": "[VISUAL: SATELLITE VIEW, ZOOM IN to the Strait of Malacca between Sumatra and the Malay Peninsula. Shipping-density heatmap, white-hot in the usable lane near Singapore, cooling toward the approaches. An equation fades in at the lower left: DEFICIT = SOUTHERN FLOW − STOCKS − PACIFIC − PIPELINES. No fleet icons yet.]"
   },
   {
     "title": "The funnel",
     "mood": "pressure",
-    "narration": "The strait is a funnel between Sumatra and the Malay Peninsula, narrowing to a few kilometers of usable lane near Singapore. A large share of the oil and dry cargo moving between the Indian Ocean and the Pacific passes that funnel. The classic Chinese statement of the problem, the Malacca dilemma, treated roughly four-fifths of China's oil imports as hostages of this single passage. Pipelines have since lowered the fraction. They have not retired it. Middle Eastern and African crude still reaches Chinese terminals by riding the southern approaches.",
+    "narration": "The strait is a funnel between Sumatra and the Malay Peninsula, narrowing to a few kilometers of usable lane near Singapore. A large share of the oil and dry cargo moving between the Indian Ocean and the Pacific passes that funnel. The classic Chinese statement of the problem, the Malacca dilemma, treated roughly four-fifths of China's oil imports as hostages of this single passage. Pipelines have since lowered the fraction, but they haven’t made the problem go away. Middle Eastern and African crude still reaches Chinese terminals by riding the southern approaches.",
     "cue": "[VISUAL: The funnel narrows to a few kilometers of lane. Historical flow ribbons: crude and dry cargo between the Indian Ocean and the Pacific. A 2000s planning card reads FOUR-FIFTHS OF OIL IMPORTS, then a second card shows the fraction lower but still dominant. Middle Eastern and African crude ribbons still enter from the west and exit toward crimson Chinese terminals.]"
   },
   {
     "title": "Valve hands",
     "mood": "shock",
-    "narration": "John Mearsheimer reads a blockade as the tool of a sea power. The United States does not have to occupy China's interior to hurt Chinese power. It has to threaten the ships that feed Chinese factories. Under anarchy, nobody is in charge, so intentions stay unknown, so Beijing plans for what America can do, not for a promise that it never will. Energy dependence is an advantage for whoever holds the outer sea. Security is one-sided at a narrow strait, because one navy's open lane is the other navy's closed valve. Relative power is getting to decide which of those it is.",
+    "narration": "John Mearsheimer reads a blockade as the tool of a sea power. The United States doesn’t have to occupy China's interior to hurt Chinese power. It has to threaten the ships that feed Chinese factories. Nobody is in charge of the whole system, and intentions stay unknown. So Beijing plans for what America can do, rather than relying on a promise that it never will. Energy dependence is an advantage for whoever holds the outer sea. Security is one-sided at a narrow strait, because one navy's open lane is the other navy's closed valve. Relative power is getting to decide which of those it is.",
     "cue": "[VISUAL: Two navies abstracted as valve hands, not as ship models in combat. Blue outer-sea control on the Indian Ocean side. Crimson industrial demand on the Pacific side. The chokepoint is a literal valve graphic. Open lane and closed valve are the same object, recolored. Caption: SECURITY AT A CHOKEPOINT IS ZERO-SUM.]"
   },
   {
     "title": "The same ships",
     "mood": "system",
-    "narration": "Jeffrey Sachs hears a different story in the same ships. A blockade of energy and food trade is what follows when one country runs out of rules and reaches for force. It confirms, inside the targeted country, that the American system is not a safe home. The Military-Industrial Complex can keep the posture going, because a crisis at a narrow strait is a fleet job with a budget line. The act meant to punish China is also the act that makes an energy partnership across Eurasia look like common sense.",
+    "narration": "Jeffrey Sachs hears a different story in the same ships. A blockade of energy and food trade is what follows when one country runs out of rules and reaches for force. It confirms, inside the targeted country, that the American system isn’t a safe home. The Military-Industrial Complex can keep the posture going, because a crisis at a narrow strait is a fleet job with a budget line. The act meant to punish China is also the act that makes an energy partnership across Eurasia look like common sense.",
     "cue": "[VISUAL: The ships remain. A second overlay, institutional, desaturates the fleet and highlights budget lines, allied price spikes, and Gulf producer choices. Amber lines begin to connect Russia, Iran, and selected Gulf nodes into a loose energy coalition. The blue fleet mission box stays funded. The coalition brightens as the mission box pulses.]"
   },
   {
     "title": "The arithmetic",
     "mood": "cold",
-    "narration": "Professor Jiang asks for the arithmetic before the coalition. Set Chinese crude imports at eleven million barrels a day. Split the flow into three pipes. Six million barrels a day still depend on a southern strait. The other five million arrive from the Pacific side or by land, and a Malacca-only stop does not touch them. Put a hypothetical stock of eight hundred million barrels behind the system, and call it a scenario dial rather than a published reserve. If every import stopped, the dial would read on the order of seventy days. If only the southern six million stopped, the deficit is six million a day and the same dial reads on the order of four months. Rationing starts before the tanks are empty. The dilemma literature divides stocks by total imports and therefore overstates the speed of a narrow closure.",
+    "narration": "Professor Jiang asks for the arithmetic before the coalition. Set Chinese crude imports at eleven million barrels a day, and split that flow by the route it takes. Six million barrels a day still depend on a southern strait. The other five million arrive from the Pacific side or by land, and a Malacca-only stop doesn’t touch them. Put a hypothetical stock of eight hundred million barrels behind the system. That's an assumption for this scenario, rather than a published reserve figure. If every import stopped, the dial would read on the order of seventy days. If only the southern six million stopped, the deficit is six million a day and the same dial reads on the order of four months. Rationing starts before the tanks are empty. The dilemma literature divides stocks by total imports and therefore overstates the speed of a narrow closure.",
     "cue": "[VISUAL: PLANNING CASE, clearly labeled SCENARIO, not a census. A Sankey diagram: eleven million barrels a day of crude imports split into six million southern-strait barrels and five million Pacific-or-land barrels. A dial marked HYPOTHETICAL STOCK, eight hundred million barrels. Two readouts: about seventy days if everything stops; about four months if only the southern six million stop. A footnote on the graph: RATIONING STARTS BEFORE EMPTY.]"
   },
   {
@@ -1082,43 +1082,43 @@ const STORY = [
   {
     "title": "Every southern gate",
     "mood": "pressure",
-    "narration": "Rerouting is the first counter. Cargoes that cannot use Malacca can try the Sunda Strait, the Lombok Strait, or the eastern Indonesian exits. The journey is longer. Freight and insurance rise. Some of this diversion is already normal, because the largest tankers prefer deeper water. A closure that is real in economic terms has to price every southern gate, not only the famous one. Each added gate adds coastline, adds a third country's territorial sea, and adds a chance that the blockade stops being a bilateral squeeze. Mearsheimer would count that chance as the mechanism by which chokepoint wars widen. The offshore power wants a valve. The geography offers an archipelago.",
+    "narration": "Rerouting is the first counter. Cargoes that can’t use Malacca can try the Sunda Strait, the Lombok Strait, or the eastern Indonesian exits. The journey is longer, which pushes up both freight and insurance. Some of this diversion is already normal, because the largest tankers prefer deeper water. A closure that is real in economic terms has to price every southern gate, not only the famous one. Each added gate adds coastline, adds a third country's territorial sea, and adds a chance that the blockade stops being a bilateral squeeze. Mearsheimer would count that chance as the mechanism by which chokepoint wars widen. The offshore power wants a single valve it can close. What it gets is an archipelago, with other routes that also have to be watched.",
     "cue": "[VISUAL: ALTERNATE GATES draw on. Sunda, Lombok, and the eastern Indonesian exits take diverted ribbons. Freight and insurance indices tick up. A depth callout shows the largest tankers already preferring deeper water. The camera PULLS BACK from Malacca alone to the whole archipelago. Each added gate lights a third country's coastline. Caption: A REAL CLOSURE MUST PRICE EVERY SOUTHERN GATE.]"
   },
   {
     "title": "Demand destruction",
     "mood": "fracture",
-    "narration": "The second answer is to use less. Diesel for agriculture and for the armed forces is protected. Private road fuel is not. Export-oriented petrochemicals are cut before household heating. Refineries are told to favor the barrel used at home over the product sold abroad. A modern industrial country can take a partial loss of crude for a season if its grids still have coal, nuclear, hydro, and pipeline gas, and if managers will idle the least necessary factory. The industries that halt first are the ones whose exports earn the foreign money China uses to buy the next cargo. An energy squeeze and a dollar squeeze work together. Tankers inside the blue insurance system stop. Cargoes that still move are the ones paid in yuan, gold, or a two-country balance, under insurance written outside American law.",
+    "narration": "The second answer is to use less. Diesel for agriculture and for the armed forces is protected, while private road fuel takes the cut. Export-oriented petrochemicals are cut before household heating. Refineries are told to favor the barrel used at home over the product sold abroad. A modern industrial country can take a partial loss of crude for a season if its grids still have coal, nuclear, hydro, and pipeline gas, and if managers will idle the least necessary factory. The industries that halt first are the ones whose exports earn the foreign money China uses to buy the next cargo. An energy squeeze and a dollar squeeze work together. Tankers inside the blue insurance system stop. Cargoes that still move are the ones paid in yuan, gold, or a two-country balance, under insurance written outside American law.",
     "cue": "[VISUAL: DEMAND-DESTRUCTION SEQUENCE as a stacked priority chart. Diesel for agriculture and the armed forces stays green and protected. Private road fuel drops out. Export petrochemicals drop before household heating. A factory icon idles. Beside it, a currency loop: halted exports cut the foreign exchange used to buy the next cargo. Blue insurance nodes go dark. Remaining cargoes retag amber: yuan, gold, or a bilateral balance.]"
   },
   {
     "title": "Overland and Arctic",
     "mood": "cold",
-    "narration": "The third counter is the overland and Arctic option set. Pipelines at full design replace a slice of the southern deficit, not the deficit itself. Pushing them harder in a crisis depends on Russian surplus production, on Kazakh politics, and on the security of a Burmese corridor that has its own internal wars. The Northern Sea Route along the Russian Arctic is a summer and shoulder-season lane, shortened on the map between northern energy projects and Chinese ports, and constrained by ice class, icebreakers, insurance, and depth of traffic. Its annual volume is a rounding error beside the oil that normally rides Malacca. It is a relief valve, not a replacement artery. Gwadar and the Pakistani corridor are a political option with berth limits and an insurgency problem.",
+    "narration": "The third counter is to look overland and toward the Arctic. Pipelines at full design replace a slice of the southern deficit, not the deficit itself. Pushing them harder in a crisis depends on Russian surplus production, on Kazakh politics, and on the security of a Burmese corridor that has its own internal wars. The Northern Sea Route along the Russian Arctic is a summer and shoulder-season lane, shortened on the map between northern energy projects and Chinese ports, and constrained by ice class, icebreakers, insurance, and depth of traffic. Its annual volume is a rounding error beside the oil that normally rides Malacca. It can ease the shortage, but it can’t carry anything like the full volume. Gwadar and the Pakistani corridor are a political option with berth limits and an insurgency problem.",
     "cue": "[VISUAL: NORTH POLAR PROJECTION. The Northern Sea Route is a thin seasonal thread, ice-class icons, a short calendar window, volume annotated as a rounding error beside Malacca. Gwadar to western China is a thin amber political line with a berth-limit marker and a security-risk hatch. Pipeline utilization needles rise but stop well below the southern deficit. Do not draw these routes thicker than their data.]"
   },
   {
     "title": "One quarter forward",
     "mood": "pressure",
-    "narration": "Run the gambit forward one quarter. Month one: ships already east of the gates discharge, and stocks draw down on a published schedule. The external price of tanker insurance spikes. Month two: southern crude is partly rerouted, partly replaced by Pacific Russian barrels, and partly lost. Pipeline utilization is forced upward. Export factories on the south coast take the first enforced holidays. Month three: if the Pacific gate is still open, the system is injured and functioning. If the Pacific gate has been closed as well, stocks approach the level where military and agricultural priorities crowd out the rest, and the industrial core contracts. This is the calculation behind China's peacetime overpayment for redundant routes. The option value equals the probability of a siege, multiplied by the output destroyed per month of shortage. These routes look overpriced until a siege probability is included in the price.",
+    "narration": "Run the gambit forward one quarter. Month one: ships already east of the gates discharge, and stocks draw down on a published schedule. The external price of tanker insurance spikes. Month two: southern crude is partly rerouted, partly replaced by Pacific Russian barrels, and partly lost. Pipeline utilization is forced upward, while export factories on the south coast take the first enforced holidays. Month three: if the Pacific gate is still open, the system is injured and functioning. If the Pacific gate has been closed as well, stocks approach the level where military and agricultural priorities crowd out the rest, and the industrial core contracts. This is the calculation behind China's peacetime overpayment for redundant routes. The option value equals the probability of a siege, multiplied by the output destroyed per month of shortage. These routes look overpriced in peacetime. Include the risk of a siege, and the extra spending starts to look like insurance.",
     "cue": "[VISUAL: QUARTER TIMELINE, three months, animated as a stock-draw chart. Month one: ships already east of the gates discharge; insurance price spikes. Month two: partial reroute, Pacific Russian barrels, forced pipeline use, south-coast factories on enforced idle. Month three splits into two branches: PACIFIC OPEN, injured and functioning; PACIFIC CLOSED, industrial core contracts. An option-value formula sits under the chart: probability of siege times output lost per month.]"
   },
   {
     "title": "The third month",
     "mood": "shock",
-    "narration": "Mearsheimer's warning sits on the third month. A continental power that watches its stocks fall does not experience the blockade as a limited navy measure. It experiences it as an attempt on the political survival of the state. The response set includes economic payback, pressure on other countries, and the risk of attacks on the blockading fleet. Such moves rest on one idea: states rank survival above the other side's rules for a fight. Washington's planners know this, which is why a real blockade is tied to a Taiwan crisis rather than switched on as a punishment by itself. The energy valve is an add-on to a larger fight, and add-ons are how larger fights get away from the people who started them.",
+    "narration": "Mearsheimer's warning sits on the third month. A continental power that watches its stocks fall doesn’t experience the blockade as a limited navy measure. It experiences it as an attempt on the political survival of the state. Beijing could respond with economic payback, pressure on other countries, or attacks on the blockading fleet. Such moves rest on one idea: states rank survival above the other side's rules for a fight. Washington's planners know this, which is why a real blockade is tied to a Taiwan crisis rather than switched on as a punishment by itself. The energy valve is an add-on to a larger fight. Each additional move gives that fight another way to spread beyond what its authors intended.",
     "cue": "[VISUAL: The month-three branch with Pacific closed pushes a survival gauge on a continental power into the red. Response icons appear as categories only: economic retaliation, pressure on third countries, risk to the blockading fleet. No targeting solution, no weapon cutaway. A Taiwan crisis timeline is shown as the thread on which the energy valve is hung. The valve is labeled ADJUNCT.]"
   },
   {
     "title": "The second buyer",
     "mood": "motion",
-    "narration": "Sachs would count a different loss. Allies who depend on the same strait for their own Gulf oil are asked to bless a closure that raises their prices and their shipping risk. Gulf producers are asked to give up Chinese demand, or to accept America policing their customers. The unipolar habit assumes those asks will be obeyed. A multipolar energy market gives the producers a second buyer and, after recent freezes of reserves, a reason to keep that buyer. Coercion at the strait speeds up the shift from the first episode: the next barrel billed outside the dollar, because the dollar system has shown it can stop the ship.",
+    "narration": "Sachs would count a different loss. Allies who depend on the same strait for their own Gulf oil are asked to bless a closure that raises their prices and their shipping risk. Gulf producers are asked to give up Chinese demand, or to accept America policing their customers. The unipolar habit assumes that those countries will accept the demands. They have costs and interests of their own. A multipolar energy market gives the producers a second buyer and, after recent freezes of reserves, a reason to keep that buyer. Coercion at the strait speeds up the shift from the first episode: the next barrel billed outside the dollar, because the dollar system has shown it can stop the ship.",
     "cue": "[VISUAL: ALLIED OIL PRICES and shipping-risk indices rise in blue-user states that also depend on the strait. Gulf producers face a fork: forgo Chinese demand, or accept enforcement of their customer. A second-buyer node in crimson stays available. A small inset replays the Episode 1 marginal-barrel contract, now triggered by the siege. Amber invoice share ticks up.]"
   },
   {
     "title": "Two numbers, two maps",
     "mood": "close",
-    "narration": "The plain result is two numbers and two maps. China can endure a Malacca-only closure for months, with damage, by drawing stocks, sending ships the long way, pushing pipelines to about one and a half million barrels a day, and leaning on Pacific crude. China cannot endure a full southern-and-Pacific energy siege for long without factories shutting down hard, and that fuller siege is a regional war, not just a strait. Beijing's gambit is to make the first closure disappointing and the second enormous. Washington's gambit is to threaten both, and hope the threat changes Chinese behavior before either closure is tried. Under unknowable intentions, meaning neither side can be sure of the other, both sides prepare for the test anyway.",
+    "narration": "The plain result is two different estimates, because these are two different wars. China can endure a Malacca-only closure for months, with damage, by drawing stocks, sending ships the long way, pushing pipelines to about one and a half million barrels a day, and leaning on Pacific crude. China can’t endure a full southern-and-Pacific energy siege for long without factories shutting down hard, and that fuller siege is a regional war, not just a strait. Beijing's gambit is to make a narrow closure achieve too little, and a wider closure cost far too much. Washington's gambit is to threaten both, hoping the threat changes Chinese behavior before either option has to be tested. Neither side can be sure what the other will do, because intentions stay hidden. Both prepare for the test anyway.",
     "cue": "[VISUAL: CLOSING SPLIT MAP. Left: Malacca-only closure, measured in months, stocks drawing, hulls diverting, pipelines maxed near one and a half million barrels a day, Pacific crude still flowing. Right: southern-plus-Pacific siege, labeled REGIONAL WAR, industrial contraction steep. Beijing's gambit highlights the left map as disappointing and the right map as enormous. Washington's gambit is a threat bracket around both. Hold. Cut to black.]"
   }
 ];
